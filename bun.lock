@@ -21,6 +21,7 @@
       "dependencies": {
         "@repo/analytics": "workspace:*",
         "@repo/auth": "workspace:*",
+        "@repo/collaboration": "workspace:*",
         "@repo/config": "workspace:*",
         "@repo/database": "workspace:*",
         "@repo/design-system": "workspace:*",
@@ -28,6 +29,7 @@
         "@repo/next-config": "workspace:*",
         "@repo/observability": "workspace:*",
         "@repo/payments": "workspace:*",
+        "@repo/webhooks": "workspace:*",
         "@sentry/nextjs": "^10.42.0",
         "@t3-oss/env-nextjs": "^0.13.10",
         "import-in-the-middle": "^3.0.0",
@@ -572,7 +574,6 @@
       "name": "@repo/webhooks",
       "version": "0.0.0",
       "dependencies": {
-        "@repo/auth": "workspace:*",
         "@t3-oss/env-nextjs": "^0.13.10",
         "server-only": "^0.0.1",
         "svix": "^1.86.0",

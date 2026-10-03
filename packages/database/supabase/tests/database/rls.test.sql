@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set search_path = public, extensions;
 
-select plan(42);
+select plan(46);
 
 -- ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -192,6 +192,10 @@ select throws_ok(
   null,
   'an invitation cannot be accepted by a different account'
 );
+select is_empty(
+  'select 1 from public.pending_invitations()',
+  'users only see invitations addressed to them'
+);
 
 -- ── Owner A ─────────────────────────────────────────────────────────────────
 
@@ -249,6 +253,11 @@ select pg_temp.login_as(
   '{"phone":"9647700000004"}'
 );
 
+select results_eq(
+  'select organization_name, role::text from public.pending_invitations()',
+  $$ values ('Org One Renamed', 'member') $$,
+  'invitees see the invitations addressed to their phone number'
+);
 select is(
   public.accept_invitation('30000000-0000-0000-0000-000000000001'),
   '10000000-0000-0000-0000-000000000001'::uuid,
@@ -264,6 +273,10 @@ select throws_ok(
   'P0002',
   null,
   'an invitation can only be used once'
+);
+select is_empty(
+  'select 1 from public.pending_invitations()',
+  'accepted invitations are no longer pending'
 );
 
 -- ── Owner C (other tenant) ──────────────────────────────────────────────────
@@ -308,6 +321,12 @@ select throws_ok(
   '42501',
   null,
   'anonymous visitors cannot read organizations'
+);
+select throws_ok(
+  'select * from public.pending_invitations()',
+  '42501',
+  null,
+  'anonymous visitors cannot list invitations'
 );
 
 -- ── Storage ─────────────────────────────────────────────────────────────────

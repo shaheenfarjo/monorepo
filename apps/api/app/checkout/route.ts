@@ -4,6 +4,7 @@ import {
   getConversions,
 } from "@repo/analytics/conversions";
 import { authenticateRequest } from "@repo/auth/verify";
+import { project } from "@repo/config";
 import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
 import { getPurchasePolicy, type Platform } from "@repo/payments";
@@ -12,6 +13,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { env } from "@/env";
 import { corsHeaders, preflight } from "@/lib/cors";
+import { isManager, membershipRole } from "@/lib/membership";
 
 const body = z.object({
   /** Ad identifiers from `getAttribution()` in @repo/analytics/client. */
@@ -27,7 +29,7 @@ const platforms = new Set<Platform>(["web", "ios", "android"]);
 const safeRedirect = (redirectUrl: string | undefined) => {
   const app = new URL(env.NEXT_PUBLIC_APP_URL);
   if (!redirectUrl) {
-    return new URL("/billing", app).toString();
+    return new URL(`/${project.locale.default}/billing`, app).toString();
   }
   return new URL(redirectUrl).origin === app.origin ? redirectUrl : undefined;
 };
@@ -68,15 +70,7 @@ export const POST = async (request: Request) => {
     return json({ error: "invalid_redirect" }, 400);
   }
 
-  // Runs as the user: RLS only returns memberships they're allowed to see.
-  const { data: membership } = await session.supabase
-    .from("memberships")
-    .select("role")
-    .eq("organization_id", organizationId)
-    .eq("user_id", session.userId)
-    .maybeSingle();
-
-  if (!(membership && ["owner", "admin"].includes(membership.role))) {
+  if (!isManager(await membershipRole(session, organizationId))) {
     return json({ error: "forbidden" }, 403);
   }
 
