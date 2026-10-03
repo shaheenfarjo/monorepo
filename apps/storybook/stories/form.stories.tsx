@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -6,8 +7,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@964reserve/design-system/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from "@repo/design-system/components/ui/form";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useForm } from "react-hook-form";
 import { action } from "storybook/actions";
@@ -17,11 +17,11 @@ import { object, string, type infer as zInfer } from "zod";
  * Building forms with React Hook Form and Zod.
  */
 const meta: Meta<typeof Form> = {
-  title: "ui/Form",
-  component: Form,
-  tags: ["autodocs"],
   argTypes: {},
+  component: Form,
   render: (args) => <ProfileForm {...args} />,
+  tags: ["autodocs"],
+  title: "ui/Form",
 } satisfies Meta<typeof Form>;
 
 export default meta;
@@ -36,10 +36,10 @@ const formSchema = object({
 
 const ProfileForm = (args: Story["args"]) => {
   const form = useForm<zInfer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
     },
+    resolver: zodResolver(formSchema),
   });
   function onSubmit(values: zInfer<typeof formSchema>) {
     action("onSubmit")(values);

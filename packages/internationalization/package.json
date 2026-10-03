@@ -1,10 +1,10 @@
 {
-  "name": "@964reserve/internationalization",
+  "name": "@repo/internationalization",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "translate": "npx -y languine@latest translate",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "translate": "npx -y languine@latest translate",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
@@ -14,7 +14,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@964reserve/typescript-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/negotiator": "^0.6.4",
     "@types/node": "25.3.5",
     "@types/react": "19.2.14",

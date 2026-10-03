@@ -1,7 +1,7 @@
-import { analytics } from "@964reserve/analytics/server";
-import { parseError } from "@964reserve/observability/error";
-import { log } from "@964reserve/observability/log";
-import { payments } from "@964reserve/payments";
+import { analytics } from "@repo/analytics/server";
+import { parseError } from "@repo/observability/error";
+import { log } from "@repo/observability/log";
+import { payments } from "@repo/payments";
 import { NextResponse } from "next/server";
 import { env } from "@/env";
 

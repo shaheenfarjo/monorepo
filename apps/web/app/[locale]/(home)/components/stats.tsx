@@ -1,4 +1,4 @@
-import type { Dictionary } from "@964reserve/internationalization";
+import type { Dictionary } from "@repo/internationalization";
 import { MoveDownLeft, MoveUpRight } from "lucide-react";
 
 interface StatsProps {

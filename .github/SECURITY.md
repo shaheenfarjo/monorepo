@@ -1,9 +1,11 @@
-# Security Policy
+# Security policy
 
-## Supported Versions
+## Supported versions
 
-Currently, only the latest on `main` branch is supported with security updates.
+Only the latest release on the default branch receives security updates.
 
-## Reporting a Vulnerability
+## Reporting a vulnerability
 
-To report a vulnerability, open a new issue.
+Please **do not** open a public issue for security problems. Email
+{{SUPPORT_EMAIL}} with a description, reproduction steps and the affected
+component. We aim to acknowledge reports within three business days.

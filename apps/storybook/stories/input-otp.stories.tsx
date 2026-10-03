@@ -3,7 +3,7 @@ import {
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@964reserve/design-system/components/ui/input-otp";
+} from "@repo/design-system/components/ui/input-otp";
 import type { Meta, StoryObj } from "@storybook/react";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 
@@ -11,14 +11,15 @@ import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
  * Accessible one-time password component with copy paste functionality.
  */
 const meta = {
-  title: "ui/InputOTP",
-  component: InputOTP,
-  tags: ["autodocs"],
-  argTypes: {},
   args: {
+    children: null,
     maxLength: 6,
     pattern: REGEXP_ONLY_DIGITS_AND_CHARS,
-    children: null,
+  },
+  argTypes: {},
+  component: InputOTP,
+  parameters: {
+    layout: "centered",
   },
 
   render: (args) => (
@@ -33,9 +34,8 @@ const meta = {
       </InputOTPGroup>
     </InputOTP>
   ),
-  parameters: {
-    layout: "centered",
-  },
+  tags: ["autodocs"],
+  title: "ui/InputOTP",
 } satisfies Meta<typeof InputOTP>;
 
 export default meta;

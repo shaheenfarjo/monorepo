@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { blog, legal } from "@964reserve/cms";
+import { blog, legal } from "@repo/cms";
 import type { MetadataRoute } from "next";
 import { env } from "@/env";
 
@@ -18,20 +18,20 @@ const url = new URL(`${protocol}://${env.VERCEL_PROJECT_PRODUCTION_URL}`);
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => [
   {
-    url: new URL("/", url).href,
     lastModified: new Date(),
+    url: new URL("/", url).href,
   },
   ...pages.map((page) => ({
+    lastModified: new Date(),
     url: new URL(page, url).href,
-    lastModified: new Date(),
   })),
-  ...blogs.map((blog) => ({
-    url: new URL(`blog/${blog}`, url).href,
+  ...blogs.map((slug) => ({
     lastModified: new Date(),
+    url: new URL(`blog/${slug}`, url).href,
   })),
-  ...legals.map((legal) => ({
-    url: new URL(`legal/${legal}`, url).href,
+  ...legals.map((slug) => ({
     lastModified: new Date(),
+    url: new URL(`legal/${slug}`, url).href,
   })),
 ];
 

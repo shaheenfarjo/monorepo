@@ -1,20 +1,20 @@
 "use client";
 
-import { OrganizationSwitcher, UserButton } from "@964reserve/auth/client";
-import { ModeToggle } from "@964reserve/design-system/components/mode-toggle";
-import { Button } from "@964reserve/design-system/components/ui/button";
+import { BrandLogo } from "@repo/design-system/components/brand-logo";
+import { ModeToggle } from "@repo/design-system/components/mode-toggle";
+import { Button } from "@repo/design-system/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@964reserve/design-system/components/ui/collapsible";
+} from "@repo/design-system/components/ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@964reserve/design-system/components/ui/dropdown-menu";
+} from "@repo/design-system/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -32,9 +32,9 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   useSidebar,
-} from "@964reserve/design-system/components/ui/sidebar";
-import { cn } from "@964reserve/design-system/lib/utils";
-import { NotificationsTrigger } from "@964reserve/notifications/components/trigger";
+} from "@repo/design-system/components/ui/sidebar";
+import { cn } from "@repo/design-system/lib/utils";
+import { NotificationsTrigger } from "@repo/notifications/components/trigger";
 import {
   AnchorIcon,
   BookOpenIcon,
@@ -61,15 +61,8 @@ interface GlobalSidebarProperties {
 }
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
-      title: "Playground",
-      url: "#",
       icon: SquareTerminalIcon,
       isActive: true,
       items: [
@@ -86,10 +79,10 @@ const data = {
           url: "#",
         },
       ],
+      title: "Playground",
+      url: "#",
     },
     {
-      title: "Models",
-      url: "#",
       icon: BotIcon,
       items: [
         {
@@ -105,10 +98,10 @@ const data = {
           url: "#",
         },
       ],
+      title: "Models",
+      url: "#",
     },
     {
-      title: "Documentation",
-      url: "#",
       icon: BookOpenIcon,
       items: [
         {
@@ -128,10 +121,10 @@ const data = {
           url: "#",
         },
       ],
+      title: "Documentation",
+      url: "#",
     },
     {
-      title: "Settings",
-      url: "#",
       icon: Settings2Icon,
       items: [
         {
@@ -151,40 +144,42 @@ const data = {
           url: "#",
         },
       ],
+      title: "Settings",
+      url: "#",
     },
   ],
   navSecondary: [
     {
+      icon: AnchorIcon,
       title: "Webhooks",
       url: "/webhooks",
-      icon: AnchorIcon,
     },
     {
+      icon: LifeBuoyIcon,
       title: "Support",
       url: "#",
-      icon: LifeBuoyIcon,
     },
     {
+      icon: SendIcon,
       title: "Feedback",
       url: "#",
-      icon: SendIcon,
     },
   ],
   projects: [
     {
+      icon: FrameIcon,
       name: "Design Engineering",
       url: "#",
-      icon: FrameIcon,
     },
     {
+      icon: PieChartIcon,
       name: "Sales & Marketing",
       url: "#",
-      icon: PieChartIcon,
     },
     {
+      icon: MapIcon,
       name: "Travel",
       url: "#",
-      icon: MapIcon,
     },
   ],
 };
@@ -204,10 +199,7 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
                   sidebar.open ? "" : "-mx-1"
                 )}
               >
-                <OrganizationSwitcher
-                  afterSelectOrganizationUrl="/"
-                  hidePersonal
-                />
+                <BrandLogo showName={sidebar.open} />
               </div>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -326,16 +318,6 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem className="flex items-center gap-2">
-              <UserButton
-                appearance={{
-                  elements: {
-                    rootBox: "flex overflow-hidden w-full",
-                    userButtonBox: "flex-row-reverse",
-                    userButtonOuterIdentifier: "truncate pl-0",
-                  },
-                }}
-                showName
-              />
               <div className="flex shrink-0 items-center gap-px">
                 <ModeToggle />
                 <Button

@@ -1,5 +1,5 @@
 {
-  "name": "@964reserve/database",
+  "name": "@repo/database",
   "version": "0.0.0",
   "main": "./index.ts",
   "types": "./index.ts",
@@ -13,15 +13,11 @@
     "@supabase/supabase-js": "^2.115.0",
     "@t3-oss/env-nextjs": "^0.13.10",
     "server-only": "^0.0.1",
-    "undici": "^7.22.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@964reserve/typescript-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "25.3.5",
-    "@types/ws": "^8.18.1",
-    "bufferutil": "^4.1.0",
-    "dotenv": "^16.5.0",
     "typescript": "^5.9.3"
   }
 }

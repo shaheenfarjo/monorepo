@@ -1,6 +1,6 @@
-import { showBetaFeature } from "@964reserve/feature-flags";
-import { getDictionary } from "@964reserve/internationalization";
-import { createMetadata } from "@964reserve/seo/metadata";
+import { showBetaFeature } from "@repo/feature-flags";
+import { getDictionary } from "@repo/internationalization";
+import { createMetadata } from "@repo/seo/metadata";
 import type { Metadata } from "next";
 import { Cases } from "./components/cases";
 import { CTA } from "./components/cta";
@@ -32,11 +32,11 @@ const Home = async ({ params }: HomeProps) => {
 
   return (
     <>
-      {betaFeature && (
+      {betaFeature ? (
         <div className="w-full bg-black py-2 text-center text-white">
           Beta feature now available
         </div>
-      )}
+      ) : null}
       <Hero dictionary={dictionary} />
       <Cases dictionary={dictionary} />
       <Features dictionary={dictionary} />

@@ -20,12 +20,12 @@ export const SignUp = () => {
 
     const { error } = await supabase.auth.signUp({
       email,
-      password,
       options: {
         data: {
           name,
         },
       },
+      password,
     });
 
     if (error) {

@@ -11,7 +11,7 @@
     "noEmit": true,
     "paths": {
       "@/*": ["./*"],
-      "@964reserve/*": ["../../packages/*"]
+      "@repo/*": ["../../packages/*"]
     }
   },
   "exclude": ["node_modules"]

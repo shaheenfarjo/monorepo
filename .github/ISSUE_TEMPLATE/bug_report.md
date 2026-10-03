@@ -10,8 +10,8 @@ assignees: ''
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**next-forge version**
-I am using version ...
+**Where does it happen?**
+App(s) affected (web, app, api, iOS, Android) and the commit or release.
 
 **To Reproduce**
 Steps to reproduce the behavior:
@@ -27,5 +27,6 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
- - OS: [e.g. MacOS]
- - Browser [e.g. chrome v130, safari]
+ - OS / device: [e.g. iOS 19, Android 16, macOS]
+ - Browser or app version: [e.g. Chrome 140, Safari, native app 1.2.0]
+ - Language / direction: [e.g. Arabic (RTL), English (LTR)]

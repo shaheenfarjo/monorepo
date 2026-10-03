@@ -3,11 +3,11 @@ import { z } from "zod";
 
 export const keys = () =>
   createEnv({
-    skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
-    server: {
-      LIVEBLOCKS_SECRET: z.string().startsWith("sk_").optional(),
-    },
     runtimeEnv: {
       LIVEBLOCKS_SECRET: process.env.LIVEBLOCKS_SECRET,
     },
+    server: {
+      LIVEBLOCKS_SECRET: z.string().startsWith("sk_").optional(),
+    },
+    skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
   });

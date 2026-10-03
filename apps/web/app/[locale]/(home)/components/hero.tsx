@@ -1,6 +1,6 @@
-import { blog } from "@964reserve/cms";
-import { Button } from "@964reserve/design-system/components/ui/button";
-import type { Dictionary } from "@964reserve/internationalization";
+import { blog } from "@repo/cms";
+import { Button } from "@repo/design-system/components/ui/button";
+import type { Dictionary } from "@repo/internationalization";
 import { MoveRight, PhoneCall } from "lucide-react";
 import Link from "next/link";
 import { env } from "@/env";
@@ -16,7 +16,7 @@ export const Hero = async ({ dictionary }: HeroProps) => {
     <div className="w-full">
       <div className="container mx-auto">
         <div className="flex flex-col items-center justify-center gap-8 py-20 lg:py-40">
-          {latestPost && (
+          {latestPost ? (
             <div>
               <Button asChild className="gap-4" size="sm" variant="secondary">
                 <Link href={`/blog/${latestPost._slug}`}>
@@ -25,7 +25,7 @@ export const Hero = async ({ dictionary }: HeroProps) => {
                 </Link>
               </Button>
             </div>
-          )}
+          ) : null}
           <div className="flex flex-col gap-4">
             <h1 className="max-w-2xl text-center font-regular text-5xl tracking-tighter md:text-7xl">
               {dictionary.web.home.meta.title}

@@ -4,7 +4,7 @@ import * as React from "react"
 import { Menubar as MenubarPrimitive } from "radix-ui"
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
 
-import { cn } from "@964reserve/design-system/lib/utils"
+import { cn } from "@repo/design-system/lib/utils"
 
 function Menubar({
   className,

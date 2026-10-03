@@ -1,7 +1,7 @@
 "use server";
 
-import { auth } from "@964reserve/auth/server";
-import { createAdminClient } from "@964reserve/database";
+import { auth } from "@repo/auth/server";
+import { createAdminClient } from "@repo/database";
 
 const colors = [
   "var(--color-red-500)",

@@ -1,12 +1,12 @@
-import { blog } from "@964reserve/cms";
-import { Body } from "@964reserve/cms/components/body";
-import { CodeBlock } from "@964reserve/cms/components/code-block";
-import { Feed } from "@964reserve/cms/components/feed";
-import { Image } from "@964reserve/cms/components/image";
-import { TableOfContents } from "@964reserve/cms/components/toc";
-import { JsonLd } from "@964reserve/seo/json-ld";
-import { createMetadata } from "@964reserve/seo/metadata";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { blog } from "@repo/cms";
+import { Body } from "@repo/cms/components/body";
+import { CodeBlock } from "@repo/cms/components/code-block";
+import { Feed } from "@repo/cms/components/feed";
+import { Image } from "@repo/cms/components/image";
+import { TableOfContents } from "@repo/cms/components/toc";
+import { JsonLd } from "@repo/seo/json-ld";
+import { createMetadata } from "@repo/seo/metadata";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -35,9 +35,9 @@ export const generateMetadata = async ({
   }
 
   return createMetadata({
-    title: post._title,
     description: post.description,
     image: post.image.url,
+    title: post._title,
   });
 };
 
@@ -65,19 +65,19 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
           <>
             <JsonLd
               code={{
-                "@type": "BlogPosting",
                 "@context": "https://schema.org",
+                "@type": "BlogPosting",
+                author: page.authors.at(0)?._title,
+                dateModified: page.date,
                 datePublished: page.date,
                 description: page.description,
-                mainEntityOfPage: {
-                  "@type": "WebPage",
-                  "@id": new URL(`/blog/${page._slug}`, url).toString(),
-                },
                 headline: page._title,
                 image: page.image.url,
-                dateModified: page.date,
-                author: page.authors.at(0)?._title,
                 isAccessibleForFree: true,
+                mainEntityOfPage: {
+                  "@id": new URL(`/blog/${page._slug}`, url).toString(),
+                  "@type": "WebPage",
+                },
               }}
             />
             <div className="container mx-auto py-16">
@@ -106,7 +106,7 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
                         src={page.image.url}
                         width={page.image.width}
                       />
-                    ) : undefined}
+                    ) : null}
                     <div className="mx-auto max-w-prose">
                       <Body
                         components={{

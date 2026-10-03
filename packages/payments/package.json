@@ -1,5 +1,5 @@
 {
-  "name": "@964reserve/payments",
+  "name": "@repo/payments",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -12,7 +12,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@964reserve/typescript-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "typescript": "^5.9.3"
   }
 }

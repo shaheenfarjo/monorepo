@@ -1,13 +1,13 @@
 {
   "extends": [
-    "@964reserve/typescript-config/nextjs.json",
-    "@964reserve/cms/typescript-config.json"
+    "@repo/typescript-config/nextjs.json",
+    "@repo/cms/typescript-config.json"
   ],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@964reserve/*": ["../../packages/*"]
+      "@repo/*": ["../../packages/*"]
     }
   },
   "include": [

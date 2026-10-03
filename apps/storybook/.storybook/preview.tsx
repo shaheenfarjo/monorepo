@@ -1,39 +1,19 @@
-import { Toaster } from "@964reserve/design-system/components/ui/sonner";
-import { TooltipProvider } from "@964reserve/design-system/components/ui/tooltip";
-import { ThemeProvider } from "@964reserve/design-system/providers/theme";
+import { Toaster } from "@repo/design-system/components/ui/sonner";
+import { TooltipProvider } from "@repo/design-system/components/ui/tooltip";
+import { ThemeProvider } from "@repo/design-system/providers/theme";
 import { withThemeByClassName } from "@storybook/addon-themes";
 import type { Preview } from "@storybook/react";
 
-import "@964reserve/design-system/styles/globals.css";
+import "@repo/design-system/styles/globals.css";
 
 const preview: Preview = {
-  parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
-    },
-    chromatic: {
-      modes: {
-        light: {
-          theme: "light",
-          className: "light",
-        },
-        dark: {
-          theme: "dark",
-          className: "dark",
-        },
-      },
-    },
-  },
   decorators: [
     withThemeByClassName({
-      themes: {
-        light: "light",
-        dark: "dark",
-      },
       defaultTheme: "light",
+      themes: {
+        dark: "dark",
+        light: "light",
+      },
     }),
     (Story) => (
       <div className="bg-background">
@@ -46,6 +26,26 @@ const preview: Preview = {
       </div>
     ),
   ],
+  parameters: {
+    chromatic: {
+      modes: {
+        dark: {
+          className: "dark",
+          theme: "dark",
+        },
+        light: {
+          className: "light",
+          theme: "light",
+        },
+      },
+    },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+  },
 };
 
 export default preview;

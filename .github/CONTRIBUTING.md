@@ -1,48 +1,27 @@
-# Contributing to This Project
+# Contributing
 
-Thank you for your interest in contributing! This document outlines the process for contributing to our project.
+## Workflow
 
-## Getting Started
+1. Create a branch from the default branch: `git checkout -b feat/short-description`.
+2. Make focused changes and keep pull requests small.
+3. Run the checks below locally before pushing.
+4. Open a pull request using the template and request a review.
 
-1. Fork the repository
-2. Create a new branch for your feature or bug fix: `git checkout -b feature/your-feature-name`
-3. Make your changes
-4. Test your changes thoroughly
-5. Commit your changes with clear, descriptive commit messages
-6. Push to your fork
-7. Submit a Pull Request
+## Local checks
 
-## Pull Request Guidelines
+```sh
+bun run check       # Biome lint + format (Ultracite)
+bun run typecheck   # TypeScript across all workspaces
+bun run test        # Vitest across all workspaces
+```
 
-- Ensure your PR addresses a specific issue or adds value to the project
-- Include a clear description of the changes
-- Keep changes focused and atomic
-- Follow existing code style and conventions
-- Include tests if applicable
-- Update documentation as needed
-- Ensure your PR follows the [project's philosophy](/docs/overview.mdx)
+## Conventions
 
-## Code Style
+- Code style is enforced by Biome; run `bun run fix` to apply safe fixes.
+- UI must work in both Arabic (RTL) and English (LTR). Use logical Tailwind
+  utilities (`ms-*`, `pe-*`, `start-*`, `text-start`) instead of physical ones
+  (`ml-*`, `pr-*`, `left-*`, `text-left`).
+- Never authorize with `user_metadata`; it is editable by the user.
+- Database changes go through migrations and need RLS policies plus tests.
 
-- Follow the existing code formatting in the project (ensure you have Biome installed)
-- Write clear, self-documenting code
-- Add comments only when necessary to explain complex logic
-- Use meaningful variable and function names
-
-## Reporting Issues
-
-- Use the GitHub issue tracker
-- Check if the issue already exists before creating a new one
-- Provide a clear description of the issue
-- Include steps to reproduce if applicable
-- Add relevant labels
-
-## Questions or Need Help?
-
-Feel free to open an issue for questions or join our discussions. We're here to help!
-
-## Code of Conduct
-
-Please note that this project follows a Code of Conduct. By participating, you are expected to uphold this code.
-
-Thank you for contributing!
+See `AGENTS.md` for the architecture overview.

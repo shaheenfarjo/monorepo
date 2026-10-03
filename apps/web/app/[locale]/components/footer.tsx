@@ -1,5 +1,6 @@
-import { legal } from "@964reserve/cms";
-import { Status } from "@964reserve/observability/status";
+import { legal } from "@repo/cms";
+import { project } from "@repo/config";
+import { Status } from "@repo/observability/status";
 import Link from "next/link";
 import { env } from "@/env";
 
@@ -8,34 +9,34 @@ export const Footer = async () => {
 
   const navigationItems = [
     {
-      title: "Home",
-      href: "/",
       description: "",
+      href: "/",
+      title: "Home",
     },
     {
-      title: "Pages",
-      description: "Managing a small business today is already tough.",
+      description: "",
       items: [
         {
-          title: "Blog",
           href: "/blog",
+          title: "Blog",
         },
       ],
+      title: "Pages",
     },
     {
-      title: "Legal",
       description: "We stay on top of the latest legal requirements.",
       items: legalPages.map((post) => ({
-        title: post._title,
         href: `/legal/${post._slug}`,
+        title: post._title,
       })),
+      title: "Legal",
     },
   ];
 
   if (env.NEXT_PUBLIC_DOCS_URL) {
     navigationItems.at(1)?.items?.push({
-      title: "Docs",
       href: env.NEXT_PUBLIC_DOCS_URL,
+      title: "Docs",
     });
   }
 
@@ -46,8 +47,8 @@ export const Footer = async () => {
           <div className="grid items-center gap-10 lg:grid-cols-2">
             <div className="flex flex-col items-start gap-8">
               <div className="flex flex-col gap-2">
-                <h2 className="max-w-xl text-left font-regular text-3xl tracking-tighter md:text-5xl">
-                  next-forge
+                <h2 className="max-w-xl text-start font-regular text-3xl tracking-tighter md:text-5xl">
+                  {project.name}
                 </h2>
                 <p className="max-w-lg text-left text-foreground/75 text-lg leading-relaxed tracking-tight">
                   This is the start of something new.

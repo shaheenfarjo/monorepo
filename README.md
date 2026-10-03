@@ -1,140 +1,76 @@
-# ▲ / next-forge
+# {{PROJECT_NAME}}
 
-**Production-grade Turborepo template for Next.js apps.**
+{{ORG_NAME}}'s production monorepo: a Next.js + Supabase SaaS platform built for
+Iraq-first products. It ships Arabic (RTL) and English (LTR) out of the box, takes
+local payments through Wayl, and can be packaged as native iOS and Android apps.
 
-<div>
-  <img src="https://img.shields.io/npm/dy/next-forge" alt="" />
-  <img src="https://img.shields.io/npm/v/next-forge" alt="" />
-  <img src="https://img.shields.io/github/license/vercel/next-forge" alt="" />
-</div>
+> **Starting a new project from this template?** Run `bun install && bun run init`
+> first. It asks for your organization and project details, fills in every
+> `{{PLACEHOLDER}}`, sets up environment files and removes the modules you don't need.
 
-## Overview
+## Stack
 
-[next-forge](https://github.com/vercel/next-forge) is a production-grade [Turborepo](https://turborepo.com) template for [Next.js](https://nextjs.org/) apps. It's designed to be a comprehensive starting point for building SaaS applications, providing a solid, opinionated foundation with minimal configuration required.
-
-Built on a decade of experience building web applications, next-forge balances speed and quality to help you ship thoroughly-built products faster.
-
-### Philosophy
-
-next-forge is built around five core principles:
-
-- **Fast** — Quick to build, run, deploy, and iterate on
-- **Cheap** — Free to start with services that scale with you
-- **Opinionated** — Integrated tooling designed to work together
-- **Modern** — Latest stable features with healthy community support
-- **Safe** — End-to-end type safety and robust security posture
-
-## Demo
-
-Experience next-forge in action:
-
-- [Web](https://demo.next-forge.com) — Marketing website
-- [App](https://app.demo.next-forge.com) — Main application
-- [Storybook](https://storybook.demo.next-forge.com) — Component library
-- [API](https://api.demo.next-forge.com/health) — API health check
-
-## Features
-
-next-forge comes with batteries included:
-
-### Apps
-
-- **Web** — Marketing site built with Tailwind CSS and TWBlocks
-- **App** — Main application with authentication and database integration
-- **API** — RESTful API with health checks and monitoring
-- **Docs** — Documentation site powered by Mintlify
-- **Email** — Email templates with React Email
-- **Storybook** — Component development environment
-
-### Packages
-
-- **Authentication** — Powered by [Clerk](https://clerk.com)
-- **Database** — Type-safe ORM with migrations
-- **Design System** — Comprehensive component library with dark mode
-- **Payments** — Subscription management via [Stripe](https://stripe.com)
-- **Email** — Transactional emails via [Resend](https://resend.com)
-- **Analytics** — Web ([Google Analytics](https://developers.google.com/analytics)) and product ([Posthog](https://posthog.com))
-- **Observability** — Error tracking ([Sentry](https://sentry.io)), logging, and uptime monitoring ([BetterStack](https://betterstack.com))
-- **Security** — Application security ([Arcjet](https://arcjet.com)), rate limiting, and secure headers
-- **CMS** — Type-safe content management for blogs and documentation
-- **SEO** — Metadata management, sitemaps, and JSON-LD
-- **AI** — AI integration utilities
-- **Webhooks** — Inbound and outbound webhook handling
-- **Collaboration** — Real-time features with avatars and live cursors
-- **Feature Flags** — Feature flag management
-- **Cron** — Scheduled job management
-- **Storage** — File upload and management
-- **Internationalization** — Multi-language support
-- **Notifications** — In-app notification system
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 20+
-- [Bun](https://bun.sh) (or npm/yarn/pnpm)
-- [Stripe CLI](https://docs.stripe.com/stripe-cli) for local webhook testing
-
-### Installation
-
-Create a new next-forge project:
-
-```sh
-npx next-forge@latest init
-```
-
-### Setup
-
-1. Configure your environment variables
-2. Set up required service accounts (Clerk, Stripe, Resend, etc.)
-3. Run the development server
-
-For detailed setup instructions, read the [documentation](https://www.next-forge.com/docs).
+| Concern | Choice |
+| --- | --- |
+| Monorepo | Turborepo + Bun workspaces |
+| Web apps | Next.js (App Router), React, Tailwind CSS v4, shadcn/ui |
+| Auth & database | Supabase (Postgres, Row Level Security, phone OTP) |
+| Payments | Provider-agnostic `@repo/payments` with Wayl (ZainCash, FIB, Qi Card, cards) |
+| Localization | Arabic + English, RTL-aware design system, `Asia/Baghdad` dates, IQD |
+| Mobile | Capacitor (iOS + Android) from the same `apps/app` codebase |
+| Analytics | GTM, GA4, Meta Pixel, TikTok Pixel, server-side conversions |
+| Hosting | Vercel (apps) + Cloudflare (DNS, Turnstile, R2) |
+| Quality | Biome via Ultracite, TypeScript strict, Vitest, GitHub Actions |
 
 ## Structure
 
-next-forge uses a monorepo structure managed by Turborepo:
-
 ```
-next-forge/
-├── apps/           # Deployable applications
-│   ├── web/        # Marketing website (port 3001)
-│   ├── app/        # Main application (port 3000)
-│   ├── api/        # API server
-│   ├── docs/       # Documentation
-│   ├── email/      # Email templates
-│   └── storybook/  # Component library
-└── packages/       # Shared packages
-    ├── design-system/
-    ├── database/
-    ├── auth/
-    └── ...
+apps/
+  web/        Marketing site (port 3001)
+  app/        Main product — web + iOS/Android via Capacitor (port 3000)
+  api/        Webhooks, cron jobs and server-only endpoints (port 3002)
+  email/      React Email templates (port 3003)
+  docs/       Mintlify documentation (port 3004)
+  storybook/  Design-system workbench (port 6006)
+packages/
+  config/     Project identity, locales and regional settings (single source of truth)
+  auth/       Supabase Auth clients, phone OTP, session middleware
+  database/   Supabase schema, migrations, RLS tests and generated types
+  payments/   Payment-provider interface, Wayl provider, billing logic
+  design-system/, internationalization/, analytics/, security/, seo/, …
+scripts/      Template init and repository checks
 ```
 
-Each app is self-contained and independently deployable. Packages are shared across apps for consistency and maintainability.
+## Getting started
 
-## Documentation
+Prerequisites: Node.js 22+, [Bun](https://bun.sh), and Docker if you want to run
+Supabase locally.
 
-Full documentation is available at [next-forge.com/docs](https://www.next-forge.com/docs), including:
+```sh
+bun install
+bun run init      # first time only, when creating a project from the template
+bun run dev       # starts every app
+```
 
-- Detailed setup guides
-- Package documentation
-- Migration guides for swapping providers
-- Deployment instructions
-- Examples and recipes
+Each app reads its environment from `.env.local` (created by `init` from the
+`.env.example` files). Without credentials the apps still start; integrations whose
+keys are missing are disabled.
 
-## Contributing
+## Common scripts
 
-We welcome contributions! See the [contributing guide](https://github.com/vercel/next-forge/blob/main/.github/CONTRIBUTING.md) for details.
+| Script | What it does |
+| --- | --- |
+| `bun run dev` | Run all apps in development |
+| `bun run build` | Build all apps |
+| `bun run check` / `bun run fix` | Lint and format with Biome |
+| `bun run typecheck` | Type-check every workspace |
+| `bun run test` | Run all unit tests |
+| `bun run check:placeholders` | Fail if `{{PLACEHOLDER}}` tokens remain after init |
 
-## Contributors
+## Further reading
 
-<a href="https://github.com/vercel/next-forge/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=vercel/next-forge" />
-</a>
+- `AGENTS.md` — architecture overview and conventions for humans and AI agents
+- `.github/CONTRIBUTING.md` — workflow and local checks
+- `THIRD_PARTY_NOTICES.md` — licenses of included open-source code
 
-Made with [contrib.rocks](https://contrib.rocks).
-
-## License
-
-MIT
+Repository: {{REPO_URL}} · Support: {{SUPPORT_EMAIL}}

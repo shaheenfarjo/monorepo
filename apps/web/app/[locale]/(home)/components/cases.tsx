@@ -5,8 +5,8 @@ import {
   type CarouselApi,
   CarouselContent,
   CarouselItem,
-} from "@964reserve/design-system/components/ui/carousel";
-import type { Dictionary } from "@964reserve/internationalization";
+} from "@repo/design-system/components/ui/carousel";
+import type { Dictionary } from "@repo/internationalization";
 import { useEffect, useState } from "react";
 
 interface CasesProps {

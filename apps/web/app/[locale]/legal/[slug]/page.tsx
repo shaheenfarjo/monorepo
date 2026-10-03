@@ -1,9 +1,9 @@
-import { legal } from "@964reserve/cms";
-import { Body } from "@964reserve/cms/components/body";
-import { Feed } from "@964reserve/cms/components/feed";
-import { TableOfContents } from "@964reserve/cms/components/toc";
-import { createMetadata } from "@964reserve/seo/metadata";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { legal } from "@repo/cms";
+import { Body } from "@repo/cms/components/body";
+import { Feed } from "@repo/cms/components/feed";
+import { TableOfContents } from "@repo/cms/components/toc";
+import { createMetadata } from "@repo/seo/metadata";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -26,8 +26,8 @@ export const generateMetadata = async ({
   }
 
   return createMetadata({
-    title: post._title,
     description: post.description,
+    title: post._title,
   });
 };
 

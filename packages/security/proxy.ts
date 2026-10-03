@@ -1,4 +1,9 @@
-import { defaults, type Options, withVercelToolbar } from "@nosecone/next";
+import {
+  defaults,
+  nosecone,
+  type Options,
+  withVercelToolbar,
+} from "@nosecone/next";
 import {
   createContentSecurityPolicy,
   defaultCspSources,
@@ -26,3 +31,19 @@ export const noseconeOptions: Options = {
 
 export const noseconeOptionsWithToolbar: Options =
   withVercelToolbar(noseconeOptions);
+
+/**
+ * Adds Nosecone's security headers to an existing proxy response (for example
+ * one that carries refreshed auth cookies or an i18n rewrite) instead of
+ * replacing it.
+ */
+export const withSecurityHeaders = <T extends Response>(
+  response: T,
+  options: Options = noseconeOptions
+): T => {
+  for (const [name, value] of nosecone(options)) {
+    response.headers.set(name, value);
+  }
+
+  return response;
+};

@@ -1,5 +1,5 @@
 {
-  "name": "@964reserve/feature-flags",
+  "name": "@repo/feature-flags",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -7,23 +7,23 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@964reserve/analytics": "workspace:*",
-    "@964reserve/auth": "workspace:*",
-    "@964reserve/design-system": "workspace:*",
+    "@repo/analytics": "workspace:*",
+    "@repo/auth": "workspace:*",
+    "@repo/design-system": "workspace:*",
     "@t3-oss/env-nextjs": "^0.13.10",
     "@vercel/toolbar": "^0.2.2",
     "flags": "^4.0.3",
     "react": "19.2.4",
     "zod": "^4.3.6"
   },
-  "peerDependencies": {
-    "next": "16.1.6"
-  },
   "devDependencies": {
-    "@964reserve/typescript-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "25.3.5",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "typescript": "^5.9.3"
+  },
+  "peerDependencies": {
+    "next": "16.1.6"
   }
 }

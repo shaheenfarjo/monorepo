@@ -2,25 +2,23 @@ import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from "@964reserve/design-system/components/ui/resizable";
+} from "@repo/design-system/components/ui/resizable";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * Accessible resizable panel groups and layouts with keyboard support.
  */
 const meta: Meta<typeof ResizablePanelGroup> = {
-  title: "ui/ResizablePanelGroup",
-  component: ResizablePanelGroup,
-  tags: ["autodocs"],
+  args: {
+    className: "max-w-96 rounded-lg border",
+    orientation: "horizontal",
+  },
   argTypes: {
-    onLayout: {
+    onLayoutChange: {
       control: false,
     },
   },
-  args: {
-    className: "max-w-96 rounded-lg border",
-    direction: "horizontal",
-  },
+  component: ResizablePanelGroup,
   render: (args) => (
     <ResizablePanelGroup {...args}>
       <ResizablePanel defaultSize={50}>
@@ -30,7 +28,7 @@ const meta: Meta<typeof ResizablePanelGroup> = {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={50}>
-        <ResizablePanelGroup direction="vertical">
+        <ResizablePanelGroup orientation="vertical">
           <ResizablePanel defaultSize={25}>
             <div className="flex h-full items-center justify-center p-6">
               <span className="font-semibold">Two</span>
@@ -46,6 +44,8 @@ const meta: Meta<typeof ResizablePanelGroup> = {
       </ResizablePanel>
     </ResizablePanelGroup>
   ),
+  tags: ["autodocs"],
+  title: "ui/ResizablePanelGroup",
 } satisfies Meta<typeof ResizablePanelGroup>;
 
 export default meta;

@@ -1,4 +1,3 @@
-import type { Database } from "@964reserve/database/types";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { keys } from "./keys";
@@ -14,7 +13,7 @@ export const createClient = async () => {
     );
   }
 
-  return createServerClient<Database>(
+  return createServerClient(
     NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {

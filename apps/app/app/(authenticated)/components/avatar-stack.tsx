@@ -1,16 +1,16 @@
 "use client";
 
-import { useOthers, useSelf } from "@964reserve/collaboration/hooks";
+import { useOthers, useSelf } from "@repo/collaboration/hooks";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@964reserve/design-system/components/ui/avatar";
+} from "@repo/design-system/components/ui/avatar";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@964reserve/design-system/components/ui/tooltip";
+} from "@repo/design-system/components/ui/tooltip";
 
 interface PresenceAvatarProps {
   info?: Liveblocks["UserMeta"]["info"];
@@ -46,13 +46,13 @@ export const AvatarStack = () => {
       {hasMoreUsers && (
         <PresenceAvatar
           info={{
-            name: `+${others.length - 3}`,
             color: "var(--color-muted-foreground)",
+            name: `+${others.length - 3}`,
           }}
         />
       )}
 
-      {self && <PresenceAvatar info={self.info} />}
+      <PresenceAvatar info={self.info} />
     </div>
   );
 };

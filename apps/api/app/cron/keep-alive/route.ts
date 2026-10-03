@@ -1,4 +1,4 @@
-import { createAdminClient } from "@964reserve/database";
+import { createAdminClient } from "@repo/database";
 import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
 
 // Touches the database daily so free-tier Supabase projects are not paused.

@@ -7,17 +7,18 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@964reserve/design-system/components/ui/drawer";
+} from "@repo/design-system/components/ui/drawer";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * A drawer component for React.
  */
-const meta: Meta<typeof Drawer> = {
-  title: "ui/Drawer",
-  component: Drawer,
-  tags: ["autodocs"],
+const meta = {
   argTypes: {},
+  component: Drawer,
+  parameters: {
+    layout: "centered",
+  },
   render: (args) => (
     <Drawer {...args}>
       <DrawerTrigger>Open</DrawerTrigger>
@@ -42,10 +43,9 @@ const meta: Meta<typeof Drawer> = {
       </DrawerContent>
     </Drawer>
   ),
-  parameters: {
-    layout: "centered",
-  },
-};
+  tags: ["autodocs"],
+  title: "ui/Drawer",
+} satisfies Meta<typeof Drawer>;
 
 export default meta;
 

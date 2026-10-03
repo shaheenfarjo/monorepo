@@ -1,11 +1,9 @@
-import { analytics } from "@964reserve/analytics/server";
-import { auth } from "@964reserve/auth/server";
+import { analytics } from "@repo/analytics/server";
+import { auth } from "@repo/auth/server";
 import { flag } from "flags/next";
 
 export const createFlag = (key: string) =>
   flag({
-    key,
-    defaultValue: false,
     async decide() {
       const { userId } = await auth();
 
@@ -21,4 +19,6 @@ export const createFlag = (key: string) =>
 
       return isEnabled ?? (this.defaultValue as boolean);
     },
+    defaultValue: false,
+    key,
   });

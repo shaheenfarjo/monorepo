@@ -1,8 +1,8 @@
-import { createAdminClient } from "@964reserve/database";
-import { sendEmail } from "@964reserve/email";
-import { parseError } from "@964reserve/observability/error";
-import { log } from "@964reserve/observability/log";
-import { payments } from "@964reserve/payments";
+import { createAdminClient } from "@repo/database";
+import { sendEmail } from "@repo/email";
+import { parseError } from "@repo/observability/error";
+import { log } from "@repo/observability/log";
+import { payments } from "@repo/payments";
 import { NextResponse } from "next/server";
 import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
 

@@ -5,7 +5,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@964reserve/design-system/components/ui/breadcrumb";
+} from "@repo/design-system/components/ui/breadcrumb";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ArrowRightSquare } from "lucide-react";
 
@@ -13,11 +13,12 @@ import { ArrowRightSquare } from "lucide-react";
  * Displays the path to the current resource using a hierarchy of links.
  */
 const meta = {
-  title: "ui/Breadcrumb",
-  component: Breadcrumb,
-  tags: ["autodocs"],
-  argTypes: {},
   args: {},
+  argTypes: {},
+  component: Breadcrumb,
+  parameters: {
+    layout: "centered",
+  },
   render: (args) => (
     <Breadcrumb {...args}>
       <BreadcrumbList>
@@ -35,9 +36,8 @@ const meta = {
       </BreadcrumbList>
     </Breadcrumb>
   ),
-  parameters: {
-    layout: "centered",
-  },
+  tags: ["autodocs"],
+  title: "ui/Breadcrumb",
 } satisfies Meta<typeof Breadcrumb>;
 
 export default meta;

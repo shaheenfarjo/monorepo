@@ -19,8 +19,8 @@
     },
     "home": {
       "meta": {
-        "title": "Transform Your Business Operations Today",
-        "description": "In today's fast-paced world, your business deserves better than outdated trading systems. Our innovative platform streamlines operations, reduces complexity, and helps small businesses thrive in the modern economy."
+        "title": "A better way to run your business",
+        "description": "Replace this description with a short summary of what your product does and who it is for."
       },
       "hero": {
         "announcement": "Read our latest article"
@@ -52,7 +52,7 @@
       },
       "stats": {
         "title": "Real Results, Real Impact",
-        "description": "Join thousands of businesses that have transformed their operations with our platform. Our solutions have helped companies reduce administrative overhead by 60% and increase trading efficiency by 45% on average.",
+        "description": "Replace these numbers with your own metrics.",
         "items": [
           {
             "title": "Monthly active users",
@@ -84,63 +84,51 @@
         "title": "Hear from Our Thriving Community",
         "items": [
           {
-            "title": "Best decision",
-            "description": "Our goal was to streamline SMB trade, making it easier and faster than ever and we did it together.",
+            "title": "Placeholder testimonial",
+            "description": "Replace this quote with real feedback from a customer, with their permission.",
             "author": {
-              "name": "Hayden Bleasel",
-              "image": "https://github.com/haydenbleasel.png"
+              "name": "Customer name",
+              "image": ""
             }
           },
           {
-            "title": "Game changer",
-            "description": "This platform revolutionized how we handle our day-to-day operations. The efficiency gains have been remarkable.",
+            "title": "Placeholder testimonial",
+            "description": "Replace this quote with real feedback from a customer, with their permission.",
             "author": {
-              "name": "Lee Robinson",
-              "image": "https://github.com/leerob.png"
+              "name": "Customer name",
+              "image": ""
             }
           },
           {
-            "title": "Exceeded expectations",
-            "description": "Implementation was smooth and the results were immediate. Our team adapted quickly and productivity soared.",
+            "title": "Placeholder testimonial",
+            "description": "Replace this quote with real feedback from a customer, with their permission.",
             "author": {
-              "name": "shadcn",
-              "image": "https://github.com/shadcn.png"
-            }
-          },
-          {
-            "title": "Outstanding support",
-            "description": "Not only is the platform powerful, but the customer support team has been exceptional in helping us maximize its potential.",
-            "author": {
-              "name": "Pontus Abrahamsson",
-              "image": "https://github.com/pontusab.png"
+              "name": "Customer name",
+              "image": ""
             }
           }
         ]
       },
       "faq": {
         "title": "Common Questions, Expert Answers",
-        "description": "Get quick answers to your most pressing questions about our platform. We've compiled everything you need to know about transforming your business operations and getting started with modern trading solutions.",
+        "description": "Answers to the questions customers ask most often. Replace these with your own.",
         "cta": "Any questions? Reach out",
         "items": [
           {
-            "question": "What is the platform?",
-            "answer": "The platform is a trading platform that allows you to trade with confidence."
+            "question": "What does the product do?",
+            "answer": "Replace this answer with a one-paragraph description of your product."
           },
           {
-            "question": "How secure is the platform?",
-            "answer": "Our platform employs enterprise-grade security measures, including end-to-end encryption and multi-factor authentication, to ensure your trading activities remain completely secure."
+            "question": "How do I pay?",
+            "answer": "We accept ZainCash, FIB, Qi Card and other local payment methods through our secure checkout."
           },
           {
-            "question": "What trading features are available?",
-            "answer": "The platform offers comprehensive trading tools including real-time market data, advanced charting, automated trading strategies, and detailed analytics to support informed decision-making."
+            "question": "Is my data secure?",
+            "answer": "Data is encrypted in transit and at rest, and every account can only access its own organization's data."
           },
           {
-            "question": "How does pricing work?",
-            "answer": "We offer flexible pricing tiers designed to scale with your business needs, from starter plans for individual traders to enterprise solutions for large organizations."
-          },
-          {
-            "question": "What kind of support do you provide?",
-            "answer": "Our dedicated support team is available 24/7 through multiple channels including live chat, email, and phone. We also provide extensive documentation and training resources."
+            "question": "How do I get support?",
+            "answer": "Contact our support team and we will get back to you as soon as possible."
           }
         ]
       },

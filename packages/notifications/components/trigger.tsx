@@ -34,13 +34,11 @@ export const NotificationsTrigger = () => {
         onClick={() => setIsVisible(!isVisible)}
         ref={notifButtonRef}
       />
-      {notifButtonRef.current && (
-        <NotificationFeedPopover
-          buttonRef={notifButtonRef as RefObject<HTMLElement>}
-          isVisible={isVisible}
-          onClose={handleClose}
-        />
-      )}
+      <NotificationFeedPopover
+        buttonRef={notifButtonRef as RefObject<HTMLElement>}
+        isVisible={isVisible}
+        onClose={handleClose}
+      />
     </>
   );
 };

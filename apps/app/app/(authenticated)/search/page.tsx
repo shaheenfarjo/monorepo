@@ -1,4 +1,4 @@
-import { auth, createClient } from "@964reserve/auth/server";
+import { auth, createClient } from "@repo/auth/server";
 import { notFound, redirect } from "next/navigation";
 import { Header } from "../components/header";
 

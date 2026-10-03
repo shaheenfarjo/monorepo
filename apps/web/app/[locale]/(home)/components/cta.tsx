@@ -1,5 +1,5 @@
-import { Button } from "@964reserve/design-system/components/ui/button";
-import type { Dictionary } from "@964reserve/internationalization";
+import { Button } from "@repo/design-system/components/ui/button";
+import type { Dictionary } from "@repo/internationalization";
 import { MoveRight, PhoneCall } from "lucide-react";
 import Link from "next/link";
 import { env } from "@/env";
