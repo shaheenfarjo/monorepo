@@ -9,29 +9,27 @@ export const locales = [
 
 export type Dictionary = typeof en;
 
+const loadEnglish = async () =>
+  (await import("./dictionaries/en.json")).default as Dictionary;
+
 const dictionaries: Record<string, () => Promise<Dictionary>> =
   Object.fromEntries(
     locales.map((locale) => [
       locale,
-      () =>
-        import(`./dictionaries/${locale}.json`)
-          .then((mod) => mod.default)
-          .catch((_err) =>
-            import("./dictionaries/en.json").then((mod) => mod.default)
-          ),
+      async () => {
+        try {
+          return (await import(`./dictionaries/${locale}.json`))
+            .default as Dictionary;
+        } catch {
+          return loadEnglish();
+        }
+      },
     ])
   );
 
-export const getDictionary = async (locale: string): Promise<Dictionary> => {
-  const normalizedLocale = locale.split("-")[0];
+export const getDictionary = (locale: string): Promise<Dictionary> => {
+  const [language = "en"] = locale.split("-");
+  const load = dictionaries[language];
 
-  if (!locales.includes(normalizedLocale as (typeof locales)[number])) {
-    return dictionaries.en();
-  }
-
-  try {
-    return await dictionaries[normalizedLocale]();
-  } catch (_error) {
-    return dictionaries.en();
-  }
+  return load ? load() : loadEnglish();
 };

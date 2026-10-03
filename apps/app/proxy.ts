@@ -1,15 +1,6 @@
 import { updateSession } from "@repo/auth/proxy";
-import {
-  noseconeOptions,
-  noseconeOptionsWithToolbar,
-  withSecurityHeaders,
-} from "@repo/security/proxy";
+import { withSecurityHeaders } from "@repo/security/proxy";
 import type { NextRequest } from "next/server";
-import { env } from "./env";
-
-const securityOptions = env.FLAGS_SECRET
-  ? noseconeOptionsWithToolbar
-  : noseconeOptions;
 
 export default async function proxy(request: NextRequest) {
   const response = await updateSession(request, {
@@ -18,7 +9,7 @@ export default async function proxy(request: NextRequest) {
     publicPaths: ["/sign-in", "/sign-up", "/auth", "/api", "/.well-known"],
   });
 
-  return withSecurityHeaders(response, securityOptions);
+  return withSecurityHeaders(response);
 }
 
 export const config = {

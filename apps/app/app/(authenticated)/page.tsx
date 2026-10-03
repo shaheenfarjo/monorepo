@@ -11,11 +11,13 @@ import { Header } from "./components/header";
 const title = project.name;
 const description = project.orgName;
 
+// <module:collaboration>
 const CollaborationProvider = dynamic(() =>
   import("./components/collaboration-provider").then(
     (mod) => mod.CollaborationProvider
   )
 );
+// </module:collaboration>
 
 export const metadata: Metadata = {
   description,
@@ -34,12 +36,14 @@ const App = async () => {
   return (
     <>
       <Header page="Data Fetching" pages={["Building Your Application"]}>
+        {/* <module:collaboration> */}
         {env.LIVEBLOCKS_SECRET ? (
           <CollaborationProvider orgId={orgId}>
             <AvatarStack />
             <Cursors />
           </CollaborationProvider>
         ) : null}
+        {/* </module:collaboration> */}
       </Header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="grid auto-rows-min gap-4 md:grid-cols-3">

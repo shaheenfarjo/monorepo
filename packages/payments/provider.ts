@@ -46,16 +46,19 @@ export interface RefundResponse {
 }
 
 export interface PaymentProvider {
-  cancelSubscription(subscriptionId: string): Promise<void>;
-  createPaymentLink(
+  cancelSubscription: (subscriptionId: string) => Promise<void>;
+  createPaymentLink: (
     params: CreatePaymentLinkParams
-  ): Promise<PaymentLinkResponse>;
-  createRefund(params: CreateRefundParams): Promise<RefundResponse>;
+  ) => Promise<PaymentLinkResponse>;
+  createRefund: (params: CreateRefundParams) => Promise<RefundResponse>;
 
-  createSubscription(
+  createSubscription: (
     params: CreateSubscriptionParams
-  ): Promise<PaymentLinkResponse>;
-  getPaymentStatus(referenceId: string): Promise<unknown>;
-  updateSubscription(subscriptionId: string, params: unknown): Promise<void>;
-  verifyWebhook(body: string | Buffer, signature: string): boolean;
+  ) => Promise<PaymentLinkResponse>;
+  getPaymentStatus: (referenceId: string) => Promise<unknown>;
+  updateSubscription: (
+    subscriptionId: string,
+    params: unknown
+  ) => Promise<void>;
+  verifyWebhook: (body: string | Buffer, signature: string) => boolean;
 }

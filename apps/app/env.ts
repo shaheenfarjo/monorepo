@@ -16,15 +16,23 @@ export const env = createEnv({
   extends: [
     auth(),
     analytics(),
+    // <module:collaboration>
     collaboration(),
+    // </module:collaboration>
     core(),
     database(),
     email(),
+    // <module:feature-flags>
     flags(),
+    // </module:feature-flags>
+    // <module:notifications>
     notifications(),
+    // </module:notifications>
     observability(),
     security(),
+    // <module:webhooks>
     webhooks(),
+    // </module:webhooks>
   ],
   runtimeEnv: {},
   server: {},

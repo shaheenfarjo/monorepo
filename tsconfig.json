@@ -4,7 +4,9 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "types": ["node"]
+    "types": ["node"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler"
   },
   "include": ["scripts/**/*.ts", "turbo/**/*.ts"],
   "exclude": ["node_modules"]

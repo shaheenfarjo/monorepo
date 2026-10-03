@@ -18,7 +18,7 @@ export const SignUp = () => {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signUp({
+    const { error: authError } = await supabase.auth.signUp({
       email,
       options: {
         data: {
@@ -28,8 +28,8 @@ export const SignUp = () => {
       password,
     });
 
-    if (error) {
-      setError(error.message);
+    if (authError) {
+      setError(authError.message);
       setLoading(false);
     } else {
       router.push("/verify-email");
@@ -39,7 +39,7 @@ export const SignUp = () => {
 
   return (
     <form onSubmit={handleSignUp}>
-      {error && <div className="text-red-500">{error}</div>}
+      {error ? <div className="text-red-500">{error}</div> : null}
       <input
         onChange={(e) => setName(e.target.value)}
         placeholder="Name"

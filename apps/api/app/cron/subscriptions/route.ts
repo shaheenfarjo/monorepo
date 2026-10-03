@@ -38,6 +38,7 @@ export const GET = async (request: Request): Promise<Response> => {
     let processed = 0;
     for (const sub of dueSubscriptions || []) {
       try {
+        // biome-ignore lint/performance/noAwaitInLoops: renewals are processed one at a time to respect provider rate limits
         const { data: userResponse } = await database.auth.admin.getUserById(
           sub.user_id
         );
@@ -83,7 +84,7 @@ export const GET = async (request: Request): Promise<Response> => {
           })
           .eq("id", sub.id);
 
-        processed++;
+        processed += 1;
       } catch (subError) {
         log.error(
           `Failed to process subscription ${sub.id}: ${parseError(subError)}`

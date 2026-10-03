@@ -10,11 +10,9 @@ import {
   supabaseCspSources,
 } from "./csp";
 
-export { createMiddleware as securityMiddleware } from "@nosecone/next";
-
 // Nosecone security headers configuration
 // https://docs.arcjet.com/nosecone/quick-start
-export const noseconeOptions: Options = {
+const baseOptions: Options = {
   ...defaults,
   contentSecurityPolicy: createContentSecurityPolicy(
     {},
@@ -29,8 +27,13 @@ export const noseconeOptions: Options = {
   referrerPolicy: { policy: ["strict-origin-when-cross-origin"] },
 };
 
-export const noseconeOptionsWithToolbar: Options =
-  withVercelToolbar(noseconeOptions);
+/**
+ * Security headers for every app. The Vercel Toolbar's origins are allowed
+ * only when it is enabled (`FLAGS_SECRET` is set).
+ */
+export const noseconeOptions: Options = process.env.FLAGS_SECRET
+  ? withVercelToolbar(baseOptions)
+  : baseOptions;
 
 /**
  * Adds Nosecone's security headers to an existing proxy response (for example

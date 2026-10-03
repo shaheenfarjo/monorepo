@@ -3,7 +3,7 @@ import raw from "./project.json" with { type: "json" };
 
 const PLACEHOLDER = /^\{\{[A-Z_]+\}\}$/;
 
-/** True while a value is still an unfilled `{{TOKEN}}` from the template. */
+/** True while a value is still an unfilled placeholder token from the template. */
 export const isPlaceholder = (value: string) => PLACEHOLDER.test(value);
 
 /**

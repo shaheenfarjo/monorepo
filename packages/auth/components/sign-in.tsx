@@ -17,13 +17,13 @@ export const SignIn = () => {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error) {
-      setError(error.message);
+    if (authError) {
+      setError(authError.message);
       setLoading(false);
     } else {
       router.push("/dashboard");
@@ -33,7 +33,7 @@ export const SignIn = () => {
 
   return (
     <form onSubmit={handleSignIn}>
-      {error && <div className="text-red-500">{error}</div>}
+      {error ? <div className="text-red-500">{error}</div> : null}
       <input
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email"

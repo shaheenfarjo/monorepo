@@ -34,8 +34,12 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
             {children}
             <Footer />
           </DesignSystemProvider>
+          {/* <module:feature-flags> */}
           <Toolbar />
+          {/* </module:feature-flags> */}
+          {/* <module:cms> */}
           <CMSToolbar />
+          {/* </module:cms> */}
         </AnalyticsProvider>
       </body>
     </html>

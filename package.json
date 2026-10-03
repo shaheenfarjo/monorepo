@@ -14,10 +14,14 @@
     "bump-deps": "bunx npm-check-updates --deep -u && bun install",
     "bump-ui": "bunx shadcn@latest add --all --overwrite -c packages/design-system",
     "check": "ultracite check",
+    "check:placeholders": "bun scripts/check-placeholders.ts",
     "clean": "git clean -xdf node_modules",
     "dev": "turbo dev",
     "fix": "ultracite fix",
+    "gen:package": "turbo gen package",
+    "init": "bun scripts/init.ts",
     "test": "turbo test",
+    "test:template": "vitest run --dir scripts",
     "typecheck": "turbo typecheck"
   },
   "overrides": {
@@ -28,7 +32,7 @@
     "@clack/prompts": "^1.1.0",
     "@repo/typescript-config": "workspace:*",
     "@turbo/gen": "^2.8.14",
-    "@types/node": "^25.3.5",
+    "@types/node": "25.3.5",
     "turbo": "^2.8.14",
     "typescript": "^5.9.3",
     "ultracite": "7.10.7",

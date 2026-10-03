@@ -15,7 +15,9 @@ const RootLayout = ({ children }: RootLayoutProperties) => (
       <AnalyticsProvider>
         <DesignSystemProvider>{children}</DesignSystemProvider>
       </AnalyticsProvider>
+      {/* <module:feature-flags> */}
       <Toolbar />
+      {/* </module:feature-flags> */}
     </body>
   </html>
 );

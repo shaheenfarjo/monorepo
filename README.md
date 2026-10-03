@@ -6,7 +6,7 @@ local payments through Wayl, and can be packaged as native iOS and Android apps.
 
 > **Starting a new project from this template?** Run `bun install && bun run init`
 > first. It asks for your organization and project details, fills in every
-> `{{PLACEHOLDER}}`, sets up environment files and removes the modules you don't need.
+> placeholder token, sets up environment files and removes the modules you don't need.
 
 ## Stack
 
@@ -65,7 +65,7 @@ keys are missing are disabled.
 | `bun run check` / `bun run fix` | Lint and format with Biome |
 | `bun run typecheck` | Type-check every workspace |
 | `bun run test` | Run all unit tests |
-| `bun run check:placeholders` | Fail if `{{PLACEHOLDER}}` tokens remain after init |
+| `bun run check:placeholders` | Fail if placeholder tokens remain after init |
 
 ## Further reading
 

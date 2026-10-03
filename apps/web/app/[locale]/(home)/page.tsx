@@ -28,15 +28,19 @@ export const generateMetadata = async ({
 const Home = async ({ params }: HomeProps) => {
   const { locale } = await params;
   const dictionary = await getDictionary(locale);
+  // <module:feature-flags>
   const betaFeature = await showBetaFeature();
+  // </module:feature-flags>
 
   return (
     <>
+      {/* <module:feature-flags> */}
       {betaFeature ? (
         <div className="w-full bg-black py-2 text-center text-white">
           Beta feature now available
         </div>
       ) : null}
+      {/* </module:feature-flags> */}
       <Hero dictionary={dictionary} />
       <Cases dictionary={dictionary} />
       <Features dictionary={dictionary} />

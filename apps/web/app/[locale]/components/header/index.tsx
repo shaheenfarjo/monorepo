@@ -39,11 +39,13 @@ export const Header = ({ dictionary }: HeaderProps) => {
       ],
       title: dictionary.web.header.product.title,
     },
+    // <module:cms>
     {
       description: "",
       href: "/blog",
       title: dictionary.web.header.blog,
     },
+    // </module:cms>
   ];
 
   if (env.NEXT_PUBLIC_DOCS_URL) {

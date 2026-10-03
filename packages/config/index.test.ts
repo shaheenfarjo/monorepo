@@ -3,7 +3,9 @@ import { isPlaceholder, project } from "./index";
 
 describe("project config", () => {
   test("detects template placeholders", () => {
-    expect(isPlaceholder("{{PROJECT_NAME}}")).toBe(true);
+    // Built at runtime so `bun run init` doesn't fill it in.
+    const token = ["{{", "PROJECT_NAME", "}}"].join("");
+    expect(isPlaceholder(token)).toBe(true);
     expect(isPlaceholder("Acme")).toBe(false);
     expect(isPlaceholder("{{ not a token }}")).toBe(false);
   });

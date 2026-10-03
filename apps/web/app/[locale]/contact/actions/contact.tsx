@@ -15,6 +15,7 @@ export const contact = async (
   error?: string;
 }> => {
   try {
+    // <module:rate-limit>
     if (env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN) {
       const rateLimiter = createRateLimiter({
         limiter: slidingWindow(1, "1d"),
@@ -30,6 +31,7 @@ export const contact = async (
         );
       }
     }
+    // </module:rate-limit>
 
     if (!(resend && env.RESEND_FROM)) {
       throw new Error("Email is not configured.");

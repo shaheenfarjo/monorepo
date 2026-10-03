@@ -10,13 +10,19 @@ import { createEnv } from "@t3-oss/env-nextjs";
 export const env = createEnv({
   client: {},
   extends: [
+    // <module:cms>
     cms(),
+    // </module:cms>
     core(),
     email(),
     observability(),
+    // <module:feature-flags>
     flags(),
+    // </module:feature-flags>
     security(),
+    // <module:rate-limit>
     rateLimit(),
+    // </module:rate-limit>
   ],
   runtimeEnv: {},
   server: {},

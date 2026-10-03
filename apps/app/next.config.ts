@@ -4,7 +4,11 @@ import { withLogging, withSentry } from "@repo/observability/next-config";
 import type { NextConfig } from "next";
 import { env } from "@/env";
 
-let nextConfig: NextConfig = withToolbar(withLogging(config));
+let nextConfig: NextConfig = withLogging(config);
+
+// <module:feature-flags>
+nextConfig = withToolbar(nextConfig);
+// </module:feature-flags>
 
 if (env.VERCEL) {
   nextConfig = withSentry(nextConfig);

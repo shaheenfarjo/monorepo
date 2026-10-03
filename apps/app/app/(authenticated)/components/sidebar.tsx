@@ -149,11 +149,13 @@ const data = {
     },
   ],
   navSecondary: [
+    // <module:webhooks>
     {
       icon: AnchorIcon,
       title: "Webhooks",
       url: "/webhooks",
     },
+    // </module:webhooks>
     {
       icon: LifeBuoyIcon,
       title: "Support",
@@ -320,6 +322,7 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
             <SidebarMenuItem className="flex items-center gap-2">
               <div className="flex shrink-0 items-center gap-px">
                 <ModeToggle />
+                {/* <module:notifications> */}
                 <Button
                   asChild
                   className="shrink-0"
@@ -330,6 +333,7 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
                     <NotificationsTrigger />
                   </div>
                 </Button>
+                {/* </module:notifications> */}
               </div>
             </SidebarMenuItem>
           </SidebarMenu>

@@ -24,6 +24,6 @@
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "next": "16.1.6"
+    "next": ">=16.0.0"
   }
 }
