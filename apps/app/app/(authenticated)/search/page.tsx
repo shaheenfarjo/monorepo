@@ -1,5 +1,4 @@
-import { auth } from "@964reserve/auth/server";
-import { database } from "@964reserve/database";
+import { auth, createClient } from "@964reserve/auth/server";
 import { notFound, redirect } from "next/navigation";
 import { Header } from "../components/header";
 
@@ -15,14 +14,15 @@ export const generateMetadata = async ({
   const { q } = await searchParams;
 
   return {
-    title: `${q} - Search results`,
     description: `Search results for ${q}`,
+    title: `${q} - Search results`,
   };
 };
 
 const SearchPage = async ({ searchParams }: SearchPageProperties) => {
   const { q } = await searchParams;
-  const { data: pages } = await database
+  const supabase = await createClient();
+  const { data: pages } = await supabase
     .from("Page")
     .select("*")
     .ilike("name", `%${q}%`);

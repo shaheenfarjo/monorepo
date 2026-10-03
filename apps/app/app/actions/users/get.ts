@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@964reserve/auth/server";
-import { database } from "@964reserve/database";
+import { createAdminClient } from "@964reserve/database";
 
 const colors = [
   "var(--color-red-500)",
@@ -23,11 +23,16 @@ const colors = [
   "var(--color-rose-500)",
 ];
 
+// Upper bound on lookups per call so a client can't force unbounded work.
+const MAX_USERS = 100;
+
+type UserInfo = Liveblocks["UserMeta"]["info"];
+
 export const getUsers = async (
   userIds: string[]
 ): Promise<
   | {
-      data: unknown[];
+      data: (UserInfo | undefined)[];
     }
   | {
       error: unknown;
@@ -40,19 +45,24 @@ export const getUsers = async (
       throw new Error("Not logged in");
     }
 
-    const { data: users } = await database.auth.admin.listUsers();
+    const admin = createAdminClient();
+    const results = await Promise.all(
+      userIds
+        .slice(0, MAX_USERS)
+        .map((userId) => admin.auth.admin.getUserById(userId))
+    );
 
-    // We are mocking a fallback in case the service role key is not used
-    // and admin API fails.
-    const fetchedUsers = users?.users || [];
-
-    const data: unknown[] = fetchedUsers
-      .filter((user) => user.id && userIds.includes(user.id))
-      .map((user) => ({
-        name: user.email ?? "Unknown user",
-        picture: user.user_metadata?.avatar_url ?? "",
-        color: colors[Math.floor(Math.random() * colors.length)],
-      }));
+    // Preserve the order of `userIds` (Liveblocks expects it) and only resolve
+    // users that belong to the caller's organization.
+    const data = results.map(({ data: { user } }) =>
+      user && user.app_metadata?.org_id === orgId
+        ? ({
+            avatar: user.user_metadata?.avatar_url,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            name: user.user_metadata?.full_name ?? user.email ?? user.phone,
+          } satisfies UserInfo)
+        : undefined
+    );
 
     return { data };
   } catch (error) {

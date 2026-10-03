@@ -1,7 +1,8 @@
-import { auth, currentUser } from "@964reserve/auth/server";
+import { currentUser } from "@964reserve/auth/server";
 import { SidebarProvider } from "@964reserve/design-system/components/ui/sidebar";
 import { showBetaFeature } from "@964reserve/feature-flags";
 import { secure } from "@964reserve/security";
+import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { env } from "@/env";
 import { NotificationsProvider } from "./components/notifications-provider";
@@ -17,11 +18,10 @@ const AppLayout = async ({ children }: AppLayoutProperties) => {
   }
 
   const user = await currentUser();
-  const { redirectToSignIn } = await auth();
   const betaFeature = await showBetaFeature();
 
   if (!user) {
-    return redirectToSignIn();
+    redirect("/sign-in");
   }
 
   return (

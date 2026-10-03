@@ -3,16 +3,22 @@ import { z } from "zod";
 
 export const keys = () =>
   createEnv({
-    skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
-    server: {
-      SUPABASE_URL: z.string().url(),
-      SUPABASE_ANON_KEY: z.string().min(1),
+    client: {
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z
+        .string()
+        .startsWith("sb_publishable_")
+        .optional(),
+      NEXT_PUBLIC_SUPABASE_URL: z.url().optional(),
     },
     runtimeEnv: {
-      SUPABASE_URL:
-        process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL,
-      SUPABASE_ANON_KEY:
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-        process.env.SUPABASE_ANON_KEY,
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:
+        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,
     },
+    server: {
+      // Server-only. Bypasses Row Level Security — never expose to the client.
+      SUPABASE_SECRET_KEY: z.string().startsWith("sb_secret_").optional(),
+    },
+    skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
   });

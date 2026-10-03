@@ -55,30 +55,31 @@ export class WaylProvider implements PaymentProvider {
     }
 
     const payload = {
-      env: this.isTestMode ? "test" : "live",
-      referenceId: params.referenceId,
-      total: params.total,
       currency: "IQD",
       customParameter: params.customParameter || "",
+      env: this.isTestMode ? "test" : "live",
       lineItem: params.lineItems,
-      webhookUrl: process.env.NEXT_PUBLIC_APP_URL
-        ? `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/payments`
-        : undefined,
-      webhookSecret: this.webhookSecret,
       redirectionUrl: params.redirectionUrl,
+      referenceId: params.referenceId,
+      total: params.total,
+      webhookSecret: this.webhookSecret,
+      // The webhook handler lives in apps/api at /webhooks/payments.
+      webhookUrl: process.env.NEXT_PUBLIC_API_URL
+        ? `${process.env.NEXT_PUBLIC_API_URL}/webhooks/payments`
+        : undefined,
     };
 
     const response = await this.fetchApi("/links", {
-      method: "POST",
       body: JSON.stringify(payload),
+      method: "POST",
     });
 
     return {
-      url: response.data.url,
+      code: response.data.code,
       id: response.data.id,
       referenceId: response.data.referenceId,
-      code: response.data.code,
       status: response.data.status,
+      url: response.data.url,
     };
   }
 
@@ -89,12 +90,12 @@ export class WaylProvider implements PaymentProvider {
 
   async createRefund(params: CreateRefundParams): Promise<RefundResponse> {
     const response = await this.fetchApi("/refunds", {
-      method: "POST",
       body: JSON.stringify({
-        referenceId: params.referenceId,
         amount: params.amount,
         reason: params.reason,
+        referenceId: params.referenceId,
       }),
+      method: "POST",
     });
 
     return {
@@ -126,17 +127,17 @@ export class WaylProvider implements PaymentProvider {
   ): Promise<PaymentLinkResponse> {
     // Invoice-based subscription: Create a one-off payment link for the first billing cycle
     return this.createPaymentLink({
-      referenceId: params.referenceId,
-      total: params.amount,
       currency: "IQD",
       lineItems: [
         {
-          label: "Subscription Start",
           amount: params.amount,
+          label: "Subscription Start",
           type: "increase",
         },
       ],
       redirectionUrl: params.redirectionUrl,
+      referenceId: params.referenceId,
+      total: params.amount,
     });
   }
 

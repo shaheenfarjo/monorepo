@@ -1,5 +1,4 @@
-import { auth } from "@964reserve/auth/server";
-import { database } from "@964reserve/database";
+import { auth, createClient } from "@964reserve/auth/server";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
@@ -18,12 +17,13 @@ const CollaborationProvider = dynamic(() =>
 );
 
 export const metadata: Metadata = {
-  title,
   description,
+  title,
 };
 
 const App = async () => {
-  const { data: pages } = await database.from("Page").select("*");
+  const supabase = await createClient();
+  const { data: pages } = await supabase.from("Page").select("*");
   const { orgId } = await auth();
 
   if (!orgId) {

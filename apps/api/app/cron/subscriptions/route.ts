@@ -1,13 +1,18 @@
-import { database } from "@964reserve/database";
+import { createAdminClient } from "@964reserve/database";
 import { sendEmail } from "@964reserve/email";
 import { parseError } from "@964reserve/observability/error";
 import { log } from "@964reserve/observability/log";
 import { payments } from "@964reserve/payments";
 import { NextResponse } from "next/server";
+import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
 
 // Assuming we have a `subscriptions` table managed via Supabase with fields:
 // id, user_id, status, next_billing_date, amount, currency
-export const GET = async (): Promise<Response> => {
+export const GET = async (request: Request): Promise<Response> => {
+  if (!isAuthorizedCronRequest(request)) {
+    return unauthorized();
+  }
+
   if (!payments) {
     return NextResponse.json({
       message: "Payments not configured",
@@ -16,8 +21,7 @@ export const GET = async (): Promise<Response> => {
   }
 
   try {
-    // Basic authorization could go here, e.g., checking a CRON_SECRET
-
+    const database = createAdminClient();
     const now = new Date().toISOString();
 
     // Find active subscriptions that are due for renewal
@@ -46,31 +50,36 @@ export const GET = async (): Promise<Response> => {
 
         // Generate a new one-off Wayl link for this renewal invoice
         const link = await payments.createPaymentLink({
-          referenceId: `renewal_${sub.id}_${Date.now()}`,
-          total: sub.amount,
           currency: "IQD",
+          // Read back by the payment webhook to attribute the payment.
+          customParameter: JSON.stringify({
+            subscriptionId: sub.id,
+            userId: sub.user_id,
+          }),
           lineItems: [
             {
-              label: "Subscription Renewal",
               amount: sub.amount,
+              label: "Subscription Renewal",
               type: "increase",
             },
           ],
+          referenceId: `renewal_${sub.id}_${Date.now()}`,
+          total: sub.amount,
         });
 
         // Email the user
         await sendEmail({
-          to: user.email,
           subject: "Your Subscription Renewal is Due",
           text: `Please pay your subscription renewal of ${sub.amount} IQD by visiting: ${link.url}`,
+          to: user.email,
         });
 
         // Update local status to pending payment
         await database
           .from("subscriptions")
           .update({
-            status: "pending_payment",
             latest_invoice_url: link.url,
+            status: "pending_payment",
           })
           .eq("id", sub.id);
 

@@ -1,20 +1,11 @@
 {
   "name": "964reserve",
   "version": "6.0.2",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vercel/next-forge.git"
   },
-  "publishConfig": {
-    "provenance": true,
-    "access": "public"
-  },
-  "bin": {
-    "next-forge": "dist/index.js"
-  },
-  "files": [
-    "dist/index.js"
-  ],
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -26,8 +17,7 @@
     "boundaries": "turbo boundaries",
     "bump-deps": "bunx npm-check-updates --deep -u && bun install",
     "bump-ui": "bunx shadcn@latest add --all --overwrite -c packages/design-system",
-    "clean": "git clean -xdf node_modules",
-    "release": "npm publish"
+    "clean": "git clean -xdf node_modules"
   },
   "devDependencies": {
     "@auto-it/first-time-contributor": "^11.3.6",
