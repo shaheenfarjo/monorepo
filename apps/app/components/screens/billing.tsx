@@ -28,9 +28,14 @@ import {
 import { detectPlatform, isNativeApp } from "@/lib/platform";
 import { usePayments, usePlans, useSubscription } from "@/lib/queries";
 
-/** Opens the hosted checkout in the same tab. */
-const openCheckout = (url: string) => {
-  window.location.assign(url);
+/** Opens the hosted checkout: same tab on the web, the system browser in the apps. */
+const openCheckout = async (url: string) => {
+  if (isNativeApp()) {
+    const { Browser } = await import("@capacitor/browser");
+    await Browser.open({ url });
+  } else {
+    window.location.assign(url);
+  }
 };
 
 export const Billing = () => {
@@ -64,7 +69,7 @@ export const Billing = () => {
         }
       ),
     onError: () => setCheckoutError(true),
-    onSuccess: ({ referenceId, url }, plan) => {
+    onSuccess: async ({ referenceId, url }, plan) => {
       if (url) {
         rememberCheckout({
           currency: plan.currency,
@@ -73,7 +78,7 @@ export const Billing = () => {
           referenceId,
           value: plan.amount,
         });
-        openCheckout(url);
+        await openCheckout(url);
       }
     },
   });

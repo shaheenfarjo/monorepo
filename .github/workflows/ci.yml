@@ -54,6 +54,8 @@ jobs:
       - run: bun install --frozen-lockfile
       # apps/web also needs BASEHUB_TOKEN while the CMS module is installed.
       - run: bunx turbo build --filter=api --filter=app
+      # The static export bundled into the iOS/Android apps (Capacitor).
+      - run: bunx turbo build:native --filter=app
 
   database:
     name: Database (migrations, RLS, integration)
