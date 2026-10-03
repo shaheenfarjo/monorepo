@@ -392,6 +392,16 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      pending_invitations: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          expires_at: string;
+          organization_id: string;
+          organization_name: string;
+          role: Database["public"]["Enums"]["org_role"];
+          token: string;
+        }[];
+      };
     };
     Enums: {
       billing_interval: "month" | "year";

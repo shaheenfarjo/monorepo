@@ -1,17 +1,14 @@
 import { keys as analytics } from "@repo/analytics/keys";
 import { keys as auth } from "@repo/auth/keys";
 import { keys as collaboration } from "@repo/collaboration/keys";
-import { keys as database } from "@repo/database/keys";
-import { keys as email } from "@repo/email/keys";
-import { keys as flags } from "@repo/feature-flags/keys";
 import { envPresets, withPresets } from "@repo/next-config/env";
 import { keys as core } from "@repo/next-config/keys";
 import { keys as notifications } from "@repo/notifications/keys";
 import { keys as observability } from "@repo/observability/keys";
-import { keys as security } from "@repo/security/keys";
-import { keys as webhooks } from "@repo/webhooks/keys";
 import { createEnv } from "@t3-oss/env-nextjs";
 
+// Client-first: everything the app reads at runtime is public (NEXT_PUBLIC_*).
+// Secrets live in apps/api, which this app calls with the user's token.
 const presets = envPresets(
   auth(),
   analytics(),
@@ -19,19 +16,10 @@ const presets = envPresets(
   collaboration(),
   // </module:collaboration>
   core(),
-  database(),
-  email(),
-  // <module:feature-flags>
-  flags(),
-  // </module:feature-flags>
   // <module:notifications>
   notifications(),
   // </module:notifications>
-  observability(),
-  security(),
-  // <module:webhooks>
-  webhooks()
-  // </module:webhooks>
+  observability()
 );
 
 export const env = withPresets(

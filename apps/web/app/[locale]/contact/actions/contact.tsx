@@ -3,17 +3,41 @@
 import { resend } from "@repo/email";
 import { ContactTemplate } from "@repo/email/templates/contact";
 import { parseError } from "@repo/observability/error";
+import { log } from "@repo/observability/log";
 import { createRateLimiter, slidingWindow } from "@repo/rate-limit";
 import { headers } from "next/headers";
+import { z } from "zod";
 import { env } from "@/env";
 
-export const contact = async (
-  name: string,
-  email: string,
-  message: string
-): Promise<{
-  error?: string;
-}> => {
+const contactSchema = z.object({
+  /** Preferred day as yyyy-MM-dd, already formatted for display in `dateLabel`. */
+  date: z.iso.date().optional(),
+  dateLabel: z.string().max(100).optional(),
+  email: z.email().max(254),
+  message: z.string().trim().min(1).max(5000),
+  name: z.string().trim().min(1).max(120),
+});
+
+export type ContactInput = z.input<typeof contactSchema>;
+
+/** Error codes the form translates; never raw messages. */
+export type ContactResult =
+  | { ok: true }
+  | {
+      error: "invalid" | "rate_limited" | "unavailable" | "unknown";
+      ok: false;
+    };
+
+export const contact = async (input: ContactInput): Promise<ContactResult> => {
+  const parsed = contactSchema.safeParse(input);
+  if (!parsed.success) {
+    return { error: "invalid", ok: false };
+  }
+
+  if (!(resend && env.RESEND_FROM)) {
+    return { error: "unavailable", ok: false };
+  }
+
   try {
     // <module:rate-limit>
     if (env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN) {
@@ -26,29 +50,30 @@ export const contact = async (
       const { success } = await rateLimiter.limit(`contact_form_${ip}`);
 
       if (!success) {
-        throw new Error(
-          "You have reached your request limit. Please try again later."
-        );
+        return { error: "rate_limited", ok: false };
       }
     }
     // </module:rate-limit>
 
-    if (!(resend && env.RESEND_FROM)) {
-      throw new Error("Email is not configured.");
-    }
-
+    const { dateLabel, email, message, name } = parsed.data;
     await resend.emails.send({
       from: env.RESEND_FROM,
-      react: <ContactTemplate email={email} message={message} name={name} />,
+      react: (
+        <ContactTemplate
+          date={dateLabel}
+          email={email}
+          message={message}
+          name={name}
+        />
+      ),
       replyTo: email,
       subject: "Contact form submission",
       to: env.RESEND_FROM,
     });
 
-    return {};
+    return { ok: true };
   } catch (error) {
-    const errorMessage = parseError(error);
-
-    return { error: errorMessage };
+    log.error(`Contact form failed: ${parseError(error)}`);
+    return { error: "unknown", ok: false };
   }
 };

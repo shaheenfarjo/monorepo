@@ -10,38 +10,30 @@ import {
   DropdownMenuTrigger,
 } from "@repo/design-system/components/ui/dropdown-menu";
 import { CheckIcon, ChevronsUpDownIcon, PlusIcon } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { type AuthMessages, defaultAuthMessages } from "../messages";
-import {
-  type OrganizationMembership,
-  setActiveOrganizationCookie,
-} from "../organizations";
+import type { OrganizationMembership } from "../organizations";
 
 interface OrganizationSwitcherProps {
   readonly activeId: string | null;
-  /** Link to the page that creates an organization; hidden when omitted. */
-  readonly createHref?: string;
   readonly messages?: AuthMessages;
+  /** Opens the "create organization" page; the item is hidden when omitted. */
+  readonly onCreate?: () => void;
+  /** Called with the chosen organization; the app remembers the choice. */
+  readonly onSelect: (organizationId: string) => void;
   readonly organizations: OrganizationMembership[];
 }
 
 /** Switches the organization the user is working in. */
 export const OrganizationSwitcher = ({
   activeId,
-  createHref,
   messages = defaultAuthMessages,
+  onCreate,
+  onSelect,
   organizations,
 }: OrganizationSwitcherProps) => {
-  const router = useRouter();
   const active = organizations.find(
     (organization) => organization.id === activeId
   );
-
-  const select = (organizationId: string) => {
-    setActiveOrganizationCookie(organizationId);
-    router.refresh();
-  };
 
   return (
     <DropdownMenu>
@@ -58,7 +50,7 @@ export const OrganizationSwitcher = ({
         {organizations.map((organization) => (
           <DropdownMenuItem
             key={organization.id}
-            onSelect={() => select(organization.id)}
+            onSelect={() => onSelect(organization.id)}
           >
             <span className="truncate">{organization.name}</span>
             {organization.id === activeId ? (
@@ -66,14 +58,12 @@ export const OrganizationSwitcher = ({
             ) : null}
           </DropdownMenuItem>
         ))}
-        {createHref ? (
+        {onCreate ? (
           <>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href={createHref}>
-                <PlusIcon className="size-4" />
-                {messages.createOrganization}
-              </Link>
+            <DropdownMenuItem onSelect={onCreate}>
+              <PlusIcon className="size-4" />
+              {messages.createOrganization}
             </DropdownMenuItem>
           </>
         ) : null}

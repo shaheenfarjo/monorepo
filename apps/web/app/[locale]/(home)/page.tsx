@@ -1,7 +1,8 @@
 import { showBetaFeature } from "@repo/feature-flags";
-import { getDictionary } from "@repo/internationalization";
-import { createMetadata } from "@repo/seo/metadata";
+import type { Locale } from "@repo/internationalization";
 import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { localizedMetadata } from "@/lib/metadata";
 import { Cases } from "./components/cases";
 import { CTA } from "./components/cta";
 import { FAQ } from "./components/faq";
@@ -12,7 +13,7 @@ import { Testimonials } from "./components/testimonials";
 
 interface HomeProps {
   params: Promise<{
-    locale: string;
+    locale: Locale;
   }>;
 }
 
@@ -20,16 +21,22 @@ export const generateMetadata = async ({
   params,
 }: HomeProps): Promise<Metadata> => {
   const { locale } = await params;
-  const dictionary = await getDictionary(locale);
+  const t = await getTranslations({ locale, namespace: "web.home.meta" });
 
-  return createMetadata(dictionary.web.home.meta);
+  return localizedMetadata(locale, "/", {
+    description: t("description"),
+    title: t("title"),
+  });
 };
 
 const Home = async ({ params }: HomeProps) => {
   const { locale } = await params;
-  const dictionary = await getDictionary(locale);
+  setRequestLocale(locale);
   // <module:feature-flags>
-  const betaFeature = await showBetaFeature();
+  const [betaFeature, t] = await Promise.all([
+    showBetaFeature(),
+    getTranslations("web.home"),
+  ]);
   // </module:feature-flags>
 
   return (
@@ -37,17 +44,17 @@ const Home = async ({ params }: HomeProps) => {
       {/* <module:feature-flags> */}
       {betaFeature ? (
         <div className="w-full bg-black py-2 text-center text-white">
-          Beta feature now available
+          {t("beta")}
         </div>
       ) : null}
       {/* </module:feature-flags> */}
-      <Hero dictionary={dictionary} />
-      <Cases dictionary={dictionary} />
-      <Features dictionary={dictionary} />
-      <Stats dictionary={dictionary} />
-      <Testimonials dictionary={dictionary} />
-      <FAQ dictionary={dictionary} />
-      <CTA dictionary={dictionary} />
+      <Hero />
+      <Cases />
+      <Features />
+      <Stats />
+      <Testimonials />
+      <FAQ />
+      <CTA />
     </>
   );
 };

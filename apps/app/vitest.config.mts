@@ -12,6 +12,9 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
+    // next-intl imports "next/navigation" without an extension, which only
+    // resolves when Vite bundles it (and lets the setup file mock it).
+    server: { deps: { inline: ["next-intl"] } },
     setupFiles: ["./__tests__/setup.ts"],
   },
 });

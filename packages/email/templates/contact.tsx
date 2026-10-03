@@ -11,12 +11,15 @@ import {
 } from "@react-email/components";
 
 interface ContactTemplateProps {
+  /** Preferred meeting date, already formatted. */
+  readonly date?: string;
   readonly email: string;
   readonly message: string;
   readonly name: string;
 }
 
 export const ContactTemplate = ({
+  date,
   name,
   email,
   message,
@@ -35,6 +38,11 @@ export const ContactTemplate = ({
               <Text className="m-0 text-zinc-500">
                 {name} ({email}) has sent you a message:
               </Text>
+              {date ? (
+                <Text className="m-0 text-zinc-500">
+                  Preferred date: {date}
+                </Text>
+              ) : null}
               <Hr className="my-4" />
               <Text className="m-0 text-zinc-500">{message}</Text>
             </Section>
@@ -46,6 +54,7 @@ export const ContactTemplate = ({
 );
 
 ContactTemplate.PreviewProps = {
+  date: "5 October 2026",
   email: "jane.smith@example.com",
   message: "I'm interested in your services.",
   name: "Jane Smith",

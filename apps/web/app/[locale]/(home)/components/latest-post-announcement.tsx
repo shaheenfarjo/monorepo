@@ -1,7 +1,7 @@
 import { blog } from "@repo/cms";
 import { Button } from "@repo/design-system/components/ui/button";
+import { Link } from "@repo/internationalization/navigation";
 import { MoveRight } from "lucide-react";
-import Link from "next/link";
 
 interface LatestPostAnnouncementProps {
   readonly label: string;

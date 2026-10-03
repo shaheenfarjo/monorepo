@@ -1,21 +1,16 @@
 import "server-only";
-import { auth } from "@repo/auth/server";
 import { Svix } from "svix";
 import { keys } from "../keys";
 
 const svixToken = keys().SVIX_TOKEN;
 
-export const send = async (eventType: string, payload: object) => {
+/** Sends an event to the organization's webhook endpoints. */
+export const send = (orgId: string, eventType: string, payload: object) => {
   if (!svixToken) {
     throw new Error("SVIX_TOKEN is not set");
   }
 
   const svix = new Svix(svixToken);
-  const { orgId } = await auth();
-
-  if (!orgId) {
-    return;
-  }
 
   return svix.message.create(orgId, {
     application: {
@@ -30,17 +25,13 @@ export const send = async (eventType: string, payload: object) => {
   });
 };
 
-export const getAppPortal = async () => {
+/** A one-time link to the organization's webhook settings portal. */
+export const getAppPortal = (orgId: string) => {
   if (!svixToken) {
     throw new Error("SVIX_TOKEN is not set");
   }
 
   const svix = new Svix(svixToken);
-  const { orgId } = await auth();
-
-  if (!orgId) {
-    return;
-  }
 
   return svix.authentication.appPortalAccess(orgId, {
     application: {

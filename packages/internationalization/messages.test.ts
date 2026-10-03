@@ -1,4 +1,5 @@
 import { existsSync } from "node:fs";
+import { createTranslator } from "next-intl";
 import { describe, expect, test } from "vitest";
 import { locales } from "./config";
 import ar from "./messages/ar.json";
@@ -19,10 +20,11 @@ const paths = (value: unknown, prefix = ""): string[] => {
   return [prefix];
 };
 
-const PLACEHOLDER = /\{(\w+)\}/g;
+// Simple arguments ({name}) and ICU arguments ({count, plural, …}).
+const PLACEHOLDER = /\{(\w+)(?=[,}])/g;
 const PATH_SEGMENT = /\.|\[(\d+)\]/;
 const placeholders = (text: string) =>
-  [...text.matchAll(PLACEHOLDER)].map((match) => match[1]).sort();
+  [...new Set([...text.matchAll(PLACEHOLDER)].map((match) => match[1]))].sort();
 
 describe("messages", () => {
   test("every enabled locale has a messages file", () => {
@@ -55,6 +57,30 @@ describe("messages", () => {
           placeholders(english)
         );
       }
+    }
+  });
+
+  test("every message is valid ICU in both languages", () => {
+    for (const [locale, messages] of [
+      ["en", en],
+      ["ar", ar],
+    ] as const) {
+      const problems: string[] = [];
+      const t = createTranslator({
+        locale,
+        messages,
+        onError: (error) => problems.push(error.message),
+      });
+      for (const path of paths(messages)) {
+        if (!path.includes("[")) {
+          // Every argument gets a value; plural arguments need a number.
+          const values = Object.fromEntries(
+            placeholders(String(t.raw(path as never))).map((name) => [name, 1])
+          );
+          t(path as never, values as never);
+        }
+      }
+      expect(problems, locale).toEqual([]);
     }
   });
 });
