@@ -60,6 +60,7 @@ export const getBilling = () =>
       : undefined,
   });
 
+export type { PaymentRecord } from "./billing/repository";
 export type {
   BillingService,
   RenewalInvoice,

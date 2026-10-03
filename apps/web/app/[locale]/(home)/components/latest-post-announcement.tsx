@@ -20,7 +20,7 @@ export const LatestPostAnnouncement = async ({
     <div>
       <Button asChild className="gap-4" size="sm" variant="secondary">
         <Link href={`/blog/${latestPost._slug}`}>
-          {label} <MoveRight className="h-4 w-4" />
+          {label} <MoveRight className="h-4 w-4 rtl:rotate-180" />
         </Link>
       </Button>
     </div>

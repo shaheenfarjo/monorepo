@@ -24,6 +24,7 @@ export const createMemoryBillingRepository = (plans: PlanRecord[] = []) => {
         amount: payment.amount,
         currency: payment.currency,
         id: randomUUID(),
+        metadata: payment.metadata ?? {},
         organizationId: payment.organizationId,
         provider: payment.provider,
         referenceId: payment.referenceId,

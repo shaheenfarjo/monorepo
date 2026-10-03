@@ -85,7 +85,7 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
                 className="mb-4 inline-flex items-center gap-1 text-muted-foreground text-sm focus:underline focus:outline-none"
                 href="/blog"
               >
-                <ArrowLeftIcon className="h-4 w-4" />
+                <ArrowLeftIcon className="h-4 w-4 rtl:rotate-180" />
                 Back to Blog
               </Link>
               <div className="mt-16 flex flex-col items-start gap-8 sm:flex-row">

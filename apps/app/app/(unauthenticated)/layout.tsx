@@ -9,12 +9,12 @@ interface AuthLayoutProps {
 
 const AuthLayout = ({ children }: AuthLayoutProps) => (
   <div className="container relative grid h-dvh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0">
-    <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
+    <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-e">
       <div className="absolute inset-0 bg-muted" />
       <div className="relative z-20 flex items-center font-medium text-lg text-primary">
         <BrandLogo />
       </div>
-      <div className="absolute top-4 right-4">
+      <div className="absolute end-4 top-4">
         <ModeToggle />
       </div>
       <div className="relative z-20 mt-auto text-primary">

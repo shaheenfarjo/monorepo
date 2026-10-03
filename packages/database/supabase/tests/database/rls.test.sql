@@ -77,7 +77,8 @@ insert into public.invitations (id, organization_id, invitee, role, token, invit
 -- ── Profiles ────────────────────────────────────────────────────────────────
 
 select is(
-  (select count(*)::int from public.profiles),
+  (select count(*)::int from public.profiles
+   where id::text like '00000000-0000-0000-0000-00000000000_'),
   4,
   'a profile is created for every new auth user'
 );

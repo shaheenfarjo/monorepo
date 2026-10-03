@@ -87,7 +87,9 @@ describe("billing", () => {
 
   test("a paid webhook activates the subscription exactly once", async () => {
     const { billing, provider, state } = setup();
+    const attribution = { fbp: "fb.1.1.1", userAgent: "Mozilla/5.0" };
     const { referenceId } = await billing.startCheckout({
+      metadata: { attribution },
       organizationId: "org-1",
       planId: "pro-monthly",
       userId: "user-1",
@@ -98,6 +100,8 @@ describe("billing", () => {
 
     expect(outcome).toMatchObject({
       from: "pending",
+      // Checkout metadata reaches the webhook for conversion reporting.
+      payment: { metadata: { attribution } },
       status: "processed",
       to: "paid",
     });

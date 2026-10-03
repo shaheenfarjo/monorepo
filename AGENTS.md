@@ -25,6 +25,7 @@ bun run check | fix         # Biome (Ultracite rules)
 bun run typecheck           # every workspace
 bun run test                # Vitest in every workspace
 bun run check:placeholders
+bun run check:rtl           # physical Tailwind utilities (--fix rewrites them)
 bun run gen:package         # scaffold packages/<name>
 ```
 
@@ -33,20 +34,32 @@ Run `check`, `typecheck` and `test` before every commit.
 ## Rules
 
 - **Package manager:** Bun with the hoisted linker (`bunfig.toml`). Declare every
-  dependency a package imports; keep versions aligned across workspaces.
+  dependency a package imports; keep versions aligned across workspaces. Bun
+  installs and runs scripts; Next.js runs on Node (`next build`, not
+  `bun --bun next build`).
 - **Auth:** never authorize with `user_metadata` — users can edit it. Use the
   session-bound Supabase client (`@repo/auth/server`) for user requests so Row
-  Level Security applies. The admin client (`@repo/database`) bypasses RLS and is
+  Level Security applies. The admin client (`@repo/database/admin`) bypasses RLS and is
   only for webhooks, cron jobs and other trusted server code.
 - **Database:** schema changes are migrations with RLS policies and tests.
 - **Secrets:** never in client code, logs or commits. New env vars go in the
   package's `keys.ts` and every affected `.env.example`.
+- **Files:** use `@repo/storage`. Organization files live under
+  `<organization id>/` and avatars under `<user id>/`; the bucket policies
+  depend on that layout.
+- **Analytics:** record events with `track()` from `@repo/analytics/client` — one
+  event catalogue mapped to GA4, Meta and TikTok — instead of calling `gtag`,
+  `fbq` or `ttq` directly. Server-confirmed purchases go through
+  `@repo/analytics/conversions` with the same event id. Ad pixels never load
+  inside the Capacitor apps.
 - **Payments:** in-app (native) checkout is controlled by
   `project.commerce.allowNativeCheckout`. Digital goods must not be sold
   through third-party checkout inside the iOS/Android apps.
 - **Localization:** UI must work in Arabic (RTL) and English (LTR). Use logical
   Tailwind utilities (`ms-*`, `pe-*`, `start-*`, `text-start`), never physical
-  ones (`ml-*`, `pr-*`, `left-*`, `text-left`). Dates default to `Asia/Baghdad`.
+  ones (`ml-*`, `pr-*`, `left-*`, `text-left`); `bun run check:rtl` enforces
+  this. Icons that point along the reading direction (arrows, chevrons) get
+  `rtl:rotate-180`. Dates default to `Asia/Baghdad`.
 - **Optional modules:** code that belongs to an optional module (see
   `scripts/template/modules.ts`) is wrapped in `// <module:id>` …
   `// </module:id>` markers (`{/* … */}` in JSX, `#` in env files). Keep markers

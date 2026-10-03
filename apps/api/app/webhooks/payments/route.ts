@@ -1,9 +1,9 @@
-import { analytics } from "@repo/analytics/server";
 import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
 import { WebhookVerificationError } from "@repo/payments";
 import { getBilling } from "@repo/payments/server";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
+import { reportPayment } from "@/lib/conversions";
 
 /**
  * Payment provider webhooks. The billing service verifies the signature over
@@ -21,18 +21,12 @@ export const POST = async (request: Request): Promise<Response> => {
 
     if (outcome.status === "processed" && outcome.to === "paid") {
       const { payment } = outcome;
-      analytics?.capture({
-        distinctId:
-          payment.userId ?? payment.organizationId ?? payment.referenceId,
-        event: "Payment Completed",
-        properties: {
-          amount: payment.amount,
-          currency: payment.currency,
-          organizationId: payment.organizationId,
-          referenceId: payment.referenceId,
-        },
-      });
-      await analytics?.shutdown();
+      // After the response, so analytics never delays or fails the webhook.
+      after(() =>
+        reportPayment(payment).catch((error: unknown) =>
+          log.error(`Payment reporting failed: ${parseError(error)}`)
+        )
+      );
     }
 
     return NextResponse.json({ ok: true, status: outcome.status });

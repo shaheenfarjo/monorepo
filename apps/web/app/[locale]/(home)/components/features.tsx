@@ -11,10 +11,10 @@ export const Features = ({ dictionary }: FeaturesProps) => (
       <div className="flex flex-col gap-10">
         <div className="flex flex-col items-start gap-4">
           <div className="flex flex-col gap-2">
-            <h2 className="max-w-xl text-left font-regular text-3xl tracking-tighter md:text-5xl">
+            <h2 className="max-w-xl text-start font-regular text-3xl tracking-tighter md:text-5xl">
               {dictionary.web.home.features.title}
             </h2>
-            <p className="max-w-xl text-left text-lg text-muted-foreground leading-relaxed tracking-tight lg:max-w-lg">
+            <p className="max-w-xl text-start text-lg text-muted-foreground leading-relaxed tracking-tight lg:max-w-lg">
               {dictionary.web.home.features.description}
             </p>
           </div>

@@ -24,7 +24,7 @@ export const TableOfContents = ({
             {children}
           </a>
         ),
-        li: ({ children }) => <li className="pl-3">{children}</li>,
+        li: ({ children }) => <li className="ps-3">{children}</li>,
         ol: ({ children }) => (
           <ol className="flex list-none flex-col gap-2 text-sm">{children}</ol>
         ),

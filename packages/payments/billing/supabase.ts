@@ -1,4 +1,4 @@
-import type { Tables } from "@repo/database";
+import type { Json, Tables } from "@repo/database";
 import type { AdminClient } from "@repo/database/admin";
 import type {
   BillingRepository,
@@ -10,6 +10,9 @@ import type {
 const UNIQUE_VIOLATION = "23505";
 
 const toDate = (value: string | null) => (value ? new Date(value) : null);
+
+const isRecord = (value: Json): value is Record<string, Json | undefined> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
 
 const toSubscription = (row: Tables<"subscriptions">): SubscriptionRecord => ({
   cancelAtPeriodEnd: row.cancel_at_period_end,
@@ -25,6 +28,7 @@ const toPayment = (row: Tables<"payments">): PaymentRecord => ({
   amount: row.amount,
   currency: row.currency,
   id: row.id,
+  metadata: isRecord(row.metadata) ? row.metadata : {},
   organizationId: row.organization_id,
   provider: row.provider,
   referenceId: row.reference_id,
@@ -71,6 +75,7 @@ export const createSupabaseBillingRepository = (
           amount: payment.amount,
           currency: payment.currency,
           description: payment.description,
+          metadata: (payment.metadata ?? {}) as NonNullable<Json>,
           organization_id: payment.organizationId,
           provider: payment.provider,
           reference_id: payment.referenceId,

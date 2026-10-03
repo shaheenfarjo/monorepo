@@ -23,6 +23,8 @@ export interface PaymentRecord {
   amount: number;
   currency: string;
   id: string;
+  /** Free-form data kept with the payment, e.g. ad attribution. */
+  metadata: Record<string, unknown>;
   organizationId: string | null;
   provider: string;
   referenceId: string;
@@ -35,6 +37,7 @@ export interface NewPayment {
   amount: number;
   currency: string;
   description: string;
+  metadata?: Record<string, unknown>;
   organizationId: string;
   provider: string;
   referenceId: string;

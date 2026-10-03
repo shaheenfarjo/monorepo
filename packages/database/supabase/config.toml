@@ -276,7 +276,10 @@ max_frequency = "5s"
 # Local development: sign in with +964 770 000 0000 and code 123456 without
 # sending a real SMS. Never configure test OTPs in production.
 [auth.sms.test_otp]
+# One number per integration suite: they run in parallel and OTP requests for
+# the same number are throttled (max_frequency above).
 9647700000000 = "123456"
+9647700000901 = "123456"
 
 # Configure logged in session timeouts.
 # [auth.sessions]

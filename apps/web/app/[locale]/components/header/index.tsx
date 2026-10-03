@@ -58,7 +58,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
 
   const [isOpen, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 left-0 z-40 w-full border-b bg-background">
+    <header className="sticky start-0 top-0 z-40 w-full border-b bg-background">
       <div className="container relative mx-auto flex min-h-20 flex-row items-center gap-4 lg:grid lg:grid-cols-3">
         <div className="hidden flex-row items-center justify-start gap-4 lg:flex">
           <NavigationMenu className="flex items-start justify-start">
@@ -99,7 +99,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
                                 key={subItem.href}
                               >
                                 <span>{subItem.title}</span>
-                                <MoveRight className="h-4 w-4 text-muted-foreground" />
+                                <MoveRight className="h-4 w-4 text-muted-foreground rtl:rotate-180" />
                               </NavigationMenuLink>
                             ))}
                           </div>
@@ -119,7 +119,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
           <Button asChild className="hidden md:inline" variant="ghost">
             <Link href="/contact">{dictionary.web.header.contact}</Link>
           </Button>
-          <div className="hidden border-r md:inline" />
+          <div className="hidden border-e md:inline" />
           <div className="hidden md:inline">
             <LanguageSwitcher />
           </div>
@@ -142,7 +142,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
           {isOpen ? (
-            <div className="container absolute top-20 right-0 flex w-full flex-col gap-8 border-t bg-background py-4 shadow-lg">
+            <div className="container absolute end-0 top-20 flex w-full flex-col gap-8 border-t bg-background py-4 shadow-lg">
               {navigationItems.map((item) => (
                 <div key={item.title}>
                   <div className="flex flex-col gap-2">
@@ -160,7 +160,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
                         }
                       >
                         <span className="text-lg">{item.title}</span>
-                        <MoveRight className="h-4 w-4 stroke-1 text-muted-foreground" />
+                        <MoveRight className="h-4 w-4 stroke-1 text-muted-foreground rtl:rotate-180" />
                       </Link>
                     ) : (
                       <p className="text-lg">{item.title}</p>
@@ -174,7 +174,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
                         <span className="text-muted-foreground">
                           {subItem.title}
                         </span>
-                        <MoveRight className="h-4 w-4 stroke-1" />
+                        <MoveRight className="h-4 w-4 stroke-1 rtl:rotate-180" />
                       </Link>
                     ))}
                   </div>

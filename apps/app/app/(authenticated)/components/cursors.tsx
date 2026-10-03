@@ -3,6 +3,9 @@
 import { useMyPresence, useOthers } from "@repo/collaboration/hooks";
 import { useEffect } from "react";
 
+// rtl-ignore-file: cursors are placed from other clients' pixel coordinates,
+// which are physical, so they stay anchored to the left edge in every locale.
+
 const Cursor = ({
   name,
   color,

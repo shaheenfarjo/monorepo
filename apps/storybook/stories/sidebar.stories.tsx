@@ -233,7 +233,7 @@ export const Base: Story = {
                       <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                         <activeTeam.logo className="size-4" />
                       </div>
-                      <div className="grid flex-1 text-left text-sm leading-tight">
+                      <div className="grid flex-1 text-start text-sm leading-tight">
                         <span className="truncate font-semibold">
                           {activeTeam.name}
                         </span>
@@ -241,7 +241,7 @@ export const Base: Story = {
                           {activeTeam.plan}
                         </span>
                       </div>
-                      <ChevronsUpDown className="ml-auto" />
+                      <ChevronsUpDown className="ms-auto" />
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
@@ -298,7 +298,7 @@ export const Base: Story = {
                         <SidebarMenuButton tooltip={item.title}>
                           {item.icon ? <item.icon /> : null}
                           <span>{item.title}</span>
-                          <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                          <ChevronRight className="ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                         </SidebarMenuButton>
                       </CollapsibleTrigger>
                       <CollapsibleContent>
@@ -386,7 +386,7 @@ export const Base: Story = {
                           CN
                         </AvatarFallback>
                       </Avatar>
-                      <div className="grid flex-1 text-left text-sm leading-tight">
+                      <div className="grid flex-1 text-start text-sm leading-tight">
                         <span className="truncate font-semibold">
                           {data.user.name}
                         </span>
@@ -394,7 +394,7 @@ export const Base: Story = {
                           {data.user.email}
                         </span>
                       </div>
-                      <ChevronsUpDown className="ml-auto size-4" />
+                      <ChevronsUpDown className="ms-auto size-4" />
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
@@ -404,7 +404,7 @@ export const Base: Story = {
                     sideOffset={4}
                   >
                     <DropdownMenuLabel className="p-0 font-normal">
-                      <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                      <div className="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                         <Avatar className="h-8 w-8 rounded-lg">
                           <AvatarImage
                             alt={data.user.name}
@@ -414,7 +414,7 @@ export const Base: Story = {
                             CN
                           </AvatarFallback>
                         </Avatar>
-                        <div className="grid flex-1 text-left text-sm leading-tight">
+                        <div className="grid flex-1 text-start text-sm leading-tight">
                           <span className="truncate font-semibold">
                             {data.user.name}
                           </span>
@@ -461,8 +461,8 @@ export const Base: Story = {
         <SidebarInset>
           <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
             <div className="flex items-center gap-2 px-4">
-              <SidebarTrigger className="-ml-1" />
-              <Separator className="mr-2 h-4" orientation="vertical" />
+              <SidebarTrigger className="-ms-1" />
+              <Separator className="me-2 h-4" orientation="vertical" />
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem className="hidden md:block">

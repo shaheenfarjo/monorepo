@@ -50,7 +50,7 @@ export const WithText: Story = {
   args: { ...Outline.args },
   render: (args) => (
     <Toggle {...args}>
-      <Italic className="mr-2 h-4 w-4" />
+      <Italic className="me-2 h-4 w-4" />
       Italic
     </Toggle>
   ),

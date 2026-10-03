@@ -7,40 +7,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@repo/design-system/components/ui/dropdown-menu";
+import {
+  getLocaleLabel,
+  type Locale,
+  locales,
+} from "@repo/internationalization/config";
 import { Languages } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-
-const languages = [
-  { label: "🇬🇧 English", value: "en" },
-  { label: "🇪🇸 Español", value: "es" },
-  { label: "🇩🇪 Deutsch", value: "de" },
-  { label: "🇨🇳 中文", value: "zh" },
-  { label: "🇫🇷 Français", value: "fr" },
-  { label: "🇵🇹 Português", value: "pt" },
-];
 
 export const LanguageSwitcher = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const params = useParams();
+  const { locale: current } = useParams<{ locale: string }>();
 
-  const switchLanguage = (locale: string) => {
-    const defaultLocale = "en";
-    let newPathname = pathname;
-
-    // Case 1: If current locale is default and missing from the URL
-    if (
-      !pathname.startsWith(`/${params.locale}`) &&
-      params.locale === defaultLocale
-    ) {
-      // Add the default locale to the beginning to normalize
-      newPathname = `/${params.locale}${pathname}`;
-    }
-
-    // Replace current locale with the selected one
-    newPathname = newPathname.replace(`/${params.locale}`, `/${locale}`);
-
-    router.push(newPathname);
+  // Every URL starts with its locale (/ar/…, /en/…); swap that segment.
+  const switchLanguage = (locale: Locale) => {
+    const rest = pathname.split("/").slice(2).join("/");
+    router.push(`/${locale}${rest ? `/${rest}` : ""}`);
   };
 
   return (
@@ -56,9 +39,14 @@ export const LanguageSwitcher = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {languages.map(({ label, value }) => (
-          <DropdownMenuItem key={value} onClick={() => switchLanguage(value)}>
-            {label}
+        {locales.map((locale) => (
+          <DropdownMenuItem
+            disabled={locale === current}
+            key={locale}
+            lang={locale}
+            onClick={() => switchLanguage(locale)}
+          >
+            {getLocaleLabel(locale)}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

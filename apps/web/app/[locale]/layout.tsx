@@ -5,7 +5,7 @@ import { DesignSystemProvider } from "@repo/design-system";
 import { fonts } from "@repo/design-system/lib/fonts";
 import { cn } from "@repo/design-system/lib/utils";
 import { Toolbar } from "@repo/feature-flags/components/toolbar";
-import { getDictionary } from "@repo/internationalization";
+import { getDictionary, getDirection } from "@repo/internationalization";
 import type { ReactNode } from "react";
 import { Footer } from "./components/footer";
 import { Header } from "./components/header";
@@ -20,16 +20,18 @@ interface RootLayoutProperties {
 const RootLayout = async ({ children, params }: RootLayoutProperties) => {
   const { locale } = await params;
   const dictionary = await getDictionary(locale);
+  const dir = getDirection(locale);
 
   return (
     <html
       className={cn(fonts, "scroll-smooth")}
-      lang="en"
+      dir={dir}
+      lang={locale}
       suppressHydrationWarning
     >
       <body>
         <AnalyticsProvider>
-          <DesignSystemProvider>
+          <DesignSystemProvider dir={dir}>
             <Header dictionary={dictionary} />
             {children}
             <Footer />

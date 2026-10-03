@@ -1,4 +1,62 @@
 {
+  "common": {
+    "language": "Language",
+    "switchLanguage": "Switch language",
+    "theme": {
+      "toggle": "Toggle theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "loading": "Loading…",
+    "error": "Something went wrong.",
+    "retry": "Try again"
+  },
+  "auth": {
+    "changePhone": "Use a different number",
+    "codeLabel": "Verification code",
+    "codeSentTo": "We sent a 6-digit code to {phone}.",
+    "continue": "Continue",
+    "createOrganization": "Create organization",
+    "errors": {
+      "captcha_failed": "Please complete the security check and try again.",
+      "delivery_failed": "We couldn't send the code. Please try again shortly.",
+      "invalid_code": "That code is incorrect or has expired.",
+      "invalid_phone": "Enter a valid mobile number, e.g. 0770 123 4567.",
+      "rate_limited": "Too many attempts. Please wait a moment and try again.",
+      "signups_disabled": "New sign-ups are currently closed.",
+      "unknown": "Something went wrong. Please try again."
+    },
+    "fullNameLabel": "Full name",
+    "organizations": "Organizations",
+    "phoneHint": "We'll text you a verification code.",
+    "phoneLabel": "Mobile number",
+    "resend": "Resend code",
+    "resendIn": "Resend code in {seconds}s",
+    "sending": "Sending…",
+    "signIn": {
+      "title": "Welcome back",
+      "description": "Sign in with your mobile number."
+    },
+    "signOut": "Sign out",
+    "signUp": {
+      "title": "Create an account",
+      "description": "Sign up with your mobile number."
+    },
+    "verify": "Verify",
+    "verifying": "Verifying…"
+  },
+  "billing": {
+    "pay": "Pay {amount}",
+    "webOnly": "Purchases are made on our website. Sign in there to manage your plan.",
+    "status": {
+      "active": "Active",
+      "past_due": "Payment due",
+      "incomplete": "Awaiting payment",
+      "canceled": "Canceled",
+      "expired": "Expired"
+    }
+  },
   "web": {
     "global": {
       "primaryCta": "Book a call",
@@ -84,7 +142,7 @@
         "title": "Hear from Our Thriving Community",
         "items": [
           {
-            "title": "Placeholder testimonial",
+            "title": "Placeholder testimonial 1",
             "description": "Replace this quote with real feedback from a customer, with their permission.",
             "author": {
               "name": "Customer name",
@@ -92,7 +150,7 @@
             }
           },
           {
-            "title": "Placeholder testimonial",
+            "title": "Placeholder testimonial 2",
             "description": "Replace this quote with real feedback from a customer, with their permission.",
             "author": {
               "name": "Customer name",
@@ -100,7 +158,7 @@
             }
           },
           {
-            "title": "Placeholder testimonial",
+            "title": "Placeholder testimonial 3",
             "description": "Replace this quote with real feedback from a customer, with their permission.",
             "author": {
               "name": "Customer name",

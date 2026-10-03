@@ -13,6 +13,7 @@
 bun run check       # Biome lint + format (Ultracite)
 bun run typecheck   # TypeScript across all workspaces
 bun run test        # Vitest across all workspaces
+bun run check:rtl   # logical (RTL-safe) Tailwind utilities
 ```
 
 ## Conventions

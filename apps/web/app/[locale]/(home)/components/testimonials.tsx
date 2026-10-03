@@ -43,7 +43,7 @@ export const Testimonials = ({ dictionary }: TestimonialsProps) => {
     <div className="w-full py-20 lg:py-40">
       <div className="container mx-auto">
         <div className="flex flex-col gap-10">
-          <h2 className="text-left font-regular text-3xl tracking-tighter md:text-5xl lg:max-w-xl">
+          <h2 className="text-start font-regular text-3xl tracking-tighter md:text-5xl lg:max-w-xl">
             {dictionary.web.home.testimonials.title}
           </h2>
           <Carousel className="w-full" setApi={setApi}>

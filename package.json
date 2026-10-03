@@ -15,6 +15,7 @@
     "bump-ui": "bunx shadcn@latest add --all --overwrite -c packages/design-system",
     "check": "ultracite check",
     "check:placeholders": "bun scripts/check-placeholders.ts",
+    "check:rtl": "bun scripts/check-rtl.ts",
     "clean": "git clean -xdf node_modules",
     "db:reset": "bun run --cwd packages/database db:reset",
     "db:start": "bun run --cwd packages/database db:start",

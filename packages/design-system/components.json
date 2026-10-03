@@ -17,5 +17,6 @@
     "lib": "@repo/design-system/lib",
     "ui": "@repo/design-system/components/ui"
   },
-  "iconLibrary": "lucide"
+  "iconLibrary": "lucide",
+  "rtl": true
 }

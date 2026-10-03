@@ -1,3 +1,8 @@
+import {
+  attributionSchema,
+  collectAttribution,
+  getConversions,
+} from "@repo/analytics/conversions";
 import { authenticateRequest } from "@repo/auth/verify";
 import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
@@ -9,6 +14,8 @@ import { env } from "@/env";
 import { corsHeaders, preflight } from "@/lib/cors";
 
 const body = z.object({
+  /** Ad identifiers from `getAttribution()` in @repo/analytics/client. */
+  attribution: attributionSchema.optional(),
   organizationId: z.uuid(),
   planId: z.string().min(1),
   redirectUrl: z.url().optional(),
@@ -73,8 +80,16 @@ export const POST = async (request: Request) => {
     return json({ error: "forbidden" }, 403);
   }
 
+  // Browser checkouts keep the context needed to report the purchase to ad
+  // platforms later; nothing is stored unless conversions are configured.
+  const metadata =
+    platform === "web" && getConversions().enabled
+      ? { attribution: collectAttribution(request, parsed.data.attribution) }
+      : undefined;
+
   try {
     const checkout = await getBilling().startCheckout({
+      metadata,
       organizationId,
       planId,
       redirectUrl,

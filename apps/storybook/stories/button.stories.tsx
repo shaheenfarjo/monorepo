@@ -94,7 +94,7 @@ export const Loading: Story = {
   },
   render: (args) => (
     <Button {...args}>
-      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      <Loader2 className="me-2 h-4 w-4 animate-spin" />
       Button
     </Button>
   ),
@@ -110,7 +110,7 @@ export const WithIcon: Story = {
   },
   render: (args) => (
     <Button {...args}>
-      <Mail className="mr-2 h-4 w-4" /> Login with Email Button
+      <Mail className="me-2 h-4 w-4" /> Login with Email Button
     </Button>
   ),
 };

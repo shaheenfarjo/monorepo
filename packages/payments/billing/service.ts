@@ -105,6 +105,7 @@ export const createBillingService = ({
   const createInvoice = async ({
     description,
     expiresInMinutes,
+    metadata,
     organizationId,
     plan,
     redirectUrl,
@@ -113,6 +114,7 @@ export const createBillingService = ({
   }: {
     description: string;
     expiresInMinutes?: number;
+    metadata?: Record<string, unknown>;
     organizationId: string;
     plan: PlanRecord;
     redirectUrl?: string;
@@ -124,6 +126,7 @@ export const createBillingService = ({
       amount: plan.amount,
       currency: plan.currency,
       description,
+      metadata,
       organizationId,
       provider: provider.id,
       referenceId,
@@ -346,11 +349,14 @@ export const createBillingService = ({
     },
     /** Starts paying for a plan; returns the hosted checkout URL. */
     async startCheckout({
+      metadata,
       organizationId,
       planId,
       redirectUrl,
       userId,
     }: {
+      /** Stored with the payment (e.g. attribution for ad conversions). */
+      metadata?: Record<string, unknown>;
       organizationId: string;
       planId: string;
       redirectUrl?: string;
@@ -374,6 +380,7 @@ export const createBillingService = ({
 
       return createInvoice({
         description: plan.name,
+        metadata,
         organizationId,
         plan,
         redirectUrl,

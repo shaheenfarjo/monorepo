@@ -11,6 +11,7 @@ import {
 } from "@repo/design-system/components/ui/popover";
 import { cn } from "@repo/design-system/lib/utils";
 import type { Dictionary } from "@repo/internationalization";
+import { WEEK_STARTS_ON } from "@repo/internationalization/format";
 import { format } from "date-fns";
 import { CalendarIcon, Check, MoveRight } from "lucide-react";
 import { useState } from "react";
@@ -29,17 +30,17 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
-                <h4 className="max-w-xl text-left font-regular text-3xl tracking-tighter md:text-5xl">
+                <h4 className="max-w-xl text-start font-regular text-3xl tracking-tighter md:text-5xl">
                   {dictionary.web.contact.meta.title}
                 </h4>
-                <p className="max-w-sm text-left text-lg text-muted-foreground leading-relaxed tracking-tight">
+                <p className="max-w-sm text-start text-lg text-muted-foreground leading-relaxed tracking-tight">
                   {dictionary.web.contact.meta.description}
                 </p>
               </div>
             </div>
             {dictionary.web.contact.hero.benefits.map((benefit) => (
               <div
-                className="flex flex-row items-start gap-6 text-left"
+                className="flex flex-row items-start gap-6 text-start"
                 key={benefit.title}
               >
                 <Check className="mt-2 h-4 w-4 text-primary" />
@@ -64,12 +65,12 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                   <PopoverTrigger asChild>
                     <Button
                       className={cn(
-                        "w-full max-w-sm justify-start text-left font-normal",
+                        "w-full max-w-sm justify-start text-start font-normal",
                         !date && "text-muted-foreground"
                       )}
                       variant="outline"
                     >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      <CalendarIcon className="me-2 h-4 w-4" />
                       {date ? (
                         format(date, "PPP")
                       ) : (
@@ -79,10 +80,11 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
                     <Calendar
-                      initialFocus
+                      autoFocus
                       mode="single"
                       onSelect={setDate}
                       selected={date}
+                      weekStartsOn={WEEK_STARTS_ON}
                     />
                   </PopoverContent>
                 </Popover>
@@ -108,7 +110,7 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
 
               <Button className="w-full gap-4">
                 {dictionary.web.contact.hero.form.cta}{" "}
-                <MoveRight className="h-4 w-4" />
+                <MoveRight className="h-4 w-4 rtl:rotate-180" />
               </Button>
             </div>
           </div>
