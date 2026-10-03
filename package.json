@@ -14,6 +14,7 @@
     "bump-deps": "bunx npm-check-updates --deep -u && bun install",
     "bump-ui": "bunx shadcn@latest add --all --overwrite -c packages/design-system",
     "check": "ultracite check",
+    "check:i18n": "bun scripts/check-i18n.ts",
     "check:placeholders": "bun scripts/check-placeholders.ts",
     "check:rtl": "bun scripts/check-rtl.ts",
     "clean": "git clean -xdf node_modules",

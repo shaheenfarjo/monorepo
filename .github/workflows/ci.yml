@@ -36,6 +36,7 @@ jobs:
       - run: bun run test
       - run: bun run check:placeholders
       - run: bun run check:rtl
+      - run: bun run check:i18n
 
   build:
     name: Build apps
