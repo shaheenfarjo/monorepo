@@ -1,7 +1,6 @@
 "use server";
 
-import { auth } from "@964reserve/auth/server";
-import { database } from "@964reserve/database";
+import { getOrganizationMembers } from "./members";
 
 const colors = [
   "var(--color-red-500)",
@@ -23,36 +22,35 @@ const colors = [
   "var(--color-rose-500)",
 ];
 
+type UserInfo = Liveblocks["UserMeta"]["info"];
+
+/** Resolves Liveblocks user ids to display info, in the order requested. */
 export const getUsers = async (
   userIds: string[]
 ): Promise<
   | {
-      data: unknown[];
+      data: (UserInfo | undefined)[];
     }
   | {
       error: unknown;
     }
 > => {
   try {
-    const { orgId } = await auth();
+    const members = new Map(
+      (await getOrganizationMembers()).map((profile) => [profile.id, profile])
+    );
 
-    if (!orgId) {
-      throw new Error("Not logged in");
-    }
+    const data = userIds.map((userId) => {
+      const profile = members.get(userId);
 
-    const { data: users } = await database.auth.admin.listUsers();
-
-    // We are mocking a fallback in case the service role key is not used
-    // and admin API fails.
-    const fetchedUsers = users?.users || [];
-
-    const data: unknown[] = fetchedUsers
-      .filter((user) => user.id && userIds.includes(user.id))
-      .map((user) => ({
-        name: user.email ?? "Unknown user",
-        picture: user.user_metadata?.avatar_url ?? "",
-        color: colors[Math.floor(Math.random() * colors.length)],
-      }));
+      return profile
+        ? ({
+            avatar: profile.avatar_url ?? undefined,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            name: profile.full_name ?? undefined,
+          } satisfies UserInfo)
+        : undefined;
+    });
 
     return { data };
   } catch (error) {

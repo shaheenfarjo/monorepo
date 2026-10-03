@@ -1,5 +1,5 @@
 import "server-only";
-import { auth } from "@964reserve/auth/server";
+import { auth } from "@repo/auth/server";
 import { Svix } from "svix";
 import { keys } from "../keys";
 
@@ -18,14 +18,14 @@ export const send = async (eventType: string, payload: object) => {
   }
 
   return svix.message.create(orgId, {
+    application: {
+      name: orgId,
+      uid: orgId,
+    },
     eventType,
     payload: {
       eventType,
       ...payload,
-    },
-    application: {
-      name: orgId,
-      uid: orgId,
     },
   });
 };

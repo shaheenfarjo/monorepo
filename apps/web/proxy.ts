@@ -1,14 +1,13 @@
-import { authMiddleware } from "@964reserve/auth/proxy";
-import { internationalizationMiddleware } from "@964reserve/internationalization/proxy";
-import { parseError } from "@964reserve/observability/error";
-import { secure } from "@964reserve/security";
-import {
-  noseconeOptions,
-  noseconeOptionsWithToolbar,
-  securityMiddleware,
-} from "@964reserve/security/proxy";
+import { internationalizationMiddleware } from "@repo/internationalization/proxy";
+import { parseError } from "@repo/observability/error";
+import { secure } from "@repo/security";
+import { withSecurityHeaders } from "@repo/security/proxy";
 import { createNEMO } from "@rescale/nemo";
-import { type NextProxy, type NextRequest, NextResponse } from "next/server";
+import {
+  type NextFetchEvent,
+  type NextRequest,
+  NextResponse,
+} from "next/server";
 import { env } from "@/env";
 
 export const config = {
@@ -18,10 +17,6 @@ export const config = {
     "/((?!_next/static|_next/image|ingest|favicon.ico|.*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
   ],
 };
-
-const securityHeaders = env.FLAGS_SECRET
-  ? securityMiddleware(noseconeOptionsWithToolbar)
-  : securityMiddleware(noseconeOptions);
 
 // Custom middleware for Arcjet security checks
 const arcjetMiddleware = async (request: NextRequest) => {
@@ -45,7 +40,6 @@ const arcjetMiddleware = async (request: NextRequest) => {
   }
 };
 
-// Compose non-Clerk middleware with Nemo
 const composedMiddleware = createNEMO(
   {},
   {
@@ -53,17 +47,13 @@ const composedMiddleware = createNEMO(
   }
 );
 
-// Clerk middleware wraps other middleware in its callback
-export default authMiddleware(async (_auth, request, event) => {
-  // Run security headers first
-  const headersResponse = securityHeaders();
+// The marketing site has no signed-in area, so no auth session handling here.
+export default async function proxy(
+  request: NextRequest,
+  event: NextFetchEvent
+) {
+  const response =
+    (await composedMiddleware(request, event)) ?? NextResponse.next();
 
-  // Then run composed middleware (i18n + arcjet)
-  const middlewareResponse = await composedMiddleware(
-    request as unknown as NextRequest,
-    event
-  );
-
-  // Return middleware response if it exists, otherwise headers response
-  return middlewareResponse || headersResponse;
-}) as unknown as NextProxy;
+  return withSecurityHeaders(response);
+}

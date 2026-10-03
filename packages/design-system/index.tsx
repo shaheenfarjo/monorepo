@@ -1,26 +1,27 @@
-import { AuthProvider } from "@964reserve/auth/provider";
 import type { ThemeProviderProps } from "next-themes";
+import { DirectionProvider } from "./components/ui/direction";
 import { Toaster } from "./components/ui/sonner";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { ThemeProvider } from "./providers/theme";
 
 type DesignSystemProviderProperties = ThemeProviderProps & {
-  privacyUrl?: string;
-  termsUrl?: string;
-  helpUrl?: string;
+  /** Text direction; set "rtl" for Arabic and Kurdish (also set on <html>). */
+  dir?: "ltr" | "rtl";
 };
 
 export const DesignSystemProvider = ({
   children,
-  privacyUrl,
-  termsUrl,
-  helpUrl,
+  dir = "ltr",
   ...properties
 }: DesignSystemProviderProperties) => (
   <ThemeProvider {...properties}>
-    <AuthProvider helpUrl={helpUrl} privacyUrl={privacyUrl} termsUrl={termsUrl}>
+    {/* Radix components (menus, popovers, sliders…) read the direction from here. */}
+    <DirectionProvider dir={dir}>
       <TooltipProvider>{children}</TooltipProvider>
-      <Toaster />
-    </AuthProvider>
+      <Toaster
+        dir={dir}
+        position={dir === "rtl" ? "bottom-left" : "bottom-right"}
+      />
+    </DirectionProvider>
   </ThemeProvider>
 );

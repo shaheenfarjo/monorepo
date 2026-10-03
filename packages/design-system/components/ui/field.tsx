@@ -3,9 +3,9 @@
 import { useMemo } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
-import { cn } from "@964reserve/design-system/lib/utils"
-import { Label } from "@964reserve/design-system/components/ui/label"
-import { Separator } from "@964reserve/design-system/components/ui/separator"
+import { cn } from "@repo/design-system/lib/utils"
+import { Label } from "@repo/design-system/components/ui/label"
+import { Separator } from "@repo/design-system/components/ui/separator"
 
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
   return (
@@ -209,7 +209,7 @@ function FieldError({
     }
 
     return (
-      <ul className="ml-4 flex list-disc flex-col gap-1">
+      <ul className="ms-4 flex list-disc flex-col gap-1">
         {uniqueErrors.map(
           (error, index) =>
             error?.message && <li key={index}>{error.message}</li>

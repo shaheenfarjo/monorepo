@@ -1,5 +1,5 @@
 {
-  "name": "@964reserve/email",
+  "name": "@repo/email",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -15,7 +15,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@964reserve/typescript-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "25.3.5",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",

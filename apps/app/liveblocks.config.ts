@@ -1,1 +1,1 @@
-export * from "@964reserve/collaboration/config";
+export * from "@repo/collaboration/config";

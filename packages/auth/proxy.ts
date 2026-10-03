@@ -1,17 +1,40 @@
-import type { Database } from "@964reserve/database/types";
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { keys } from "./keys";
 
-export const updateSession = async (request: NextRequest) => {
+export interface UpdateSessionOptions {
+  /** Path prefixes that don't require a signed-in user. */
+  publicPaths?: string[];
+  /** Where anonymous visitors are redirected. `null` disables redirects. */
+  signInPath?: string | null;
+}
+
+const defaultPublicPaths = ["/sign-in", "/sign-up", "/auth"];
+
+/**
+ * Refreshes the Supabase session cookies on every request and, unless the
+ * path is public, redirects anonymous visitors to the sign-in page.
+ */
+export const updateSession = async (
+  request: NextRequest,
+  {
+    publicPaths = defaultPublicPaths,
+    signInPath = "/sign-in",
+  }: UpdateSessionOptions = {}
+) => {
+  const { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY } =
+    keys();
   let supabaseResponse = NextResponse.next({
     request,
   });
 
-  const supabase = createServerClient<Database>(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  if (!(NEXT_PUBLIC_SUPABASE_URL && NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)) {
+    return supabaseResponse;
+  }
+
+  const supabase = createServerClient(
+    NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
       cookies: {
         getAll() {
@@ -32,40 +55,22 @@ export const updateSession = async (request: NextRequest) => {
     }
   );
 
-  // IMPORTANT: Avoid writing any logic between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-
+  // Do not run code between createServerClient and getUser(): it refreshes
+  // the session, and anything in between can cause random sign-outs.
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (
-    !(
-      user ||
-      request.nextUrl.pathname.startsWith("/login") ||
-      request.nextUrl.pathname.startsWith("/auth") ||
-      request.nextUrl.pathname.startsWith("/contact")
-    )
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  const isPublic = publicPaths.some((path) =>
+    request.nextUrl.pathname.startsWith(path)
+  );
+
+  if (!(user || isPublic || signInPath === null)) {
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = signInPath;
     return NextResponse.redirect(url);
   }
 
-  // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
-  // creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
-
+  // Return supabaseResponse as-is: it carries the refreshed session cookies.
   return supabaseResponse;
 };

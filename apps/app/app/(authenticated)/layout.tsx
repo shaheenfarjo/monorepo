@@ -1,10 +1,10 @@
-import { auth, currentUser } from "@964reserve/auth/server";
-import { SidebarProvider } from "@964reserve/design-system/components/ui/sidebar";
-import { showBetaFeature } from "@964reserve/feature-flags";
-import { secure } from "@964reserve/security";
+import { listMemberships } from "@repo/auth/organizations";
+import { auth, createClient, requireUser } from "@repo/auth/server";
+import { showBetaFeature } from "@repo/feature-flags";
+import { secure } from "@repo/security";
 import type { ReactNode } from "react";
 import { env } from "@/env";
-import { NotificationsProvider } from "./components/notifications-provider";
+import { AuthenticatedProviders } from "./components/providers";
 import { GlobalSidebar } from "./components/sidebar";
 
 interface AppLayoutProperties {
@@ -16,27 +16,29 @@ const AppLayout = async ({ children }: AppLayoutProperties) => {
     await secure(["CATEGORY:PREVIEW"]);
   }
 
-  const user = await currentUser();
-  const { redirectToSignIn } = await auth();
-  const betaFeature = await showBetaFeature();
+  const user = await requireUser();
+  const [{ orgId }, organizations] = await Promise.all([
+    auth(),
+    createClient().then((supabase) => listMemberships(supabase, user.id)),
+  ]);
 
-  if (!user) {
-    return redirectToSignIn();
-  }
+  // <module:feature-flags>
+  const betaFeature = await showBetaFeature();
+  // </module:feature-flags>
 
   return (
-    <NotificationsProvider userId={user.id}>
-      <SidebarProvider>
-        <GlobalSidebar>
-          {betaFeature && (
-            <div className="m-4 rounded-full bg-blue-500 p-1.5 text-center text-sm text-white">
-              Beta feature now available
-            </div>
-          )}
-          {children}
-        </GlobalSidebar>
-      </SidebarProvider>
-    </NotificationsProvider>
+    <AuthenticatedProviders user={user}>
+      <GlobalSidebar activeOrganizationId={orgId} organizations={organizations}>
+        {/* <module:feature-flags> */}
+        {betaFeature ? (
+          <div className="m-4 rounded-full bg-blue-500 p-1.5 text-center text-sm text-white">
+            Beta feature now available
+          </div>
+        ) : null}
+        {/* </module:feature-flags> */}
+        {children}
+      </GlobalSidebar>
+    </AuthenticatedProviders>
   );
 };
 

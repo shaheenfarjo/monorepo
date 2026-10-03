@@ -1,4 +1,4 @@
-import { Button } from "@964reserve/design-system/components/ui/button";
+import { Button } from "@repo/design-system/components/ui/button";
 import { Check, Minus, MoveRight, PhoneCall } from "lucide-react";
 import Link from "next/link";
 import { env } from "@/env";
@@ -15,7 +15,7 @@ const Pricing = () => (
             Managing a small business today is already tough.
           </p>
         </div>
-        <div className="grid w-full grid-cols-3 divide-x pt-20 text-left lg:grid-cols-4">
+        <div className="grid w-full grid-cols-3 divide-x pt-20 text-start lg:grid-cols-4">
           <div className="col-span-3 lg:col-span-1" />
           <div className="flex flex-col gap-2 px-3 py-1 md:px-6 md:py-4">
             <p className="text-2xl">Startup</p>
@@ -29,7 +29,7 @@ const Pricing = () => (
             </p>
             <Button asChild className="mt-8 gap-4" variant="outline">
               <Link href={env.NEXT_PUBLIC_APP_URL}>
-                Try it <MoveRight className="h-4 w-4" />
+                Try it <MoveRight className="h-4 w-4 rtl:rotate-180" />
               </Link>
             </Button>
           </div>
@@ -45,7 +45,7 @@ const Pricing = () => (
             </p>
             <Button asChild className="mt-8 gap-4">
               <Link href={env.NEXT_PUBLIC_APP_URL}>
-                Try it <MoveRight className="h-4 w-4" />
+                Try it <MoveRight className="h-4 w-4 rtl:rotate-180" />
               </Link>
             </Button>
           </div>

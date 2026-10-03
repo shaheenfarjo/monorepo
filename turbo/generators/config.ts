@@ -1,36 +1,48 @@
 import type { PlopTypes } from "@turbo/gen";
 
+const SCOPE = "@repo/";
+const PACKAGE_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
-  plop.setGenerator("init", {
-    description: "Generate a new package for the Monorepo",
-    prompts: [
-      {
-        type: "input",
-        name: "name",
-        message:
-          "What is the name of the package? (You can skip the `@repo/` prefix)",
-      },
-    ],
+  plop.setGenerator("package", {
     actions: [
       (answers) => {
         if (
           "name" in answers &&
           typeof answers.name === "string" &&
-          answers.name.startsWith("@964reserve/")
+          answers.name.startsWith(SCOPE)
         ) {
-          answers.name = answers.name.replace("@964reserve/", "");
+          answers.name = answers.name.slice(SCOPE.length);
         }
         return "Config sanitized";
       },
       {
-        type: "add",
         path: "packages/{{ name }}/package.json",
         templateFile: "templates/package.json.hbs",
+        type: "add",
       },
       {
-        type: "add",
         path: "packages/{{ name }}/tsconfig.json",
         templateFile: "templates/tsconfig.json.hbs",
+        type: "add",
+      },
+      {
+        path: "packages/{{ name }}/index.ts",
+        templateFile: "templates/index.ts.hbs",
+        type: "add",
+      },
+    ],
+    description:
+      "Create a new shared package in packages/ (run `bun install` after)",
+    prompts: [
+      {
+        message: `Package name (without the ${SCOPE} prefix)`,
+        name: "name",
+        type: "input",
+        validate: (value: string) =>
+          PACKAGE_NAME.test(value.replace(SCOPE, ""))
+            ? true
+            : "Use lowercase letters, digits and hyphens.",
       },
     ],
   });

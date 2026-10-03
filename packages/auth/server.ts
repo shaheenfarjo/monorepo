@@ -1,14 +1,32 @@
-import type { Database } from "@964reserve/database/types";
+import "server-only";
+
+import type { Database } from "@repo/database";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { cache } from "react";
+import { keys } from "./keys";
+import {
+  ACTIVE_ORGANIZATION_COOKIE,
+  listMemberships,
+  pickActiveOrganization,
+} from "./organizations";
 
+/** Session-bound client for Server Components, Route Handlers and Actions. */
 export const createClient = async () => {
   const cookieStore = await cookies();
+  const { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY } =
+    keys();
+
+  if (!(NEXT_PUBLIC_SUPABASE_URL && NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)) {
+    throw new Error(
+      "Supabase requires NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY."
+    );
+  }
+
   return createServerClient<Database>(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
       cookies: {
         getAll() {
@@ -20,7 +38,8 @@ export const createClient = async () => {
               cookieStore.set(name, value, options);
             }
           } catch {
-            // Ignore error
+            // Called from a Server Component, where cookies are read-only.
+            // The proxy refreshes the session, so this can be ignored.
           }
         },
       },
@@ -28,27 +47,48 @@ export const createClient = async () => {
   );
 };
 
-export const currentUser = async () => {
+/** The signed-in user, verified with the Auth server (null if signed out). */
+export const currentUser = cache(async () => {
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
 
-  if (!data.user) {
-    return null;
+  return data.user ?? null;
+});
+
+/**
+ * The caller's identity and active organization, resolved from memberships
+ * (never from user-editable metadata). Cached per request.
+ */
+export const auth = cache(async () => {
+  const supabase = await createClient();
+  // Verifies the JWT locally with the project's signing keys when available.
+  const { data } = await supabase.auth.getClaims();
+  const userId = data?.claims.sub ?? null;
+
+  if (!userId) {
+    return { orgId: null, role: null, userId: null };
   }
 
-  return {
-    ...data.user,
-  };
-};
-
-export const auth = async () => {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
+  const cookieStore = await cookies();
+  const active = pickActiveOrganization(
+    await listMemberships(supabase, userId),
+    cookieStore.get(ACTIVE_ORGANIZATION_COOKIE)?.value
+  );
 
   return {
-    userId: data.user?.id,
-    orgId: data.user?.user_metadata?.orgId ?? "mock-org-id",
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    redirectToSignIn: () => {},
+    orgId: active?.id ?? null,
+    role: active?.role ?? null,
+    userId,
   };
+});
+
+/** Redirects to the sign-in page when nobody is signed in. */
+export const requireUser = async (signInPath = "/sign-in") => {
+  const user = await currentUser();
+
+  if (!user) {
+    redirect(signInPath);
+  }
+
+  return user;
 };

@@ -1,7 +1,8 @@
 "use client";
 
-import { ModeToggle } from "@964reserve/design-system/components/mode-toggle";
-import { Button } from "@964reserve/design-system/components/ui/button";
+import { BrandLogo } from "@repo/design-system/components/brand-logo";
+import { ModeToggle } from "@repo/design-system/components/mode-toggle";
+import { Button } from "@repo/design-system/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -9,8 +10,8 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@964reserve/design-system/components/ui/navigation-menu";
-import type { Dictionary } from "@964reserve/internationalization";
+} from "@repo/design-system/components/ui/navigation-menu";
+import type { Dictionary } from "@repo/internationalization";
 import { Menu, MoveRight, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -24,38 +25,40 @@ interface HeaderProps {
 export const Header = ({ dictionary }: HeaderProps) => {
   const navigationItems = [
     {
-      title: dictionary.web.header.home,
-      href: "/",
       description: "",
+      href: "/",
+      title: dictionary.web.header.home,
     },
     {
-      title: dictionary.web.header.product.title,
       description: dictionary.web.header.product.description,
       items: [
         {
-          title: dictionary.web.header.product.pricing,
           href: "/pricing",
+          title: dictionary.web.header.product.pricing,
         },
       ],
+      title: dictionary.web.header.product.title,
     },
+    // <module:cms>
     {
-      title: dictionary.web.header.blog,
-      href: "/blog",
       description: "",
+      href: "/blog",
+      title: dictionary.web.header.blog,
     },
+    // </module:cms>
   ];
 
   if (env.NEXT_PUBLIC_DOCS_URL) {
     navigationItems.push({
-      title: dictionary.web.header.docs,
-      href: env.NEXT_PUBLIC_DOCS_URL,
       description: "",
+      href: env.NEXT_PUBLIC_DOCS_URL,
+      title: dictionary.web.header.docs,
     });
   }
 
   const [isOpen, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 left-0 z-40 w-full border-b bg-background">
+    <header className="sticky start-0 top-0 z-40 w-full border-b bg-background">
       <div className="container relative mx-auto flex min-h-20 flex-row items-center gap-4 lg:grid lg:grid-cols-3">
         <div className="hidden flex-row items-center justify-start gap-4 lg:flex">
           <NavigationMenu className="flex items-start justify-start">
@@ -96,7 +99,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
                                 key={subItem.href}
                               >
                                 <span>{subItem.title}</span>
-                                <MoveRight className="h-4 w-4 text-muted-foreground" />
+                                <MoveRight className="h-4 w-4 text-muted-foreground rtl:rotate-180" />
                               </NavigationMenuLink>
                             ))}
                           </div>
@@ -110,26 +113,13 @@ export const Header = ({ dictionary }: HeaderProps) => {
           </NavigationMenu>
         </div>
         <div className="flex items-center gap-2 lg:justify-center">
-          <svg
-            className="h-[18px] w-[18px] -translate-y-[0.5px] fill-current"
-            fill="none"
-            height="22"
-            viewBox="0 0 235 203"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <title>Vercel</title>
-            <path
-              d="M117.082 0L234.164 202.794H0L117.082 0Z"
-              fill="currentColor"
-            />
-          </svg>
-          <p className="whitespace-nowrap font-semibold">next-forge</p>
+          <BrandLogo />
         </div>
         <div className="flex w-full justify-end gap-4">
           <Button asChild className="hidden md:inline" variant="ghost">
             <Link href="/contact">{dictionary.web.header.contact}</Link>
           </Button>
-          <div className="hidden border-r md:inline" />
+          <div className="hidden border-e md:inline" />
           <div className="hidden md:inline">
             <LanguageSwitcher />
           </div>
@@ -151,8 +141,8 @@ export const Header = ({ dictionary }: HeaderProps) => {
           <Button onClick={() => setOpen(!isOpen)} variant="ghost">
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
-          {isOpen && (
-            <div className="container absolute top-20 right-0 flex w-full flex-col gap-8 border-t bg-background py-4 shadow-lg">
+          {isOpen ? (
+            <div className="container absolute end-0 top-20 flex w-full flex-col gap-8 border-t bg-background py-4 shadow-lg">
               {navigationItems.map((item) => (
                 <div key={item.title}>
                   <div className="flex flex-col gap-2">
@@ -170,7 +160,7 @@ export const Header = ({ dictionary }: HeaderProps) => {
                         }
                       >
                         <span className="text-lg">{item.title}</span>
-                        <MoveRight className="h-4 w-4 stroke-1 text-muted-foreground" />
+                        <MoveRight className="h-4 w-4 stroke-1 text-muted-foreground rtl:rotate-180" />
                       </Link>
                     ) : (
                       <p className="text-lg">{item.title}</p>
@@ -184,14 +174,14 @@ export const Header = ({ dictionary }: HeaderProps) => {
                         <span className="text-muted-foreground">
                           {subItem.title}
                         </span>
-                        <MoveRight className="h-4 w-4 stroke-1" />
+                        <MoveRight className="h-4 w-4 stroke-1 rtl:rotate-180" />
                       </Link>
                     ))}
                   </div>
                 </div>
               ))}
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </header>

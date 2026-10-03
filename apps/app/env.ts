@@ -1,32 +1,48 @@
-import { keys as analytics } from "@964reserve/analytics/keys";
-import { keys as auth } from "@964reserve/auth/keys";
-import { keys as collaboration } from "@964reserve/collaboration/keys";
-import { keys as database } from "@964reserve/database/keys";
-import { keys as email } from "@964reserve/email/keys";
-import { keys as flags } from "@964reserve/feature-flags/keys";
-import { keys as core } from "@964reserve/next-config/keys";
-import { keys as notifications } from "@964reserve/notifications/keys";
-import { keys as observability } from "@964reserve/observability/keys";
-import { keys as security } from "@964reserve/security/keys";
-import { keys as webhooks } from "@964reserve/webhooks/keys";
+import { keys as analytics } from "@repo/analytics/keys";
+import { keys as auth } from "@repo/auth/keys";
+import { keys as collaboration } from "@repo/collaboration/keys";
+import { keys as database } from "@repo/database/keys";
+import { keys as email } from "@repo/email/keys";
+import { keys as flags } from "@repo/feature-flags/keys";
+import { envPresets, withPresets } from "@repo/next-config/env";
+import { keys as core } from "@repo/next-config/keys";
+import { keys as notifications } from "@repo/notifications/keys";
+import { keys as observability } from "@repo/observability/keys";
+import { keys as security } from "@repo/security/keys";
+import { keys as webhooks } from "@repo/webhooks/keys";
 import { createEnv } from "@t3-oss/env-nextjs";
 
-export const env = createEnv({
-  skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
-  extends: [
-    auth(),
-    analytics(),
-    collaboration(),
-    core(),
-    database(),
-    email(),
-    flags(),
-    notifications(),
-    observability(),
-    security(),
-    webhooks(),
-  ],
-  server: {},
-  client: {},
-  runtimeEnv: {},
-});
+const presets = envPresets(
+  auth(),
+  analytics(),
+  // <module:collaboration>
+  collaboration(),
+  // </module:collaboration>
+  core(),
+  database(),
+  email(),
+  // <module:feature-flags>
+  flags(),
+  // </module:feature-flags>
+  // <module:notifications>
+  notifications(),
+  // </module:notifications>
+  observability(),
+  security(),
+  // <module:webhooks>
+  webhooks()
+  // </module:webhooks>
+);
+
+export const env = withPresets(
+  createEnv({
+    client: {},
+    // Treat KEY="" (as in .env.example) as unset.
+    emptyStringAsUndefined: true,
+    extends: presets,
+    runtimeEnv: {},
+    server: {},
+    skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
+  }),
+  presets
+);

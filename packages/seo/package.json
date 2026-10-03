@@ -1,5 +1,5 @@
 {
-  "name": "@964reserve/seo",
+  "name": "@repo/seo",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -7,12 +7,13 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@repo/config": "workspace:*",
     "lodash.merge": "^4.6.2",
     "react": "19.2.4",
     "schema-dts": "^1.1.5"
   },
   "devDependencies": {
-    "@964reserve/typescript-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/lodash.merge": "^4.6.9",
     "@types/node": "25.3.5",
     "@types/react": "19.2.14",

@@ -1,10 +1,14 @@
-import { withToolbar } from "@964reserve/feature-flags/lib/toolbar";
-import { config, withAnalyzer } from "@964reserve/next-config";
-import { withLogging, withSentry } from "@964reserve/observability/next-config";
+import { withToolbar } from "@repo/feature-flags/lib/toolbar";
+import { config, withAnalyzer } from "@repo/next-config";
+import { withLogging, withSentry } from "@repo/observability/next-config";
 import type { NextConfig } from "next";
 import { env } from "@/env";
 
-let nextConfig: NextConfig = withToolbar(withLogging(config));
+let nextConfig: NextConfig = withLogging(config);
+
+// <module:feature-flags>
+nextConfig = withToolbar(nextConfig);
+// </module:feature-flags>
 
 if (env.VERCEL) {
   nextConfig = withSentry(nextConfig);

@@ -1,24 +1,40 @@
-import { keys as cms } from "@964reserve/cms/keys";
-import { keys as email } from "@964reserve/email/keys";
-import { keys as flags } from "@964reserve/feature-flags/keys";
-import { keys as core } from "@964reserve/next-config/keys";
-import { keys as observability } from "@964reserve/observability/keys";
-import { keys as rateLimit } from "@964reserve/rate-limit/keys";
-import { keys as security } from "@964reserve/security/keys";
+import { keys as analytics } from "@repo/analytics/keys";
+import { keys as cms } from "@repo/cms/keys";
+import { keys as email } from "@repo/email/keys";
+import { keys as flags } from "@repo/feature-flags/keys";
+import { envPresets, withPresets } from "@repo/next-config/env";
+import { keys as core } from "@repo/next-config/keys";
+import { keys as observability } from "@repo/observability/keys";
+import { keys as rateLimit } from "@repo/rate-limit/keys";
+import { keys as security } from "@repo/security/keys";
 import { createEnv } from "@t3-oss/env-nextjs";
 
-export const env = createEnv({
-  skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
-  extends: [
-    cms(),
-    core(),
-    email(),
-    observability(),
-    flags(),
-    security(),
-    rateLimit(),
-  ],
-  server: {},
-  client: {},
-  runtimeEnv: {},
-});
+const presets = envPresets(
+  analytics(),
+  // <module:cms>
+  cms(),
+  // </module:cms>
+  core(),
+  email(),
+  observability(),
+  // <module:feature-flags>
+  flags(),
+  // </module:feature-flags>
+  security(),
+  // <module:rate-limit>
+  rateLimit()
+  // </module:rate-limit>
+);
+
+export const env = withPresets(
+  createEnv({
+    client: {},
+    // Treat KEY="" (as in .env.example) as unset.
+    emptyStringAsUndefined: true,
+    extends: presets,
+    runtimeEnv: {},
+    server: {},
+    skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
+  }),
+  presets
+);

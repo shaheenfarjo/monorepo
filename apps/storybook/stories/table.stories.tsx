@@ -6,33 +6,33 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@964reserve/design-system/components/ui/table";
+} from "@repo/design-system/components/ui/table";
 import type { Meta, StoryObj } from "@storybook/react";
 
 const invoices = [
   {
     invoice: "INV001",
+    paymentMethod: "Credit Card",
     paymentStatus: "Paid",
     totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
   },
   {
     invoice: "INV002",
+    paymentMethod: "PayPal",
     paymentStatus: "Pending",
     totalAmount: "$150.00",
-    paymentMethod: "PayPal",
   },
   {
     invoice: "INV003",
+    paymentMethod: "Bank Transfer",
     paymentStatus: "Unpaid",
     totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
   },
   {
     invoice: "INV004",
+    paymentMethod: "Credit Card",
     paymentStatus: "Paid",
     totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
   },
 ];
 
@@ -40,10 +40,8 @@ const invoices = [
  * Powerful table and datagrids built using TanStack Table.
  */
 const meta = {
-  title: "ui/Table",
-  component: Table,
-  tags: ["autodocs"],
   argTypes: {},
+  component: Table,
   render: (args) => (
     <Table {...args}>
       <TableCaption>A list of your recent invoices.</TableCaption>
@@ -52,7 +50,7 @@ const meta = {
           <TableHead className="w-[100px]">Invoice</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+          <TableHead className="text-end">Amount</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -61,12 +59,14 @@ const meta = {
             <TableCell className="font-medium">{invoice.invoice}</TableCell>
             <TableCell>{invoice.paymentStatus}</TableCell>
             <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+            <TableCell className="text-end">{invoice.totalAmount}</TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
   ),
+  tags: ["autodocs"],
+  title: "ui/Table",
 } satisfies Meta<typeof Table>;
 
 export default meta;

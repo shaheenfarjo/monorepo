@@ -1,9 +1,9 @@
 "use server";
 
-import { auth } from "@964reserve/auth/server";
-import { database } from "@964reserve/database";
 import Fuse from "fuse.js";
+import { getOrganizationMembers } from "./members";
 
+/** Member ids matching a mention query, within the active organization. */
 export const searchUsers = async (
   query: string
 ): Promise<
@@ -15,31 +15,14 @@ export const searchUsers = async (
     }
 > => {
   try {
-    const { orgId } = await auth();
-
-    if (!orgId) {
-      throw new Error("Not logged in");
-    }
-
-    const { data: usersResponse } = await database.auth.admin.listUsers();
-    const fetchedUsers = usersResponse?.users || [];
-
-    const users = fetchedUsers.map((user) => ({
-      id: user.id,
-      name: user.email,
-      imageUrl: user.user_metadata?.avatar_url,
-    }));
-
-    const fuse = new Fuse(users, {
-      keys: ["name"],
+    const members = await getOrganizationMembers();
+    const fuse = new Fuse(members, {
+      keys: ["full_name"],
       minMatchCharLength: 1,
       threshold: 0.3,
     });
 
-    const results = fuse.search(query);
-    const data = results.map((result) => result.item.id);
-
-    return { data };
+    return { data: fuse.search(query).map((result) => result.item.id) };
   } catch (error) {
     return { error };
   }

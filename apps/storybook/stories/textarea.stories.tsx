@@ -1,18 +1,18 @@
-import { Textarea } from "@964reserve/design-system/components/ui/textarea";
+import { Textarea } from "@repo/design-system/components/ui/textarea";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * Displays a form textarea or a component that looks like a textarea.
  */
 const meta = {
-  title: "ui/Textarea",
+  args: {
+    disabled: false,
+    placeholder: "Type your message here.",
+  },
+  argTypes: {},
   component: Textarea,
   tags: ["autodocs"],
-  argTypes: {},
-  args: {
-    placeholder: "Type your message here.",
-    disabled: false,
-  },
+  title: "ui/Textarea",
 } satisfies Meta<typeof Textarea>;
 
 export default meta;

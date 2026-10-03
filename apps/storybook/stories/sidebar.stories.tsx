@@ -2,7 +2,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@964reserve/design-system/components/ui/avatar";
+} from "@repo/design-system/components/ui/avatar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,12 +10,12 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@964reserve/design-system/components/ui/breadcrumb";
+} from "@repo/design-system/components/ui/breadcrumb";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@964reserve/design-system/components/ui/collapsible";
+} from "@repo/design-system/components/ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,8 +25,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@964reserve/design-system/components/ui/dropdown-menu";
-import { Separator } from "@964reserve/design-system/components/ui/separator";
+} from "@repo/design-system/components/ui/dropdown-menu";
+import { Separator } from "@repo/design-system/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
@@ -45,7 +45,7 @@ import {
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
-} from "@964reserve/design-system/components/ui/sidebar";
+} from "@repo/design-system/components/ui/sidebar";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   AudioWaveform,
@@ -75,42 +75,18 @@ import {
 import { useState } from "react";
 
 const meta: Meta<typeof Sidebar> = {
-  title: "ui/Sidebar",
+  argTypes: {},
   component: Sidebar,
   tags: ["autodocs"],
-  argTypes: {},
+  title: "ui/Sidebar",
 };
 export default meta;
 
 type Story = StoryObj<typeof Sidebar>;
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
@@ -127,10 +103,10 @@ const data = {
           url: "#",
         },
       ],
+      title: "Playground",
+      url: "#",
     },
     {
-      title: "Models",
-      url: "#",
       icon: Bot,
       items: [
         {
@@ -146,10 +122,10 @@ const data = {
           url: "#",
         },
       ],
+      title: "Models",
+      url: "#",
     },
     {
-      title: "Documentation",
-      url: "#",
       icon: BookOpen,
       items: [
         {
@@ -169,10 +145,10 @@ const data = {
           url: "#",
         },
       ],
+      title: "Documentation",
+      url: "#",
     },
     {
-      title: "Settings",
-      url: "#",
       icon: Settings2,
       items: [
         {
@@ -192,28 +168,53 @@ const data = {
           url: "#",
         },
       ],
+      title: "Settings",
+      url: "#",
     },
   ],
   projects: [
     {
+      icon: Frame,
       name: "Design Engineering",
       url: "#",
-      icon: Frame,
     },
     {
+      icon: PieChart,
       name: "Sales & Marketing",
       url: "#",
-      icon: PieChart,
     },
     {
+      icon: Map,
       name: "Travel",
       url: "#",
-      icon: Map,
     },
   ],
+  teams: [
+    {
+      logo: GalleryVerticalEnd,
+      name: "Acme Inc",
+      plan: "Enterprise",
+    },
+    {
+      logo: AudioWaveform,
+      name: "Acme Corp.",
+      plan: "Startup",
+    },
+    {
+      logo: Command,
+      name: "Evil Corp.",
+      plan: "Free",
+    },
+  ],
+  user: {
+    avatar: "/avatars/shadcn.jpg",
+    email: "m@example.com",
+    name: "shadcn",
+  },
 };
 
 export const Base: Story = {
+  args: {},
   render: () => {
     const [activeTeam, setActiveTeam] = useState(data.teams[0]);
 
@@ -232,7 +233,7 @@ export const Base: Story = {
                       <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                         <activeTeam.logo className="size-4" />
                       </div>
-                      <div className="grid flex-1 text-left text-sm leading-tight">
+                      <div className="grid flex-1 text-start text-sm leading-tight">
                         <span className="truncate font-semibold">
                           {activeTeam.name}
                         </span>
@@ -240,7 +241,7 @@ export const Base: Story = {
                           {activeTeam.plan}
                         </span>
                       </div>
-                      <ChevronsUpDown className="ml-auto" />
+                      <ChevronsUpDown className="ms-auto" />
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
@@ -295,9 +296,9 @@ export const Base: Story = {
                     <SidebarMenuItem>
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton tooltip={item.title}>
-                          {item.icon && <item.icon />}
+                          {item.icon ? <item.icon /> : null}
                           <span>{item.title}</span>
-                          <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                          <ChevronRight className="ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                         </SidebarMenuButton>
                       </CollapsibleTrigger>
                       <CollapsibleContent>
@@ -385,7 +386,7 @@ export const Base: Story = {
                           CN
                         </AvatarFallback>
                       </Avatar>
-                      <div className="grid flex-1 text-left text-sm leading-tight">
+                      <div className="grid flex-1 text-start text-sm leading-tight">
                         <span className="truncate font-semibold">
                           {data.user.name}
                         </span>
@@ -393,7 +394,7 @@ export const Base: Story = {
                           {data.user.email}
                         </span>
                       </div>
-                      <ChevronsUpDown className="ml-auto size-4" />
+                      <ChevronsUpDown className="ms-auto size-4" />
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
@@ -403,7 +404,7 @@ export const Base: Story = {
                     sideOffset={4}
                   >
                     <DropdownMenuLabel className="p-0 font-normal">
-                      <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                      <div className="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                         <Avatar className="h-8 w-8 rounded-lg">
                           <AvatarImage
                             alt={data.user.name}
@@ -413,7 +414,7 @@ export const Base: Story = {
                             CN
                           </AvatarFallback>
                         </Avatar>
-                        <div className="grid flex-1 text-left text-sm leading-tight">
+                        <div className="grid flex-1 text-start text-sm leading-tight">
                           <span className="truncate font-semibold">
                             {data.user.name}
                           </span>
@@ -460,8 +461,8 @@ export const Base: Story = {
         <SidebarInset>
           <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
             <div className="flex items-center gap-2 px-4">
-              <SidebarTrigger className="-ml-1" />
-              <Separator className="mr-2 h-4" orientation="vertical" />
+              <SidebarTrigger className="-ms-1" />
+              <Separator className="me-2 h-4" orientation="vertical" />
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem className="hidden md:block">
@@ -489,5 +490,4 @@ export const Base: Story = {
       </SidebarProvider>
     );
   },
-  args: {},
 };

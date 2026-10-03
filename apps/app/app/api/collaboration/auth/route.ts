@@ -1,5 +1,5 @@
-import { auth, currentUser } from "@964reserve/auth/server";
-import { authenticate } from "@964reserve/collaboration/auth";
+import { auth, currentUser } from "@repo/auth/server";
+import { authenticate } from "@repo/collaboration/auth";
 
 const COLORS = [
   "var(--color-red-500)",
@@ -22,21 +22,19 @@ const COLORS = [
 ];
 
 export const POST = async () => {
-  const user = await currentUser();
-  const { orgId } = await auth();
+  const [user, { orgId }] = await Promise.all([currentUser(), auth()]);
 
   if (!(user && orgId)) {
     return new Response("Unauthorized", { status: 401 });
   }
 
   return authenticate({
-    userId: user.id,
     orgId,
+    userId: user.id,
     userInfo: {
-      name:
-        user.fullName ?? user.emailAddresses.at(0)?.emailAddress ?? undefined,
-      avatar: user.imageUrl ?? undefined,
+      avatar: user.user_metadata?.avatar_url,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      name: user.user_metadata?.full_name,
     },
   });
 };

@@ -1,12 +1,12 @@
 {
-  "name": "@964reserve/cms",
+  "name": "@repo/cms",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "basehub dev",
-    "build": "basehub build",
     "analyze": "basehub",
+    "build": "basehub build",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "basehub dev",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
@@ -16,7 +16,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@964reserve/typescript-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "25.3.5",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",

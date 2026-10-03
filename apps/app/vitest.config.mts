@@ -4,13 +4,14 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [react()],
-  test: {
-    environment: "jsdom",
-  },
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "./"),
-      "@964reserve": path.resolve(import.meta.dirname, "../../packages"),
+      "@repo": path.resolve(import.meta.dirname, "../../packages"),
     },
+  },
+  test: {
+    environment: "jsdom",
+    setupFiles: ["./__tests__/setup.ts"],
   },
 });

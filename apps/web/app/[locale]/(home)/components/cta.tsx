@@ -1,5 +1,5 @@
-import { Button } from "@964reserve/design-system/components/ui/button";
-import type { Dictionary } from "@964reserve/internationalization";
+import { Button } from "@repo/design-system/components/ui/button";
+import type { Dictionary } from "@repo/internationalization";
 import { MoveRight, PhoneCall } from "lucide-react";
 import Link from "next/link";
 import { env } from "@/env";
@@ -30,7 +30,7 @@ export const CTA = ({ dictionary }: CTAProps) => (
           <Button asChild className="gap-4">
             <Link href={env.NEXT_PUBLIC_APP_URL}>
               {dictionary.web.global.secondaryCta}{" "}
-              <MoveRight className="h-4 w-4" />
+              <MoveRight className="h-4 w-4 rtl:rotate-180" />
             </Link>
           </Button>
         </div>

@@ -5,22 +5,22 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@964reserve/design-system/components/ui/card";
+} from "@repo/design-system/components/ui/card";
 import type { Meta, StoryObj } from "@storybook/react";
 import { BellRing } from "lucide-react";
 
 const notifications = [
   {
+    description: "1 hour ago",
     title: "Your call has been confirmed.",
-    description: "1 hour ago",
   },
   {
+    description: "1 hour ago",
     title: "You have a new message!",
-    description: "1 hour ago",
   },
   {
-    title: "Your subscription is expiring soon!",
     description: "2 hours ago",
+    title: "Your subscription is expiring soon!",
   },
 ];
 
@@ -28,12 +28,13 @@ const notifications = [
  * Displays a card with header, content, and footer.
  */
 const meta = {
-  title: "ui/Card",
-  component: Card,
-  tags: ["autodocs"],
-  argTypes: {},
   args: {
     className: "w-96",
+  },
+  argTypes: {},
+  component: Card,
+  parameters: {
+    layout: "centered",
   },
   render: (args) => (
     <Card {...args}>
@@ -59,9 +60,8 @@ const meta = {
       </CardFooter>
     </Card>
   ),
-  parameters: {
-    layout: "centered",
-  },
+  tags: ["autodocs"],
+  title: "ui/Card",
 } satisfies Meta<typeof Card>;
 
 export default meta;

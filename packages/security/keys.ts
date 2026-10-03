@@ -3,11 +3,13 @@ import { z } from "zod";
 
 export const keys = () =>
   createEnv({
-    skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
-    server: {
-      ARCJET_KEY: z.string().startsWith("ajkey_").optional(),
-    },
+    // Treat KEY="" (as in .env.example) as unset.
+    emptyStringAsUndefined: true,
     runtimeEnv: {
       ARCJET_KEY: process.env.ARCJET_KEY,
     },
+    server: {
+      ARCJET_KEY: z.string().startsWith("ajkey_").optional(),
+    },
+    skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
   });

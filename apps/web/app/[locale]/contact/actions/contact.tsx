@@ -1,9 +1,9 @@
 "use server";
 
-import { resend } from "@964reserve/email";
-import { ContactTemplate } from "@964reserve/email/templates/contact";
-import { parseError } from "@964reserve/observability/error";
-import { createRateLimiter, slidingWindow } from "@964reserve/rate-limit";
+import { resend } from "@repo/email";
+import { ContactTemplate } from "@repo/email/templates/contact";
+import { parseError } from "@repo/observability/error";
+import { createRateLimiter, slidingWindow } from "@repo/rate-limit";
 import { headers } from "next/headers";
 import { env } from "@/env";
 
@@ -15,6 +15,7 @@ export const contact = async (
   error?: string;
 }> => {
   try {
+    // <module:rate-limit>
     if (env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN) {
       const rateLimiter = createRateLimiter({
         limiter: slidingWindow(1, "1d"),
@@ -30,6 +31,7 @@ export const contact = async (
         );
       }
     }
+    // </module:rate-limit>
 
     if (!(resend && env.RESEND_FROM)) {
       throw new Error("Email is not configured.");
@@ -37,10 +39,10 @@ export const contact = async (
 
     await resend.emails.send({
       from: env.RESEND_FROM,
-      to: env.RESEND_FROM,
-      subject: "Contact form submission",
-      replyTo: email,
       react: <ContactTemplate email={email} message={message} name={name} />,
+      replyTo: email,
+      subject: "Contact form submission",
+      to: env.RESEND_FROM,
     });
 
     return {};

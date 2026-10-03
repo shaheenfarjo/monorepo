@@ -1,14 +1,19 @@
-import { database } from "@964reserve/database";
+import { createAdminClient } from "@repo/database/admin";
+import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
 
-export const GET = async () => {
-  const { data: newPage } = await database
-    .from("Page")
-    .insert({ name: "cron-temp" })
+// Touches the database daily so free-tier Supabase projects are not paused.
+export const GET = async (request: Request) => {
+  if (!isAuthorizedCronRequest(request)) {
+    return unauthorized();
+  }
+
+  const { error } = await createAdminClient()
+    .from("plans")
     .select("id")
-    .single();
+    .limit(1);
 
-  if (newPage) {
-    await database.from("Page").delete().eq("id", newPage.id);
+  if (error) {
+    return new Response(error.message, { status: 500 });
   }
 
   return new Response("OK", { status: 200 });

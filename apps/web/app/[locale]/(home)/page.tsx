@@ -1,6 +1,6 @@
-import { showBetaFeature } from "@964reserve/feature-flags";
-import { getDictionary } from "@964reserve/internationalization";
-import { createMetadata } from "@964reserve/seo/metadata";
+import { showBetaFeature } from "@repo/feature-flags";
+import { getDictionary } from "@repo/internationalization";
+import { createMetadata } from "@repo/seo/metadata";
 import type { Metadata } from "next";
 import { Cases } from "./components/cases";
 import { CTA } from "./components/cta";
@@ -28,15 +28,19 @@ export const generateMetadata = async ({
 const Home = async ({ params }: HomeProps) => {
   const { locale } = await params;
   const dictionary = await getDictionary(locale);
+  // <module:feature-flags>
   const betaFeature = await showBetaFeature();
+  // </module:feature-flags>
 
   return (
     <>
-      {betaFeature && (
+      {/* <module:feature-flags> */}
+      {betaFeature ? (
         <div className="w-full bg-black py-2 text-center text-white">
           Beta feature now available
         </div>
-      )}
+      ) : null}
+      {/* </module:feature-flags> */}
       <Hero dictionary={dictionary} />
       <Cases dictionary={dictionary} />
       <Features dictionary={dictionary} />

@@ -1,0 +1,235 @@
+{
+  "common": {
+    "language": "Language",
+    "switchLanguage": "Switch language",
+    "theme": {
+      "toggle": "Toggle theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "loading": "Loading…",
+    "error": "Something went wrong.",
+    "retry": "Try again"
+  },
+  "auth": {
+    "changePhone": "Use a different number",
+    "codeLabel": "Verification code",
+    "codeSentTo": "We sent a 6-digit code to {phone}.",
+    "continue": "Continue",
+    "createOrganization": "Create organization",
+    "errors": {
+      "captcha_failed": "Please complete the security check and try again.",
+      "delivery_failed": "We couldn't send the code. Please try again shortly.",
+      "invalid_code": "That code is incorrect or has expired.",
+      "invalid_phone": "Enter a valid mobile number, e.g. 0770 123 4567.",
+      "rate_limited": "Too many attempts. Please wait a moment and try again.",
+      "signups_disabled": "New sign-ups are currently closed.",
+      "unknown": "Something went wrong. Please try again."
+    },
+    "fullNameLabel": "Full name",
+    "organizations": "Organizations",
+    "phoneHint": "We'll text you a verification code.",
+    "phoneLabel": "Mobile number",
+    "resend": "Resend code",
+    "resendIn": "Resend code in {seconds}s",
+    "sending": "Sending…",
+    "signIn": {
+      "title": "Welcome back",
+      "description": "Sign in with your mobile number."
+    },
+    "signOut": "Sign out",
+    "signUp": {
+      "title": "Create an account",
+      "description": "Sign up with your mobile number."
+    },
+    "verify": "Verify",
+    "verifying": "Verifying…"
+  },
+  "billing": {
+    "pay": "Pay {amount}",
+    "webOnly": "Purchases are made on our website. Sign in there to manage your plan.",
+    "status": {
+      "active": "Active",
+      "past_due": "Payment due",
+      "incomplete": "Awaiting payment",
+      "canceled": "Canceled",
+      "expired": "Expired"
+    }
+  },
+  "web": {
+    "global": {
+      "primaryCta": "Book a call",
+      "secondaryCta": "Sign up"
+    },
+    "header": {
+      "home": "Home",
+      "product": {
+        "title": "Product",
+        "description": "Managing a small business today is already tough.",
+        "pricing": "Pricing"
+      },
+      "blog": "Blog",
+      "docs": "Docs",
+      "contact": "Contact",
+      "signIn": "Sign in",
+      "signUp": "Get started"
+    },
+    "home": {
+      "meta": {
+        "title": "A better way to run your business",
+        "description": "Replace this description with a short summary of what your product does and who it is for."
+      },
+      "hero": {
+        "announcement": "Read our latest article"
+      },
+      "cases": {
+        "title": "Empowering Success Stories Across the Globe"
+      },
+      "features": {
+        "title": "Powerful Tools for Modern Business",
+        "description": "Discover how our cutting-edge features can revolutionize your daily operations.",
+        "items": [
+          {
+            "title": "Streamlined Operations",
+            "description": "Our platform streamlines operations, reduces complexity, and helps small businesses thrive in the modern economy."
+          },
+          {
+            "title": "Real-Time Analytics",
+            "description": "Get instant insights into your business performance with comprehensive analytics and reporting tools."
+          },
+          {
+            "title": "Automated Workflows",
+            "description": "Save time and reduce errors with intelligent automation that handles repetitive tasks for you."
+          },
+          {
+            "title": "Secure Transactions",
+            "description": "Rest easy knowing your business operations are protected by enterprise-grade security and encryption."
+          }
+        ]
+      },
+      "stats": {
+        "title": "Real Results, Real Impact",
+        "description": "Replace these numbers with your own metrics.",
+        "items": [
+          {
+            "title": "Monthly active users",
+            "metric": "100000",
+            "delta": "10",
+            "type": "unit"
+          },
+          {
+            "title": "Daily active users",
+            "metric": "10000",
+            "delta": "-5",
+            "type": "unit"
+          },
+          {
+            "title": "Monthly recurring revenue",
+            "metric": "100000",
+            "delta": "20",
+            "type": "currency"
+          },
+          {
+            "title": "Cost per acquisition",
+            "metric": "100",
+            "delta": "-10",
+            "type": "currency"
+          }
+        ]
+      },
+      "testimonials": {
+        "title": "Hear from Our Thriving Community",
+        "items": [
+          {
+            "title": "Placeholder testimonial 1",
+            "description": "Replace this quote with real feedback from a customer, with their permission.",
+            "author": {
+              "name": "Customer name",
+              "image": ""
+            }
+          },
+          {
+            "title": "Placeholder testimonial 2",
+            "description": "Replace this quote with real feedback from a customer, with their permission.",
+            "author": {
+              "name": "Customer name",
+              "image": ""
+            }
+          },
+          {
+            "title": "Placeholder testimonial 3",
+            "description": "Replace this quote with real feedback from a customer, with their permission.",
+            "author": {
+              "name": "Customer name",
+              "image": ""
+            }
+          }
+        ]
+      },
+      "faq": {
+        "title": "Common Questions, Expert Answers",
+        "description": "Answers to the questions customers ask most often. Replace these with your own.",
+        "cta": "Any questions? Reach out",
+        "items": [
+          {
+            "question": "What does the product do?",
+            "answer": "Replace this answer with a one-paragraph description of your product."
+          },
+          {
+            "question": "How do I pay?",
+            "answer": "We accept ZainCash, FIB, Qi Card and other local payment methods through our secure checkout."
+          },
+          {
+            "question": "Is my data secure?",
+            "answer": "Data is encrypted in transit and at rest, and every account can only access its own organization's data."
+          },
+          {
+            "question": "How do I get support?",
+            "answer": "Contact our support team and we will get back to you as soon as possible."
+          }
+        ]
+      },
+      "cta": {
+        "title": "Start Your Business Transformation",
+        "description": "Join thousands of forward-thinking businesses who have already modernized their operations. Our platform offers the tools, support, and efficiency you need to succeed in today's competitive market. Get started in minutes."
+      }
+    },
+    "blog": {
+      "meta": {
+        "title": "Blog",
+        "description": "Thoughts, ideas, and opinions."
+      }
+    },
+    "contact": {
+      "meta": {
+        "title": "Let's Talk About Your Business",
+        "description": "Schedule a consultation with our team to discuss how we can help streamline your operations and drive growth for your business."
+      },
+      "hero": {
+        "benefits": [
+          {
+            "title": "Personalized Consultation",
+            "description": "Get tailored solutions and expert advice specific to your business needs."
+          },
+          {
+            "title": "Seamless Integration",
+            "description": "We seamlessly integrate with your existing systems to ensure a smooth transition and minimal disruption."
+          },
+          {
+            "title": "Expert Guidance",
+            "description": "Our team of experts will guide you through the process, ensuring you get the most out of our platform."
+          }
+        ],
+        "form": {
+          "title": "Book a meeting",
+          "date": "Date",
+          "firstName": "First name",
+          "lastName": "Last name",
+          "resume": "Upload resume",
+          "cta": "Book the meeting"
+        }
+      }
+    }
+  }
+}

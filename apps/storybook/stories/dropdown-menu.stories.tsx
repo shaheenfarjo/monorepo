@@ -14,7 +14,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@964reserve/design-system/components/ui/dropdown-menu";
+} from "@repo/design-system/components/ui/dropdown-menu";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Mail, Plus, PlusCircle, Search, UserPlus } from "lucide-react";
 
@@ -23,10 +23,11 @@ import { Mail, Plus, PlusCircle, Search, UserPlus } from "lucide-react";
  * triggered by a button.
  */
 const meta = {
-  title: "ui/DropdownMenu",
-  component: DropdownMenu,
-  tags: ["autodocs"],
   argTypes: {},
+  component: DropdownMenu,
+  parameters: {
+    layout: "centered",
+  },
   render: (args) => (
     <DropdownMenu {...args}>
       <DropdownMenuTrigger>Open</DropdownMenuTrigger>
@@ -40,9 +41,8 @@ const meta = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
-  parameters: {
-    layout: "centered",
-  },
+  tags: ["autodocs"],
+  title: "ui/DropdownMenu",
 } satisfies Meta<typeof DropdownMenu>;
 
 export default meta;
@@ -85,30 +85,30 @@ export const WithSubmenus: Story = {
       <DropdownMenuTrigger>Open</DropdownMenuTrigger>
       <DropdownMenuContent className="w-44">
         <DropdownMenuItem>
-          <Search className="mr-2 size-4" />
+          <Search className="me-2 size-4" />
           <span>Search</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Plus className="mr-2 size-4" />
+            <Plus className="me-2 size-4" />
             <span>New Team</span>
             <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <UserPlus className="mr-2 size-4" />
+              <UserPlus className="me-2 size-4" />
               <span>Invite users</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
                 <DropdownMenuItem>
-                  <Mail className="mr-2 size-4" />
+                  <Mail className="me-2 size-4" />
                   <span>Email</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <PlusCircle className="mr-2 size-4" />
+                  <PlusCircle className="me-2 size-4" />
                   <span>More...</span>
                 </DropdownMenuItem>
               </DropdownMenuSubContent>

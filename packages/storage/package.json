@@ -1,17 +1,20 @@
 {
-  "name": "@964reserve/storage",
+  "name": "@repo/storage",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@t3-oss/env-nextjs": "^0.13.10",
-    "@vercel/blob": "^2.3.1",
-    "zod": "^4.3.6"
+    "@repo/database": "workspace:*",
+    "@supabase/supabase-js": "^2.115.0"
   },
   "devDependencies": {
-    "@964reserve/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "25.3.5",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }

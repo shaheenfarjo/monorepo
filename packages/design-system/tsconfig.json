@@ -1,5 +1,5 @@
 {
-  "extends": "@964reserve/typescript-config/nextjs.json",
+  "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
     "baseUrl": ".",
     "plugins": [
@@ -8,8 +8,8 @@
       }
     ],
     "paths": {
-      "@964reserve/*": ["../*"],
-      "@964reserve/design-system/*": ["./*"]
+      "@repo/*": ["../*"],
+      "@repo/design-system/*": ["./*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

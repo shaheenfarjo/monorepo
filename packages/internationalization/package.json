@@ -1,24 +1,36 @@
 {
-  "name": "@964reserve/internationalization",
+  "name": "@repo/internationalization",
   "version": "0.0.0",
   "private": true,
+  "exports": {
+    ".": "./index.ts",
+    "./config": "./config.ts",
+    "./format": "./format.ts",
+    "./navigation": "./navigation.ts",
+    "./proxy": "./proxy.ts",
+    "./request": "./request.ts",
+    "./routing": "./routing.ts",
+    "./messages/*": "./messages/*"
+  },
   "scripts": {
-    "translate": "npx -y languine@latest translate",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@formatjs/intl-localematcher": "^0.8.1",
-    "negotiator": "^1.0.0",
-    "next-international": "^1.3.1",
-    "server-only": "^0.0.1"
+    "@date-fns/tz": "^1.5.0",
+    "@repo/config": "workspace:*",
+    "next-intl": "^4.14.9",
+    "react": "19.2.4"
   },
   "devDependencies": {
-    "@964reserve/typescript-config": "workspace:*",
-    "@types/negotiator": "^0.6.4",
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "25.3.5",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "next": "16.3.4"
+    "date-fns": "^4.1.0",
+    "next": "16.3.4",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }

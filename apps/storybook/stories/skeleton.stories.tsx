@@ -1,17 +1,17 @@
-import { Skeleton } from "@964reserve/design-system/components/ui/skeleton";
+import { Skeleton } from "@repo/design-system/components/ui/skeleton";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * Use to show a placeholder while content is loading.
  */
 const meta = {
-  title: "ui/Skeleton",
-  component: Skeleton,
-  tags: ["autodocs"],
   argTypes: {},
+  component: Skeleton,
   parameters: {
     layout: "centered",
   },
+  tags: ["autodocs"],
+  title: "ui/Skeleton",
 } satisfies Meta<typeof Skeleton>;
 
 export default meta;

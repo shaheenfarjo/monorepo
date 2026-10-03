@@ -1,4 +1,4 @@
-import { initializeSentry } from "@964reserve/observability/instrumentation";
+import { initializeSentry } from "@repo/observability/instrumentation";
 
 export const register = initializeSentry;
-export { onRequestError } from "@964reserve/observability/instrumentation";
+export { onRequestError } from "@repo/observability/instrumentation";

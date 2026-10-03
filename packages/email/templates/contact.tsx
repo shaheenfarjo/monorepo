@@ -46,9 +46,10 @@ export const ContactTemplate = ({
 );
 
 ContactTemplate.PreviewProps = {
-  name: "Jane Smith",
   email: "jane.smith@example.com",
   message: "I'm interested in your services.",
+  name: "Jane Smith",
 };
 
+// biome-ignore lint/complexity/noRedundantDefaultExport: React Email's preview server loads templates through their default export.
 export default ContactTemplate;

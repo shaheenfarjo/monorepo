@@ -8,7 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@964reserve/design-system/components/ui/alert-dialog";
+} from "@repo/design-system/components/ui/alert-dialog";
 import type { Meta, StoryObj } from "@storybook/react";
 
 /**
@@ -16,10 +16,11 @@ import type { Meta, StoryObj } from "@storybook/react";
  * a response.
  */
 const meta = {
-  title: "ui/AlertDialog",
-  component: AlertDialog,
-  tags: ["autodocs"],
   argTypes: {},
+  component: AlertDialog,
+  parameters: {
+    layout: "centered",
+  },
   render: (args) => (
     <AlertDialog {...args}>
       <AlertDialogTrigger>Open</AlertDialogTrigger>
@@ -38,9 +39,8 @@ const meta = {
       </AlertDialogContent>
     </AlertDialog>
   ),
-  parameters: {
-    layout: "centered",
-  },
+  tags: ["autodocs"],
+  title: "ui/AlertDialog",
 } satisfies Meta<typeof AlertDialog>;
 
 export default meta;

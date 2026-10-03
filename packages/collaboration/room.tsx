@@ -16,7 +16,7 @@ type RoomProps = ComponentProps<typeof LiveblocksProvider> & {
   fallback: ReactNode;
   resolveUsers?: (
     args: ResolveUsersArgs
-  ) => Promise<Liveblocks["UserMeta"]["info"][]>;
+  ) => Promise<(Liveblocks["UserMeta"]["info"] | undefined)[]>;
   resolveMentionSuggestions?: (
     args: ResolveMentionSuggestionsArgs
   ) => Promise<string[]>;

@@ -1,37 +1,26 @@
-import "server-only";
-import type en from "./dictionaries/en.json";
-import languine from "./languine.json" with { type: "json" };
+import type {} from "./augment";
+import { defaultLocale, isLocale } from "./config";
+import type en from "./messages/en.json";
 
-export const locales = [
-  languine.locale.source,
-  ...languine.locale.targets,
-] as const;
+export {
+  type Direction,
+  defaultLocale,
+  getDirection,
+  getLocaleLabel,
+  isLocale,
+  type Locale,
+  localeDefinitions,
+  locales,
+} from "./config";
 
-export type Dictionary = typeof en;
+export type Messages = typeof en;
+/** @deprecated Use `Messages`. Kept for existing marketing-site components. */
+export type Dictionary = Messages;
 
-const dictionaries: Record<string, () => Promise<Dictionary>> =
-  Object.fromEntries(
-    locales.map((locale) => [
-      locale,
-      () =>
-        import(`./dictionaries/${locale}.json`)
-          .then((mod) => mod.default)
-          .catch((_err) =>
-            import("./dictionaries/en.json").then((mod) => mod.default)
-          ),
-    ])
-  );
+/** Loads the messages for a locale, falling back to the default locale. */
+export const getMessages = async (locale: string): Promise<Messages> =>
+  (await import(`./messages/${isLocale(locale) ? locale : defaultLocale}.json`))
+    .default;
 
-export const getDictionary = async (locale: string): Promise<Dictionary> => {
-  const normalizedLocale = locale.split("-")[0];
-
-  if (!locales.includes(normalizedLocale as (typeof locales)[number])) {
-    return dictionaries.en();
-  }
-
-  try {
-    return await dictionaries[normalizedLocale]();
-  } catch (_error) {
-    return dictionaries.en();
-  }
-};
+/** @deprecated Use `getMessages`. */
+export const getDictionary = getMessages;
