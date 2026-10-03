@@ -5,13 +5,32 @@ import type { BetterStackResponse } from "./types";
 const apiKey = keys().BETTERSTACK_API_KEY;
 const url = keys().BETTERSTACK_URL;
 
-export const Status = async () => {
+export interface StatusLabels {
+  degraded: string;
+  operational: string;
+  partial: string;
+  unknown: string;
+}
+
+const defaultLabels: StatusLabels = {
+  degraded: "Degraded performance",
+  operational: "All systems normal",
+  partial: "Partial outage",
+  unknown: "Unable to fetch status",
+};
+
+interface StatusProps {
+  /** Translated texts; English by default. */
+  readonly labels?: StatusLabels;
+}
+
+export const Status = async ({ labels = defaultLabels }: StatusProps) => {
   if (!(apiKey && url)) {
     return null;
   }
 
   let statusColor = "bg-muted-foreground";
-  let statusLabel = "Unable to fetch status";
+  let statusLabel = labels.unknown;
 
   try {
     const response = await fetch(
@@ -35,17 +54,17 @@ export const Status = async () => {
 
     if (status === 0) {
       statusColor = "bg-destructive";
-      statusLabel = "Degraded performance";
+      statusLabel = labels.degraded;
     } else if (status < 1) {
       statusColor = "bg-warning";
-      statusLabel = "Partial outage";
+      statusLabel = labels.partial;
     } else {
       statusColor = "bg-success";
-      statusLabel = "All systems normal";
+      statusLabel = labels.operational;
     }
   } catch {
     statusColor = "bg-muted-foreground";
-    statusLabel = "Unable to fetch status";
+    statusLabel = labels.unknown;
   }
 
   return (

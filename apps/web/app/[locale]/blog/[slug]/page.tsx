@@ -5,13 +5,16 @@ import { CodeBlock } from "@repo/cms/components/code-block";
 import { Feed } from "@repo/cms/components/feed";
 import { Image } from "@repo/cms/components/image";
 import { TableOfContents } from "@repo/cms/components/toc";
+import type { Locale } from "@repo/internationalization";
+import { formatNumber } from "@repo/internationalization/format";
+import { Link } from "@repo/internationalization/navigation";
 import { JsonLd } from "@repo/seo/json-ld";
-import { createMetadata } from "@repo/seo/metadata";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Sidebar } from "@/components/sidebar";
 import { env } from "@/env";
+import { localizedMetadata } from "@/lib/metadata";
 
 const protocol = env.VERCEL_PROJECT_PRODUCTION_URL?.startsWith("https")
   ? "https"
@@ -20,6 +23,7 @@ const url = new URL(`${protocol}://${env.VERCEL_PROJECT_PRODUCTION_URL}`);
 
 interface BlogPostProperties {
   readonly params: Promise<{
+    locale: Locale;
     slug: string;
   }>;
 }
@@ -27,14 +31,14 @@ interface BlogPostProperties {
 export const generateMetadata = async ({
   params,
 }: BlogPostProperties): Promise<Metadata> => {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const post = await blog.getPost(slug);
 
   if (!post) {
     return {};
   }
 
-  return createMetadata({
+  return localizedMetadata(locale, `/blog/${slug}`, {
     description: post.description,
     image: post.image.url,
     title: post._title,
@@ -48,7 +52,20 @@ export const generateStaticParams = async (): Promise<{ slug: string }[]> => {
 };
 
 const BlogPost = async ({ params }: BlogPostProperties) => {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("web.blog");
+  const labels = {
+    back: t("back"),
+    published: t("published"),
+    sections: t("sections"),
+    tags: t("tags"),
+  };
+  const readingTime = (minutes: number) =>
+    t("readingTime", {
+      count: minutes,
+      minutes: formatNumber(minutes, locale),
+    });
 
   return (
     <Feed queries={[blog.postQuery(slug)]}>
@@ -86,7 +103,7 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
                 href="/blog"
               >
                 <ArrowLeftIcon className="h-4 w-4 rtl:rotate-180" />
-                Back to Blog
+                {labels.back}
               </Link>
               <div className="mt-16 flex flex-col items-start gap-8 sm:flex-row">
                 <div className="sm:flex-1">
@@ -125,7 +142,9 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
                 <div className="sticky top-24 hidden shrink-0 md:block">
                   <Sidebar
                     date={new Date(page.date)}
-                    readingTime={`${page.body.readingTime} min read`}
+                    labels={labels}
+                    locale={locale}
+                    readingTime={readingTime(page.body.readingTime)}
                     toc={<TableOfContents data={page.body.json.toc} />}
                   />
                 </div>

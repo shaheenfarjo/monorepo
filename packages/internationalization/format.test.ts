@@ -2,10 +2,13 @@ import { startOfDay } from "date-fns";
 import { describe, expect, test } from "vitest";
 import { getDirection } from "./config";
 import {
+  formatCalendarDate,
   formatCurrency,
   formatDate,
   formatDateTime,
+  formatMonthYear,
   formatRelativeTime,
+  formatWeekday,
   inProjectTimeZone,
   intlLocale,
   WEEK_STARTS_ON,
@@ -57,5 +60,14 @@ describe("regional formatting", () => {
     expect(getDirection("ar")).toBe("rtl");
     expect(getDirection("en")).toBe("ltr");
     expect(getDirection("xx")).toBe("ltr");
+  });
+
+  test("labels calendars with Iraqi month names and Latin digits", () => {
+    const october = new Date(2026, 9, 15);
+    expect(formatMonthYear(october, "ar")).toBe("تشرين الأول 2026");
+    expect(formatMonthYear(october, "en")).toBe("October 2026");
+    expect(formatCalendarDate(october, "ar")).toBe("15 تشرين الأول 2026");
+    // 15 October 2026 is a Thursday.
+    expect(formatWeekday(october, "en")).toBe("Thu");
   });
 });

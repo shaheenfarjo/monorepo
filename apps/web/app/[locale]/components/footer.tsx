@@ -1,18 +1,20 @@
 import { project } from "@repo/config";
 import { Status } from "@repo/observability/status";
+import { getTranslations } from "next-intl/server";
 import { env } from "@/env";
 import { FooterColumn, type FooterLink } from "./footer-column";
 import { FooterLegalColumn } from "./footer-legal-column";
 
-export const Footer = () => {
+export const Footer = async () => {
+  const t = await getTranslations();
   const pages: FooterLink[] = [
     // <module:cms>
-    { href: "/blog", title: "Blog" },
+    { href: "/blog", title: t("web.footer.blog") },
     // </module:cms>
   ];
 
   if (env.NEXT_PUBLIC_DOCS_URL) {
-    pages.push({ href: env.NEXT_PUBLIC_DOCS_URL, title: "Docs" });
+    pages.push({ href: env.NEXT_PUBLIC_DOCS_URL, title: t("web.footer.docs") });
   }
 
   return (
@@ -26,12 +28,19 @@ export const Footer = () => {
                   {project.name}
                 </h2>
               </div>
-              <Status />
+              <Status
+                labels={{
+                  degraded: t("common.status.degraded"),
+                  operational: t("common.status.operational"),
+                  partial: t("common.status.partial"),
+                  unknown: t("common.status.unknown"),
+                }}
+              />
             </div>
             <div className="grid items-start gap-10 lg:grid-cols-3">
-              <FooterColumn href="/" title="Home" />
+              <FooterColumn href="/" title={t("web.footer.home")} />
               {pages.length > 0 ? (
-                <FooterColumn items={pages} title="Pages" />
+                <FooterColumn items={pages} title={t("web.footer.pages")} />
               ) : null}
               {/* <module:cms> */}
               <FooterLegalColumn />

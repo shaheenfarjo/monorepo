@@ -11,15 +11,25 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@repo/design-system/components/ui/carousel";
-import type { Dictionary } from "@repo/internationalization";
+import type { Messages } from "@repo/internationalization";
 import { User } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
-interface TestimonialsProps {
-  dictionary: Dictionary;
-}
+type TestimonialItems = Messages["web"]["home"]["testimonials"]["items"];
 
-export const Testimonials = ({ dictionary }: TestimonialsProps) => {
+const WHITESPACE = /\s+/;
+
+const initials = (name: string) =>
+  name
+    .split(WHITESPACE)
+    .slice(0, 2)
+    .map((part) => part.charAt(0))
+    .join("");
+
+export const Testimonials = () => {
+  const t = useTranslations("web.home.testimonials");
+  const items = t.raw("items") as TestimonialItems;
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
@@ -44,11 +54,11 @@ export const Testimonials = ({ dictionary }: TestimonialsProps) => {
       <div className="container mx-auto">
         <div className="flex flex-col gap-10">
           <h2 className="text-start font-regular text-3xl tracking-tighter md:text-5xl lg:max-w-xl">
-            {dictionary.web.home.testimonials.title}
+            {t("title")}
           </h2>
           <Carousel className="w-full" setApi={setApi}>
             <CarouselContent>
-              {dictionary.web.home.testimonials.items.map((item) => (
+              {items.map((item) => (
                 <CarouselItem className="lg:basis-1/2" key={item.title}>
                   <div className="flex aspect-video h-full flex-col justify-between rounded-md bg-muted p-6 lg:col-span-2">
                     <User className="h-8 w-8 stroke-1" />
@@ -60,10 +70,12 @@ export const Testimonials = ({ dictionary }: TestimonialsProps) => {
                         </p>
                       </div>
                       <p className="flex flex-row items-center gap-2 text-sm">
-                        <span className="text-muted-foreground">By</span>
+                        <span className="text-muted-foreground">{t("by")}</span>
                         <Avatar className="h-6 w-6">
                           <AvatarImage src={item.author.image} />
-                          <AvatarFallback>??</AvatarFallback>
+                          <AvatarFallback>
+                            {initials(item.author.name)}
+                          </AvatarFallback>
                         </Avatar>
                         <span>{item.author.name}</span>
                       </p>

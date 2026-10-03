@@ -1,47 +1,51 @@
 import { capitalize } from "@repo/design-system/lib/utils";
+import type { Locale } from "@repo/internationalization";
+import { formatDate, intlLocale } from "@repo/internationalization/format";
 import type { ReactNode } from "react";
 
 interface SidebarProperties {
   readonly date: Date;
+  readonly labels: {
+    published: string;
+    sections: string;
+    tags: string;
+  };
+  readonly locale: Locale;
   readonly readingTime: string;
   readonly tags?: string[];
   readonly toc?: ReactNode;
 }
 
-export const Sidebar = async ({
+export const Sidebar = ({
   date,
+  labels,
+  locale,
   readingTime,
   tags,
   toc: Toc,
 }: SidebarProperties) => (
   <div className="col-span-4 flex w-72 flex-col items-start gap-8 border-foreground/10 border-s px-6 lg:col-span-2">
     <div className="grid gap-2">
-      <p className="text-muted-foreground text-sm">Published</p>
+      <p className="text-muted-foreground text-sm">{labels.published}</p>
       <p className="rounded-sm text-foreground text-sm">
-        {new Intl.DateTimeFormat("en-US", {
-          day: "numeric",
-          month: "short",
-          timeZone: "America/New_York",
-          year: "numeric",
-        }).format(date)}
+        {formatDate(date, locale, "medium")}
       </p>
     </div>
     <div className="grid gap-2">
-      <p className="text-muted-foreground text-sm">Reading Time</p>
       <p className="rounded-sm text-foreground text-sm">{readingTime}</p>
     </div>
     {tags ? (
       <div className="grid gap-2">
-        <p className="text-muted-foreground text-sm">Tags</p>
+        <p className="text-muted-foreground text-sm">{labels.tags}</p>
         <p className="rounded-sm text-foreground text-sm">
-          {tags.map(capitalize).join(", ")}
+          {new Intl.ListFormat(intlLocale(locale)).format(tags.map(capitalize))}
         </p>
       </div>
     ) : null}
     {Toc ? (
       <div className="-mx-2">
         <div className="grid gap-2 p-2">
-          <p className="text-muted-foreground text-sm">Sections</p>
+          <p className="text-muted-foreground text-sm">{labels.sections}</p>
           {Toc}
         </div>
       </div>

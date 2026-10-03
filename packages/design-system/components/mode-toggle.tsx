@@ -10,13 +10,28 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 
-const themes = [
-  { label: "Light", value: "light" },
-  { label: "Dark", value: "dark" },
-  { label: "System", value: "system" },
-];
+export interface ModeToggleLabels {
+  dark: string;
+  light: string;
+  system: string;
+  toggle: string;
+}
 
-export const ModeToggle = () => {
+const defaultLabels: ModeToggleLabels = {
+  dark: "Dark",
+  light: "Light",
+  system: "System",
+  toggle: "Toggle theme",
+};
+
+const themes = ["light", "dark", "system"] as const;
+
+interface ModeToggleProps {
+  /** Translated texts; English by default. */
+  readonly labels?: ModeToggleLabels;
+}
+
+export const ModeToggle = ({ labels = defaultLabels }: ModeToggleProps) => {
   const { setTheme } = useTheme();
 
   return (
@@ -29,13 +44,13 @@ export const ModeToggle = () => {
         >
           <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
+          <span className="sr-only">{labels.toggle}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {themes.map(({ label, value }) => (
+        {themes.map((value) => (
           <DropdownMenuItem key={value} onClick={() => setTheme(value)}>
-            {label}
+            {labels[value]}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

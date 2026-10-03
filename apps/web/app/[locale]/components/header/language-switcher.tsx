@@ -7,24 +7,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@repo/design-system/components/ui/dropdown-menu";
-import {
-  getLocaleLabel,
-  type Locale,
-  locales,
-} from "@repo/internationalization/config";
+import { getLocaleLabel, locales } from "@repo/internationalization/config";
+import { usePathname, useRouter } from "@repo/internationalization/navigation";
 import { Languages } from "lucide-react";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 
 export const LanguageSwitcher = () => {
+  const t = useTranslations("common");
   const router = useRouter();
+  // The current path without its locale prefix.
   const pathname = usePathname();
-  const { locale: current } = useParams<{ locale: string }>();
-
-  // Every URL starts with its locale (/ar/…, /en/…); swap that segment.
-  const switchLanguage = (locale: Locale) => {
-    const rest = pathname.split("/").slice(2).join("/");
-    router.push(`/${locale}${rest ? `/${rest}` : ""}`);
-  };
+  const current = useLocale();
 
   return (
     <DropdownMenu>
@@ -35,7 +28,7 @@ export const LanguageSwitcher = () => {
           variant="ghost"
         >
           <Languages className="h-[1.2rem] w-[1.2rem]" />
-          <span className="sr-only">Switch language</span>
+          <span className="sr-only">{t("switchLanguage")}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -44,7 +37,7 @@ export const LanguageSwitcher = () => {
             disabled={locale === current}
             key={locale}
             lang={locale}
-            onClick={() => switchLanguage(locale)}
+            onClick={() => router.replace(pathname, { locale })}
           >
             {getLocaleLabel(locale)}
           </DropdownMenuItem>
