@@ -10,6 +10,8 @@ import { z } from "zod";
 
 export const env = createEnv({
   client: {},
+  // Treat KEY="" (as in .env.example) as unset.
+  emptyStringAsUndefined: true,
   extends: [
     auth(),
     analytics(),

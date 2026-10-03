@@ -22,8 +22,7 @@ const COLORS = [
 ];
 
 export const POST = async () => {
-  const user = await currentUser();
-  const { orgId } = await auth();
+  const [user, { orgId }] = await Promise.all([currentUser(), auth()]);
 
   if (!(user && orgId)) {
     return new Response("Unauthorized", { status: 401 });
@@ -35,7 +34,7 @@ export const POST = async () => {
     userInfo: {
       avatar: user.user_metadata?.avatar_url,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      name: user.user_metadata?.full_name ?? user.email ?? user.phone,
+      name: user.user_metadata?.full_name,
     },
   });
 };

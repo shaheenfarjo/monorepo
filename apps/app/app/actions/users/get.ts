@@ -1,7 +1,6 @@
 "use server";
 
-import { auth } from "@repo/auth/server";
-import { createAdminClient } from "@repo/database";
+import { getOrganizationMembers } from "./members";
 
 const colors = [
   "var(--color-red-500)",
@@ -23,11 +22,9 @@ const colors = [
   "var(--color-rose-500)",
 ];
 
-// Upper bound on lookups per call so a client can't force unbounded work.
-const MAX_USERS = 100;
-
 type UserInfo = Liveblocks["UserMeta"]["info"];
 
+/** Resolves Liveblocks user ids to display info, in the order requested. */
 export const getUsers = async (
   userIds: string[]
 ): Promise<
@@ -39,30 +36,21 @@ export const getUsers = async (
     }
 > => {
   try {
-    const { orgId } = await auth();
-
-    if (!orgId) {
-      throw new Error("Not logged in");
-    }
-
-    const admin = createAdminClient();
-    const results = await Promise.all(
-      userIds
-        .slice(0, MAX_USERS)
-        .map((userId) => admin.auth.admin.getUserById(userId))
+    const members = new Map(
+      (await getOrganizationMembers()).map((profile) => [profile.id, profile])
     );
 
-    // Preserve the order of `userIds` (Liveblocks expects it) and only resolve
-    // users that belong to the caller's organization.
-    const data = results.map(({ data: { user } }) =>
-      user && user.app_metadata?.org_id === orgId
+    const data = userIds.map((userId) => {
+      const profile = members.get(userId);
+
+      return profile
         ? ({
-            avatar: user.user_metadata?.avatar_url,
+            avatar: profile.avatar_url ?? undefined,
             color: colors[Math.floor(Math.random() * colors.length)],
-            name: user.user_metadata?.full_name ?? user.email ?? user.phone,
+            name: profile.full_name ?? undefined,
           } satisfies UserInfo)
-        : undefined
-    );
+        : undefined;
+    });
 
     return { data };
   } catch (error) {

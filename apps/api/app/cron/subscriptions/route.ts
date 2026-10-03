@@ -1,106 +1,31 @@
-import { createAdminClient } from "@repo/database";
-import { sendEmail } from "@repo/email";
 import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
-import { payments } from "@repo/payments";
+import { getBilling } from "@repo/payments/server";
 import { NextResponse } from "next/server";
+import { notifyRenewalInvoices } from "@/lib/billing-notifications";
 import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
 
-// Assuming we have a `subscriptions` table managed via Supabase with fields:
-// id, user_id, status, next_billing_date, amount, currency
+/**
+ * Daily: issues renewal invoices a few days before each period ends, marks
+ * unpaid subscriptions past due and expires them after the grace period.
+ */
 export const GET = async (request: Request): Promise<Response> => {
   if (!isAuthorizedCronRequest(request)) {
     return unauthorized();
   }
 
-  if (!payments) {
-    return NextResponse.json({
-      message: "Payments not configured",
-      ok: false,
-    });
-  }
-
   try {
-    const database = createAdminClient();
-    const now = new Date().toISOString();
-
-    // Find active subscriptions that are due for renewal
-    const { data: dueSubscriptions, error } = await database
-      .from("subscriptions")
-      .select("*")
-      .eq("status", "active")
-      .lte("next_billing_date", now);
-
-    if (error) {
-      throw new Error(`Failed to fetch subscriptions: ${error.message}`);
-    }
-
-    let processed = 0;
-    for (const sub of dueSubscriptions || []) {
-      try {
-        // biome-ignore lint/performance/noAwaitInLoops: renewals are processed one at a time to respect provider rate limits
-        const { data: userResponse } = await database.auth.admin.getUserById(
-          sub.user_id
-        );
-        const user = userResponse?.user;
-
-        if (!user?.email) {
-          log.warn(`User ${sub.user_id} not found or has no email.`);
-          continue;
-        }
-
-        // Generate a new one-off Wayl link for this renewal invoice
-        const link = await payments.createPaymentLink({
-          currency: "IQD",
-          // Read back by the payment webhook to attribute the payment.
-          customParameter: JSON.stringify({
-            subscriptionId: sub.id,
-            userId: sub.user_id,
-          }),
-          lineItems: [
-            {
-              amount: sub.amount,
-              label: "Subscription Renewal",
-              type: "increase",
-            },
-          ],
-          referenceId: `renewal_${sub.id}_${Date.now()}`,
-          total: sub.amount,
-        });
-
-        // Email the user
-        await sendEmail({
-          subject: "Your Subscription Renewal is Due",
-          text: `Please pay your subscription renewal of ${sub.amount} IQD by visiting: ${link.url}`,
-          to: user.email,
-        });
-
-        // Update local status to pending payment
-        await database
-          .from("subscriptions")
-          .update({
-            latest_invoice_url: link.url,
-            status: "pending_payment",
-          })
-          .eq("id", sub.id);
-
-        processed += 1;
-      } catch (subError) {
-        log.error(
-          `Failed to process subscription ${sub.id}: ${parseError(subError)}`
-        );
-      }
-    }
+    const { expired, invoices, pastDue } = await getBilling().issueRenewals();
+    await notifyRenewalInvoices(invoices);
 
     return NextResponse.json({
-      message: `Processed ${processed} subscriptions`,
+      expired,
+      invoiced: invoices.length,
       ok: true,
+      pastDue,
     });
   } catch (error) {
-    log.error(`Cron error: ${parseError(error)}`);
-    return NextResponse.json(
-      { message: "something went wrong", ok: false },
-      { status: 500 }
-    );
+    log.error(`Subscription renewals failed: ${parseError(error)}`);
+    return NextResponse.json({ ok: false }, { status: 500 });
   }
 };

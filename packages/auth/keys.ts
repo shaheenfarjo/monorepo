@@ -10,6 +10,8 @@ export const keys = () =>
         .optional(),
       NEXT_PUBLIC_SUPABASE_URL: z.url().optional(),
     },
+    // Treat KEY="" (as in .env.example) as unset.
+    emptyStringAsUndefined: true,
     runtimeEnv: {
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:
         process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,

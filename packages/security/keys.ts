@@ -3,6 +3,8 @@ import { z } from "zod";
 
 export const keys = () =>
   createEnv({
+    // Treat KEY="" (as in .env.example) as unset.
+    emptyStringAsUndefined: true,
     runtimeEnv: {
       ARCJET_KEY: process.env.ARCJET_KEY,
     },

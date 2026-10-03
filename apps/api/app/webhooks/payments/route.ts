@@ -1,86 +1,51 @@
 import { analytics } from "@repo/analytics/server";
 import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
-import { payments } from "@repo/payments";
+import { WebhookVerificationError } from "@repo/payments";
+import { getBilling } from "@repo/payments/server";
 import { NextResponse } from "next/server";
-import { env } from "@/env";
-
-const COMPLETED_STATUSES = new Set(["Complete", "Delivered"]);
-const FAILED_STATUSES = new Set(["Cancelled", "Rejected"]);
 
 /**
- * SECURITY: the payer is identified only from data our own server attached to
- * the link (`customParameter`), re-read from Wayl's API. Nothing that a user
- * can edit (e.g. `user_metadata`) is trusted to attribute a payment.
+ * Payment provider webhooks. The billing service verifies the signature over
+ * the raw body, ignores repeated deliveries and re-reads the payment from the
+ * provider's API before changing any state.
  */
-const getUserIdFromLink = (link: Record<string, unknown>) => {
-  if (typeof link.customParameter !== "string") {
-    return;
-  }
-
-  try {
-    const parsed = JSON.parse(link.customParameter) as { userId?: unknown };
-    return typeof parsed.userId === "string" ? parsed.userId : undefined;
-  } catch {
-    // Not JSON, so it was not set by this server.
-  }
-};
-
 export const POST = async (request: Request): Promise<Response> => {
-  if (!(payments && env.WAYL_WEBHOOK_SECRET)) {
-    return NextResponse.json({ message: "Not configured", ok: false });
-  }
-
-  // Read the raw bytes exactly as received; the signature covers them.
-  const body = await request.text();
-  const signature = request.headers.get("x-wayl-signature-256");
-
-  if (!(signature && payments.verifyWebhook(body, signature))) {
-    return NextResponse.json(
-      { message: "invalid signature", ok: false },
-      { status: 401 }
-    );
-  }
+  const rawBody = await request.text();
 
   try {
-    const event = JSON.parse(body) as { referenceId?: unknown };
+    const outcome = await getBilling().handleWebhook({
+      headers: request.headers,
+      rawBody,
+    });
 
-    if (typeof event.referenceId !== "string") {
+    if (outcome.status === "processed" && outcome.to === "paid") {
+      const { payment } = outcome;
+      analytics?.capture({
+        distinctId:
+          payment.userId ?? payment.organizationId ?? payment.referenceId,
+        event: "Payment Completed",
+        properties: {
+          amount: payment.amount,
+          currency: payment.currency,
+          organizationId: payment.organizationId,
+          referenceId: payment.referenceId,
+        },
+      });
+      await analytics?.shutdown();
+    }
+
+    return NextResponse.json({ ok: true, status: outcome.status });
+  } catch (error) {
+    if (error instanceof WebhookVerificationError) {
       return NextResponse.json(
-        { message: "missing referenceId", ok: false },
-        { status: 400 }
+        { message: error.message, ok: false },
+        { status: 401 }
       );
     }
 
-    // Defense in depth: never act on the webhook body alone. Re-fetch the
-    // authoritative link state from Wayl's API.
-    const link = (await payments.getPaymentStatus(event.referenceId)) as Record<
-      string,
-      unknown
-    >;
-    const status = typeof link.status === "string" ? link.status : undefined;
-    const userId = getUserIdFromLink(link);
-
-    if (userId && status && COMPLETED_STATUSES.has(status)) {
-      analytics?.capture({ distinctId: userId, event: "Payment Complete" });
-    } else if (userId && status && FAILED_STATUSES.has(status)) {
-      analytics?.capture({ distinctId: userId, event: "Payment Cancelled" });
-    } else {
-      log.info("Wayl webhook received", {
-        referenceId: event.referenceId,
-        status,
-      });
-    }
-
-    await analytics?.shutdown();
-
-    return NextResponse.json({ ok: true });
-  } catch (error) {
-    log.error(parseError(error));
-
-    return NextResponse.json(
-      { message: "something went wrong", ok: false },
-      { status: 500 }
-    );
+    log.error(`Payment webhook failed: ${parseError(error)}`);
+    // A 5xx makes the provider retry the delivery later.
+    return NextResponse.json({ ok: false }, { status: 500 });
   }
 };

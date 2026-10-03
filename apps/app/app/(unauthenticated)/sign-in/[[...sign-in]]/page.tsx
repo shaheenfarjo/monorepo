@@ -1,15 +1,20 @@
+import { PhoneOtpForm } from "@repo/auth/components/phone-otp-form";
 import { createMetadata } from "@repo/seo/metadata";
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 
 const title = "Welcome back";
-const description = "Enter your details to sign in.";
-const SignIn = dynamic(() =>
-  import("@repo/auth/components/sign-in").then((mod) => mod.SignIn)
-);
+const description = "Sign in with your mobile number.";
 
 export const metadata: Metadata = createMetadata({ description, title });
 
-const SignInPage = () => <SignIn />;
+const SignInPage = () => (
+  <div className="grid gap-6">
+    <div className="grid gap-1 text-center">
+      <h1 className="font-semibold text-2xl tracking-tight">{title}</h1>
+      <p className="text-muted-foreground text-sm">{description}</p>
+    </div>
+    <PhoneOtpForm />
+  </div>
+);
 
 export default SignInPage;

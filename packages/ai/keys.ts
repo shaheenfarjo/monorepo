@@ -3,6 +3,8 @@ import { z } from "zod";
 
 export const keys = () =>
   createEnv({
+    // Treat KEY="" (as in .env.example) as unset.
+    emptyStringAsUndefined: true,
     runtimeEnv: {
       OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     },

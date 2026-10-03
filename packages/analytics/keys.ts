@@ -8,6 +8,8 @@ export const keys = () =>
       NEXT_PUBLIC_POSTHOG_HOST: z.url().optional(),
       NEXT_PUBLIC_POSTHOG_KEY: z.string().startsWith("phc_").optional(),
     },
+    // Treat KEY="" (as in .env.example) as unset.
+    emptyStringAsUndefined: true,
     runtimeEnv: {
       NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
       NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,

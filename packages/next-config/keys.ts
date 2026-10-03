@@ -9,6 +9,8 @@ export const keys = () =>
       NEXT_PUBLIC_DOCS_URL: z.url().optional(),
       NEXT_PUBLIC_WEB_URL: z.url(),
     },
+    // Treat KEY="" (as in .env.example) as unset.
+    emptyStringAsUndefined: true,
     runtimeEnv: {
       ANALYZE: process.env.ANALYZE,
       NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,

@@ -25,13 +25,18 @@ export const metadata: Metadata = {
 };
 
 const App = async () => {
-  const supabase = await createClient();
-  const { data: pages } = await supabase.from("Page").select("*");
   const { orgId } = await auth();
 
   if (!orgId) {
     notFound();
   }
+
+  const supabase = await createClient();
+  const { data: projects } = await supabase
+    .from("projects")
+    .select("id, name")
+    .eq("organization_id", orgId)
+    .order("created_at", { ascending: false });
 
   return (
     <>
@@ -47,9 +52,12 @@ const App = async () => {
       </Header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-          {(pages || []).map((page) => (
-            <div className="aspect-video rounded-xl bg-muted/50" key={page.id}>
-              {page.name}
+          {(projects ?? []).map((item) => (
+            <div
+              className="aspect-video rounded-xl bg-muted/50 p-4"
+              key={item.id}
+            >
+              {item.name}
             </div>
           ))}
         </div>

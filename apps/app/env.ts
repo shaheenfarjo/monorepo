@@ -13,6 +13,8 @@ import { createEnv } from "@t3-oss/env-nextjs";
 
 export const env = createEnv({
   client: {},
+  // Treat KEY="" (as in .env.example) as unset.
+  emptyStringAsUndefined: true,
   extends: [
     auth(),
     analytics(),

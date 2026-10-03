@@ -1,4 +1,4 @@
-import { createAdminClient } from "@repo/database";
+import { createAdminClient } from "@repo/database/admin";
 import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
 
 // Touches the database daily so free-tier Supabase projects are not paused.
@@ -7,9 +7,10 @@ export const GET = async (request: Request) => {
     return unauthorized();
   }
 
-  const { error } = await createAdminClient().auth.admin.listUsers({
-    perPage: 1,
-  });
+  const { error } = await createAdminClient()
+    .from("plans")
+    .select("id")
+    .limit(1);
 
   if (error) {
     return new Response(error.message, { status: 500 });

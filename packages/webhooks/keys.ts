@@ -3,6 +3,8 @@ import { z } from "zod";
 
 export const keys = () =>
   createEnv({
+    // Treat KEY="" (as in .env.example) as unset.
+    emptyStringAsUndefined: true,
     runtimeEnv: {
       SVIX_TOKEN: process.env.SVIX_TOKEN,
     },

@@ -1,5 +1,8 @@
 "use client";
 
+import { OrganizationSwitcher } from "@repo/auth/components/organization-switcher";
+import { UserMenu } from "@repo/auth/components/user-menu";
+import type { OrganizationMembership } from "@repo/auth/organizations";
 import { BrandLogo } from "@repo/design-system/components/brand-logo";
 import { ModeToggle } from "@repo/design-system/components/mode-toggle";
 import { Button } from "@repo/design-system/components/ui/button";
@@ -57,7 +60,9 @@ import type { ReactNode } from "react";
 import { Search } from "./search";
 
 interface GlobalSidebarProperties {
+  readonly activeOrganizationId: string | null;
   readonly children: ReactNode;
+  readonly organizations: OrganizationMembership[];
 }
 
 const data = {
@@ -186,7 +191,11 @@ const data = {
   ],
 };
 
-export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
+export const GlobalSidebar = ({
+  activeOrganizationId,
+  children,
+  organizations,
+}: GlobalSidebarProperties) => {
   const sidebar = useSidebar();
 
   return (
@@ -201,7 +210,14 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
                   sidebar.open ? "" : "-mx-1"
                 )}
               >
-                <BrandLogo showName={sidebar.open} />
+                {organizations.length > 0 ? (
+                  <OrganizationSwitcher
+                    activeId={activeOrganizationId}
+                    organizations={organizations}
+                  />
+                ) : (
+                  <BrandLogo showName={sidebar.open} />
+                )}
               </div>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -320,6 +336,9 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem className="flex items-center gap-2">
+              <div className="min-w-0 flex-1">
+                <UserMenu />
+              </div>
               <div className="flex shrink-0 items-center gap-px">
                 <ModeToggle />
                 {/* <module:notifications> */}

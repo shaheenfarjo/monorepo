@@ -1,10 +1,12 @@
+import { AuthProvider } from "@repo/auth/provider";
 import { SidebarProvider } from "@repo/design-system/components/ui/sidebar";
+import type { User } from "@supabase/supabase-js";
 import type { ReactNode } from "react";
 import { NotificationsProvider } from "./notifications-provider";
 
 interface AuthenticatedProvidersProperties {
   readonly children: ReactNode;
-  readonly userId: string;
+  readonly user: User;
 }
 
 /**
@@ -18,11 +20,11 @@ export const AuthenticatedProviders = (
 
   // <module:notifications>
   content = (
-    <NotificationsProvider userId={props.userId}>
+    <NotificationsProvider userId={props.user.id}>
       {content}
     </NotificationsProvider>
   );
   // </module:notifications>
 
-  return content;
+  return <AuthProvider initialUser={props.user}>{content}</AuthProvider>;
 };

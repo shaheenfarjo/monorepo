@@ -1,7 +1,18 @@
+import "server-only";
+
+import type { Database } from "@repo/database";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { cache } from "react";
 import { keys } from "./keys";
+import {
+  ACTIVE_ORGANIZATION_COOKIE,
+  listMemberships,
+  pickActiveOrganization,
+} from "./organizations";
 
+/** Session-bound client for Server Components, Route Handlers and Actions. */
 export const createClient = async () => {
   const cookieStore = await cookies();
   const { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY } =
@@ -13,7 +24,7 @@ export const createClient = async () => {
     );
   }
 
-  return createServerClient(
+  return createServerClient<Database>(
     NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
@@ -36,27 +47,48 @@ export const createClient = async () => {
   );
 };
 
-export const currentUser = async () => {
+/** The signed-in user, verified with the Auth server (null if signed out). */
+export const currentUser = cache(async () => {
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
 
   return data.user ?? null;
-};
+});
 
 /**
- * Resolves the caller's identity and organization.
- *
- * SECURITY: the organization is read from `app_metadata`, which only the
- * server (secret key) can write. `user_metadata` is editable by the user via
- * `supabase.auth.updateUser()` and must never be used for authorization.
- * There is deliberately no fallback organization.
+ * The caller's identity and active organization, resolved from memberships
+ * (never from user-editable metadata). Cached per request.
  */
-export const auth = async () => {
-  const user = await currentUser();
-  const orgId = user?.app_metadata?.org_id;
+export const auth = cache(async () => {
+  const supabase = await createClient();
+  // Verifies the JWT locally with the project's signing keys when available.
+  const { data } = await supabase.auth.getClaims();
+  const userId = data?.claims.sub ?? null;
+
+  if (!userId) {
+    return { orgId: null, role: null, userId: null };
+  }
+
+  const cookieStore = await cookies();
+  const active = pickActiveOrganization(
+    await listMemberships(supabase, userId),
+    cookieStore.get(ACTIVE_ORGANIZATION_COOKIE)?.value
+  );
 
   return {
-    orgId: typeof orgId === "string" && orgId.length > 0 ? orgId : null,
-    userId: user?.id ?? null,
+    orgId: active?.id ?? null,
+    role: active?.role ?? null,
+    userId,
   };
+});
+
+/** Redirects to the sign-in page when nobody is signed in. */
+export const requireUser = async (signInPath = "/sign-in") => {
+  const user = await currentUser();
+
+  if (!user) {
+    redirect(signInPath);
+  }
+
+  return user;
 };

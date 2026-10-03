@@ -3,6 +3,8 @@ import { z } from "zod";
 
 export const keys = () =>
   createEnv({
+    // Treat KEY="" (as in .env.example) as unset.
+    emptyStringAsUndefined: true,
     runtimeEnv: {
       BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
     },

@@ -7,6 +7,8 @@ export const keys = () =>
       // Added by Sentry Integration, Vercel Marketplace
       NEXT_PUBLIC_SENTRY_DSN: z.url().optional(),
     },
+    // Treat KEY="" (as in .env.example) as unset.
+    emptyStringAsUndefined: true,
     runtimeEnv: {
       BETTERSTACK_API_KEY: process.env.BETTERSTACK_API_KEY,
       BETTERSTACK_URL: process.env.BETTERSTACK_URL,

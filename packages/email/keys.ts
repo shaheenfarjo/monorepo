@@ -3,6 +3,8 @@ import { z } from "zod";
 
 export const keys = () =>
   createEnv({
+    // Treat KEY="" (as in .env.example) as unset.
+    emptyStringAsUndefined: true,
     runtimeEnv: {
       RESEND_FROM: process.env.RESEND_FROM,
       RESEND_TOKEN: process.env.RESEND_TOKEN,
