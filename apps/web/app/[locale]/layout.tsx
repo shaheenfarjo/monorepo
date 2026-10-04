@@ -5,7 +5,11 @@ import { DesignSystemProvider } from "@repo/design-system";
 import { fonts } from "@repo/design-system/lib/fonts";
 import { cn } from "@repo/design-system/lib/utils";
 import { Toolbar } from "@repo/feature-flags/components/toolbar";
-import { getDictionary, getDirection } from "@repo/internationalization";
+import { getDirection, locales } from "@repo/internationalization";
+import { routing } from "@repo/internationalization/routing";
+import { notFound } from "next/navigation";
+import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { Footer } from "./components/footer";
 import { Header } from "./components/header";
@@ -17,10 +21,20 @@ interface RootLayoutProperties {
   }>;
 }
 
+export const generateStaticParams = () => locales.map((locale) => ({ locale }));
+
 const RootLayout = async ({ children, params }: RootLayoutProperties) => {
   const { locale } = await params;
-  const dictionary = await getDictionary(locale);
+
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
+
+  // Lets pages under this layout render statically.
+  setRequestLocale(locale);
   const dir = getDirection(locale);
+  // Client components only need the shared and marketing texts.
+  const { common, web } = await getMessages();
 
   return (
     <html
@@ -30,19 +44,21 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
       suppressHydrationWarning
     >
       <body>
-        <AnalyticsProvider>
-          <DesignSystemProvider dir={dir}>
-            <Header dictionary={dictionary} />
-            {children}
-            <Footer />
-          </DesignSystemProvider>
-          {/* <module:feature-flags> */}
-          <Toolbar />
-          {/* </module:feature-flags> */}
-          {/* <module:cms> */}
-          <CMSToolbar />
-          {/* </module:cms> */}
-        </AnalyticsProvider>
+        <NextIntlClientProvider messages={{ common, web }}>
+          <AnalyticsProvider>
+            <DesignSystemProvider dir={dir} labels={common.ui}>
+              <Header />
+              {children}
+              <Footer />
+            </DesignSystemProvider>
+            {/* <module:feature-flags> */}
+            <Toolbar />
+            {/* </module:feature-flags> */}
+            {/* <module:cms> */}
+            <CMSToolbar />
+            {/* </module:cms> */}
+          </AnalyticsProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

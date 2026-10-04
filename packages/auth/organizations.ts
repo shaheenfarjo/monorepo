@@ -1,7 +1,7 @@
 import type { Database, OrgRole } from "@repo/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-/** Cookie remembering which organization the user is working in. */
+/** Cookie remembering the active organization for server-rendered apps. */
 export const ACTIVE_ORGANIZATION_COOKIE = "active_org";
 
 export interface OrganizationMembership {
@@ -43,10 +43,3 @@ export const pickActiveOrganization = (
   memberships.find((membership) => membership.id === preferredId) ??
   memberships[0] ??
   null;
-
-/** Browser only: remember the active organization for server rendering. */
-export const setActiveOrganizationCookie = (organizationId: string) => {
-  const secure = window.location.protocol === "https:" ? "; Secure" : "";
-  // biome-ignore lint/suspicious/noDocumentCookie: the Cookie Store API is not available in all supported browsers
-  document.cookie = `${ACTIVE_ORGANIZATION_COOKIE}=${encodeURIComponent(organizationId)}; Path=/; Max-Age=31536000; SameSite=Lax${secure}`;
-};

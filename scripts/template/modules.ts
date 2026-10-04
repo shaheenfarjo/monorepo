@@ -41,11 +41,8 @@ export const templateModules: TemplateModule[] = [
     packages: ["packages/collaboration"],
     paths: [
       "apps/app/liveblocks.config.ts",
-      "apps/app/app/api/collaboration",
-      "apps/app/app/actions/users",
-      "apps/app/app/(authenticated)/components/avatar-stack.tsx",
-      "apps/app/app/(authenticated)/components/collaboration-provider.tsx",
-      "apps/app/app/(authenticated)/components/cursors.tsx",
+      "apps/app/components/collaboration",
+      "apps/api/app/collaboration",
     ],
   },
   {
@@ -53,23 +50,26 @@ export const templateModules: TemplateModule[] = [
     id: "notifications",
     name: "Notifications",
     packages: ["packages/notifications"],
-    paths: [
-      "apps/app/app/(authenticated)/components/notifications-provider.tsx",
-    ],
+    paths: ["apps/app/components/notifications-provider.tsx"],
   },
   {
     description: "Outbound webhooks and a customer webhook portal (Svix).",
     id: "webhooks",
     name: "Outbound webhooks",
     packages: ["packages/webhooks"],
-    paths: ["apps/app/app/(authenticated)/webhooks"],
+    paths: [
+      "apps/app/app/[locale]/(app)/webhooks",
+      "apps/app/components/screens/webhooks.tsx",
+      "apps/api/app/webhooks/portal",
+    ],
   },
   {
-    description: "Vercel Flags with PostHog-backed decisions and the toolbar.",
+    description:
+      "Vercel Flags with PostHog-backed decisions and the toolbar (marketing site).",
     id: "feature-flags",
     name: "Feature flags",
     packages: ["packages/feature-flags"],
-    paths: ["apps/app/app/.well-known", "apps/web/app/.well-known"],
+    paths: ["apps/web/app/.well-known"],
   },
   {
     description: "Redis-backed rate limiting for forms and APIs (Upstash).",

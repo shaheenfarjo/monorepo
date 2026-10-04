@@ -64,6 +64,32 @@ export const formatTime = (value: DateInput, locale: Locale = defaultLocale) =>
     timeZone: TIME_ZONE,
   }).format(toDate(value));
 
+/**
+ * Calendar labels for date pickers, whose dates are local (browser) days:
+ * "تشرين الأول 2026" / "October 2026" and short weekday names. Formatted
+ * without a time zone so the local day never shifts.
+ */
+export const formatMonthYear = (value: Date, locale: Locale = defaultLocale) =>
+  new Intl.DateTimeFormat(intlLocale(locale), {
+    month: "long",
+    year: "numeric",
+  }).format(value);
+
+export const formatWeekday = (
+  value: Date,
+  locale: Locale = defaultLocale,
+  weekday: "long" | "short" | "narrow" = "short"
+) => new Intl.DateTimeFormat(intlLocale(locale), { weekday }).format(value);
+
+/** A local calendar day ("15 October 2026"), without time-zone conversion. */
+export const formatCalendarDate = (
+  value: Date,
+  locale: Locale = defaultLocale
+) =>
+  new Intl.DateTimeFormat(intlLocale(locale), { dateStyle: "long" }).format(
+    value
+  );
+
 const RELATIVE_UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
   ["year", 365 * 24 * 60 * 60],
   ["month", 30 * 24 * 60 * 60],

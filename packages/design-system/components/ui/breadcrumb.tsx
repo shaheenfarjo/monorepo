@@ -1,8 +1,11 @@
+"use client"
+
 import * as React from "react"
 import { Slot as SlotPrimitive } from "radix-ui"
 import { ChevronRight, MoreHorizontal } from "lucide-react"
 
 import { cn } from "@repo/design-system/lib/utils"
+import { useUiLabels } from "@repo/design-system/lib/labels"
 
 function Breadcrumb({ ...props }: React.ComponentProps<"nav">) {
   return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />
@@ -84,6 +87,7 @@ function BreadcrumbEllipsis({
   className,
   ...props
 }: React.ComponentProps<"span">) {
+  const labels = useUiLabels()
   return (
     <span
       data-slot="breadcrumb-ellipsis"
@@ -93,7 +97,7 @@ function BreadcrumbEllipsis({
       {...props}
     >
       <MoreHorizontal className="size-4" />
-      <span className="sr-only">More</span>
+      <span className="sr-only">{labels.more}</span>
     </span>
   )
 }

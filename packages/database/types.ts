@@ -375,6 +375,15 @@ export type Database = {
         Args: { invitation_token: string };
         Returns: string;
       };
+      account_deletion_blockers: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          name: string;
+          organization_id: string;
+          other_members: number;
+          slug: string;
+        }[];
+      };
       create_organization: {
         Args: { org_name: string; org_slug: string };
         Returns: {
@@ -391,6 +400,16 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      pending_invitations: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          expires_at: string;
+          organization_id: string;
+          organization_name: string;
+          role: Database["public"]["Enums"]["org_role"];
+          token: string;
+        }[];
       };
     };
     Enums: {

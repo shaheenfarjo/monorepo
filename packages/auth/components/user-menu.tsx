@@ -14,8 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@repo/design-system/components/ui/dropdown-menu";
-import { LogOutIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { LogOutIcon, UserIcon } from "lucide-react";
 import { type AuthMessages, defaultAuthMessages } from "../messages";
 import { formatPhone } from "../phone";
 import { useAuth } from "../provider";
@@ -32,30 +31,32 @@ const getInitials = (name: string) =>
 
 interface UserMenuProps {
   readonly messages?: AuthMessages;
-  /** Where to go after signing out. */
-  readonly signInPath?: string;
+  /** Display name, e.g. from the profile; defaults to the sign-up name. */
+  readonly name?: string | null;
+  /** Called after signing out, e.g. to navigate to the sign-in page. */
+  readonly onSignedOut?: () => void;
 }
 
 /** Avatar button with the signed-in user's details and a sign-out action. */
 export const UserMenu = ({
   messages = defaultAuthMessages,
-  signInPath = "/sign-in",
+  name: displayName,
+  onSignedOut,
 }: UserMenuProps) => {
   const { supabase, user } = useAuth();
-  const router = useRouter();
 
   if (!user) {
     return null;
   }
 
-  const name: string | undefined = user.user_metadata?.full_name;
+  const name: string | undefined =
+    displayName || user.user_metadata?.full_name || undefined;
   const contact = user.phone ? formatPhone(user.phone) : (user.email ?? "");
   const avatarUrl: string | undefined = user.user_metadata?.avatar_url;
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    router.push(signInPath);
-    router.refresh();
+    onSignedOut?.();
   };
 
   return (
@@ -65,10 +66,17 @@ export const UserMenu = ({
           <Avatar className="size-7">
             {avatarUrl ? <AvatarImage alt="" src={avatarUrl} /> : null}
             <AvatarFallback>
-              {getInitials(name ?? contact) || "?"}
+              {name ? getInitials(name) : <UserIcon className="size-4" />}
             </AvatarFallback>
           </Avatar>
-          <span className="truncate text-start text-sm">{name ?? contact}</span>
+          {name ? (
+            <span className="truncate text-start text-sm">{name}</span>
+          ) : (
+            // Phone numbers read left-to-right in Arabic too.
+            <span className="truncate text-sm" dir="ltr">
+              {contact}
+            </span>
+          )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="min-w-56">

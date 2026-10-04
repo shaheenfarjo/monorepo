@@ -67,6 +67,10 @@ export const defaultCspSources: CspSources = {
   ],
 };
 
+/** Our own API (apps/api), called directly from the browser by apps/app. */
+export const apiCspSources = (url: string | undefined): CspSources =>
+  url ? { connect: [new URL(url).origin] } : {};
+
 /** Supabase REST, Auth, Storage and Realtime (WebSocket) for a project URL. */
 export const supabaseCspSources = (url: string | undefined): CspSources => {
   if (!url) {

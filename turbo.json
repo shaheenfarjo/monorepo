@@ -15,6 +15,14 @@
         ".react-email/**"
       ]
     },
+    "build:native": {
+      "dependsOn": ["^build"],
+      "outputs": ["out/**"]
+    },
+    "cap:sync": {
+      "cache": false,
+      "dependsOn": ["build:native"]
+    },
     "typecheck": {
       "dependsOn": ["^typecheck"]
     },

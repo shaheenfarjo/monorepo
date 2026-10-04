@@ -5,6 +5,7 @@ import {
   withVercelToolbar,
 } from "@nosecone/next";
 import {
+  apiCspSources,
   createContentSecurityPolicy,
   defaultCspSources,
   supabaseCspSources,
@@ -17,7 +18,8 @@ const baseOptions: Options = {
   contentSecurityPolicy: createContentSecurityPolicy(
     {},
     defaultCspSources,
-    supabaseCspSources(process.env.NEXT_PUBLIC_SUPABASE_URL)
+    supabaseCspSources(process.env.NEXT_PUBLIC_SUPABASE_URL),
+    apiCspSources(process.env.NEXT_PUBLIC_API_URL)
   ),
   // `require-corp` blocks third-party images, pixels and iframes that do not
   // send a Cross-Origin-Resource-Policy header (most analytics endpoints).
@@ -34,6 +36,18 @@ const baseOptions: Options = {
 export const noseconeOptions: Options = process.env.FLAGS_SECRET
   ? withVercelToolbar(baseOptions)
   : baseOptions;
+
+/**
+ * The same headers as static `headers()` entries for next.config, for apps
+ * without a proxy (apps/app is client-first and also builds as a static
+ * export, where headers come from the host instead).
+ */
+export const securityHeaders = (options: Options = noseconeOptions) => [
+  {
+    headers: [...nosecone(options)].map(([key, value]) => ({ key, value })),
+    source: "/:path*",
+  },
+];
 
 /**
  * Adds Nosecone's security headers to an existing proxy response (for example

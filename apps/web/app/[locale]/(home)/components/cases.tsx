@@ -6,14 +6,13 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@repo/design-system/components/ui/carousel";
-import type { Dictionary } from "@repo/internationalization";
+import { formatNumber } from "@repo/internationalization/format";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
-interface CasesProps {
-  dictionary: Dictionary;
-}
-
-export const Cases = ({ dictionary }: CasesProps) => {
+export const Cases = () => {
+  const t = useTranslations("web.home.cases");
+  const locale = useLocale();
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
@@ -38,7 +37,7 @@ export const Cases = ({ dictionary }: CasesProps) => {
       <div className="container mx-auto">
         <div className="flex flex-col gap-10">
           <h2 className="text-start font-regular text-xl tracking-tighter md:text-5xl lg:max-w-xl">
-            {dictionary.web.home.cases.title}
+            {t("title")}
           </h2>
           <Carousel className="w-full" setApi={setApi}>
             <CarouselContent>
@@ -46,7 +45,9 @@ export const Cases = ({ dictionary }: CasesProps) => {
                 // biome-ignore lint/suspicious/noArrayIndexKey: static list
                 <CarouselItem className="basis-1/4 lg:basis-1/6" key={index}>
                   <div className="flex aspect-square items-center justify-center rounded-md bg-muted p-6">
-                    <span className="text-sm">Logo {index + 1}</span>
+                    <span className="text-sm">
+                      {t("logo", { number: formatNumber(index + 1, locale) })}
+                    </span>
                   </div>
                 </CarouselItem>
               ))}

@@ -52,13 +52,16 @@ const LOGICAL: Record<string, string> = {
 
 const STRING_LITERAL = /"[^"\n]*"|'[^'\n]*'|`[^`]*`/g;
 const VALUE = String.raw`-[\w[\]()./%,#-]+`;
+// Insets, margins and paddings take spacing values (0, 1/2, px, auto, full,
+// [10px]…), so prose like "left-to-right" isn't mistaken for a class.
+const SPACING = String.raw`-(?:\[[^\]\s]*\]|px|auto|full|screen|\d[\w./%]*)`;
 // A class token: variants (md:, data-[side=left]:, [&>svg]:), an optional
 // "-" for negative values, then a physical utility. Insets, margins and
 // paddings need a value (left-0, ml-2); borders, corners, floats and text
 // alignment also exist bare (border-l, rounded-r, text-left).
 const PHYSICAL = new RegExp(
   String.raw`(?<=^|[\s"'\`])((?:(?:[\w-]|\[[^\]\s]*\])+:)*)(!?-?)` +
-    `(?:(left|right|scroll-[mp][lr]|[mp][lr])(${VALUE})` +
+    `(?:(left|right|scroll-[mp][lr]|[mp][lr])(${SPACING})` +
     `|(border-[lr]|rounded-(?:[tb][lr]|[lr])|float-(?:left|right)|text-(?:left|right))(${VALUE})?)` +
     String.raw`(?=[\s"'\`!]|$)`,
   "g"

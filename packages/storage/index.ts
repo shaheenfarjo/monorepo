@@ -159,6 +159,65 @@ export const removeFiles = async (
   }
 };
 
+const LIST_PAGE = 1000;
+
+/** Every file path under a folder, including subfolders. */
+const listFolder = async (
+  supabase: Client,
+  bucket: BucketId,
+  folder: string
+): Promise<string[]> => {
+  const paths: string[] = [];
+  const folders = [folder];
+
+  while (folders.length > 0) {
+    const current = folders.pop() as string;
+    let offset = 0;
+
+    for (;;) {
+      // biome-ignore lint/performance/noAwaitInLoops: pages are sequential
+      const { data, error } = await supabase.storage
+        .from(bucket)
+        .list(current, { limit: LIST_PAGE, offset });
+      if (error) {
+        throw new StorageError("request_failed", error.message);
+      }
+      for (const object of data ?? []) {
+        // Folders have no id.
+        (object.id === null ? folders : paths).push(
+          `${current}/${object.name}`
+        );
+      }
+      if ((data ?? []).length < LIST_PAGE) {
+        break;
+      }
+      offset += LIST_PAGE;
+    }
+  }
+
+  return paths;
+};
+
+/**
+ * Deletes a whole folder, such as `<organization id>` in org-files or
+ * `<user id>` in avatars. Used with the admin client when an organization or
+ * an account is deleted; returns how many files were removed.
+ */
+export const removeFolder = async (
+  supabase: Client,
+  bucket: BucketId,
+  folder: string
+) => {
+  const paths = await listFolder(supabase, bucket, folder);
+
+  for (let start = 0; start < paths.length; start += LIST_PAGE) {
+    // biome-ignore lint/performance/noAwaitInLoops: bounded batches
+    await removeFiles(supabase, bucket, paths.slice(start, start + LIST_PAGE));
+  }
+
+  return paths.length;
+};
+
 export { type BucketId, type BucketKey, buckets } from "./buckets";
 export {
   checkFile,

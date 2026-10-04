@@ -3,14 +3,18 @@ import { legal } from "@repo/cms";
 import { Body } from "@repo/cms/components/body";
 import { Feed } from "@repo/cms/components/feed";
 import { TableOfContents } from "@repo/cms/components/toc";
-import { createMetadata } from "@repo/seo/metadata";
+import type { Locale } from "@repo/internationalization";
+import { formatNumber } from "@repo/internationalization/format";
+import { Link } from "@repo/internationalization/navigation";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Sidebar } from "@/components/sidebar";
+import { localizedMetadata } from "@/lib/metadata";
 
 interface LegalPageProperties {
   readonly params: Promise<{
+    locale: Locale;
     slug: string;
   }>;
 }
@@ -18,14 +22,14 @@ interface LegalPageProperties {
 export const generateMetadata = async ({
   params,
 }: LegalPageProperties): Promise<Metadata> => {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const post = await legal.getPost(slug);
 
   if (!post) {
     return {};
   }
 
-  return createMetadata({
+  return localizedMetadata(locale, `/legal/${slug}`, {
     description: post.description,
     title: post._title,
   });
@@ -38,7 +42,20 @@ export const generateStaticParams = async (): Promise<{ slug: string }[]> => {
 };
 
 const LegalPage = async ({ params }: LegalPageProperties) => {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("web");
+  const labels = {
+    back: t("legal.back"),
+    published: t("blog.published"),
+    sections: t("blog.sections"),
+    tags: t("blog.tags"),
+  };
+  const readingTime = (minutes: number) =>
+    t("blog.readingTime", {
+      count: minutes,
+      minutes: formatNumber(minutes, locale),
+    });
 
   return (
     <Feed queries={[legal.postQuery(slug)]}>
@@ -58,7 +75,7 @@ const LegalPage = async ({ params }: LegalPageProperties) => {
               href="/"
             >
               <ArrowLeftIcon className="h-4 w-4 rtl:rotate-180" />
-              Back to Home
+              {labels.back}
             </Link>
             <h1 className="scroll-m-20 text-balance font-extrabold text-4xl tracking-tight lg:text-5xl">
               {page._title}
@@ -75,7 +92,9 @@ const LegalPage = async ({ params }: LegalPageProperties) => {
               <div className="sticky top-24 hidden shrink-0 md:block">
                 <Sidebar
                   date={new Date()}
-                  readingTime={`${page.body.readingTime} min read`}
+                  labels={labels}
+                  locale={locale}
+                  readingTime={readingTime(page.body.readingTime)}
                   toc={<TableOfContents data={page.body.json.toc} />}
                 />
               </div>

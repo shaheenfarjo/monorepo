@@ -66,10 +66,16 @@ keys are missing are disabled.
 | `bun run typecheck` | Type-check every workspace |
 | `bun run test` | Run all unit tests |
 | `bun run check:placeholders` | Fail if placeholder tokens remain after init |
+| `bun run check:rtl` / `bun run check:i18n` | Physical Tailwind utilities / UI text missing from the messages files |
+| `bun run db:start` / `db:reset` / `db:test` / `db:types` | Local Supabase, migrations, RLS tests, generated types |
+| `bun run build:native` / `bun run cap:sync` | Static export of `apps/app` / copy it into the iOS and Android projects |
 
 ## Further reading
 
-- `AGENTS.md` — architecture overview and conventions for humans and AI agents
+- `ARCHITECTURE_AND_INTEGRATIONS.md` — how the apps fit together, and step-by-step
+  setup for the template generator, Supabase migrations and RLS, the Capacitor apps,
+  tracking, Wayl payments and Vercel environment variables
+- `AGENTS.md` — conventions for humans and AI agents
 - `.github/CONTRIBUTING.md` — workflow and local checks
 - `THIRD_PARTY_NOTICES.md` — licenses of included open-source code
 
