@@ -1,5 +1,5 @@
 import { cleanup } from "@testing-library/react";
-import { afterEach, vi } from "vitest";
+import { afterEach, type Mock, vi } from "vitest";
 
 afterEach(() => {
   cleanup();
@@ -12,7 +12,7 @@ vi.stubEnv("NEXT_PUBLIC_API_URL", "http://localhost:3002");
 vi.stubEnv("NEXT_PUBLIC_APP_URL", "http://localhost:3000");
 vi.stubEnv("NEXT_PUBLIC_WEB_URL", "http://localhost:3001");
 
-export const router = {
+export const router: Record<"back" | "push" | "refresh" | "replace", Mock> = {
   back: vi.fn(),
   push: vi.fn(),
   refresh: vi.fn(),

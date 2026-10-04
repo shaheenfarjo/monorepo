@@ -71,7 +71,8 @@
       "title": "Welcome back",
       "description": "Sign in with your mobile number.",
       "noAccount": "Don't have an account?",
-      "signUpLink": "Sign up"
+      "signUpLink": "Sign up",
+      "deleted": "Your account has been deleted."
     },
     "signOut": "Sign out",
     "signUp": {
@@ -468,6 +469,31 @@
         "description": "Only owners and admins can change these settings.",
         "name": "Organization name",
         "slug": "Address"
+      },
+      "deleteAccount": {
+        "title": "Delete account",
+        "description": "Permanently delete your account and personal data. This can't be undone.",
+        "open": "Delete account",
+        "dialogTitle": "Delete your account?",
+        "consequences": "Your profile, photo and sign-in are deleted, and you leave every organization you belong to. Payment records are kept for accounting, without your name.",
+        "confirmLabel": "To confirm, type “{phrase}”",
+        "confirmPhrase": "delete my account",
+        "confirm": "Delete my account permanently",
+        "deleting": "Deleting…",
+        "failed": "Your account couldn't be deleted. Please try again.",
+        "checking": "Checking your organizations…",
+        "blockers": {
+          "title": "First, resolve your organizations",
+          "description": "You're the only owner of the organizations below. Make another member an owner, or delete the organization. Then you can delete your account.",
+          "handOver": "Make another member an owner",
+          "makeOwner": "Make owner",
+          "onlyMember": "You're the only member, so this organization can only be deleted.",
+          "unnamed": "Member without a name",
+          "deleteOrganization": "Delete organization",
+          "deleteConfirmLabel": "This deletes {name} with its projects, members and files. Type “{slug}” to confirm.",
+          "deleteConfirm": "Delete {name}",
+          "failed": "That didn't work. Please try again."
+        }
       }
     },
     "errors": {

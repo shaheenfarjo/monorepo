@@ -2,11 +2,13 @@
 
 import { project } from "@repo/config";
 import { BrandLogo } from "@repo/design-system/components/brand-logo";
+import { Button } from "@repo/design-system/components/ui/button";
 import { formatNumber } from "@repo/internationalization/format";
 import { useRouter } from "@repo/internationalization/navigation";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
+import { DeleteAccountDialog } from "@/components/account/delete-account";
 import { CreateOrganizationForm } from "@/components/organization-form";
 import { ProfileForm } from "@/components/profile-form";
 import { ErrorState, FullPageSpinner } from "@/components/states";
@@ -22,6 +24,7 @@ const TOTAL_STEPS = 2;
  */
 export const OnboardingFlow = () => {
   const t = useTranslations("app.onboarding");
+  const tAccount = useTranslations("app.settings.deleteAccount");
   const locale = useLocale();
   const router = useRouter();
   const step = useSearchParams().get("step") === "organization" ? 2 : 1;
@@ -102,6 +105,21 @@ export const OnboardingFlow = () => {
           </section>
         </div>
       )}
+      {/* Account deletion must be reachable before an organization exists. */}
+      <footer className="border-t pt-4 text-center">
+        <DeleteAccountDialog
+          trigger={
+            <Button
+              className="text-muted-foreground"
+              size="sm"
+              type="button"
+              variant="link"
+            >
+              {tAccount("open")}
+            </Button>
+          }
+        />
+      </footer>
     </main>
   );
 };

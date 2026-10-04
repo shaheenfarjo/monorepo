@@ -54,7 +54,7 @@ flowchart LR
 | --- | --- | --- | --- |
 | `apps/web` | 3001 | Marketing site: home, pricing, blog, legal, contact. Server-rendered Next.js with `next-intl` locale routing (`/ar/…`, `/en/…`). | Vercel |
 | `apps/app` | 3000 | The product. **Client-first**: every screen renders in the browser and talks to Supabase directly. The same code is built twice: a normal Next.js build for the web, and a static export for the native apps. | Vercel (web) and the App Store / Google Play (native) |
-| `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, the Liveblocks and Svix token endpoints. Route handlers only. | Vercel |
+| `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, the Liveblocks and Svix token endpoints. Route handlers only. | Vercel |
 | `apps/email` | 3003 | React Email templates (`@repo/email`). | Not deployed (dev preview) |
 | `apps/docs` | 3004 | Mintlify documentation site. | Mintlify |
 | `apps/storybook` | 6006 | Design-system workbench. | Optional |
@@ -269,6 +269,45 @@ permission. Roles are `owner`, `admin` and `member`:
 
 An organization always keeps at least one owner (a trigger enforces it).
 
+### 1.6 Account deletion
+
+Apple (guideline 5.1.1(v)) and Google Play require apps that let users create
+accounts to let them delete those accounts in the app. Users find it under
+**Settings → Delete account**, and on the onboarding screen for people who
+haven't joined an organization yet.
+
+**Organization ownership.** A user may be the only owner of an organization.
+Deleting their account would leave it without an owner, so they must resolve
+it first. When the dialog opens, it calls `account_deletion_blockers()`, which
+lists each organization the user alone owns and how many other members it
+has. For each one, the user either:
+
+- **makes another member an owner** (offered when the organization has other
+  members; RLS only lets owners grant the owner role), or
+- **deletes the organization**, after typing its address. This calls
+  `POST /organizations/delete` in `apps/api`. The delete runs as the user, so
+  the owners-only policy applies. Projects, memberships, invitations and the
+  subscription go with it, payment records are kept with the organization
+  cleared, and the `org-files/<organization id>/` folder is removed.
+
+Once no blockers remain, the user types a confirmation phrase ("delete my
+account" or «احذف حسابي»). `POST /account/delete` then:
+
+1. checks `account_deletion_blockers()` again, and answers `409` with the
+   list if a new one appeared, which takes the dialog back to that step;
+2. removes the user's `avatars/<user id>/` folder (storage objects have no
+   foreign key to users);
+3. deletes the auth user with the admin API. That cascades to the profile
+   and memberships and clears `created_by`, `invited_by` and
+   `payments.user_id`.
+
+The database is the final guard: `private.protect_last_owner` refuses to
+remove the last owner's membership, so even a request that skips the checks
+cannot orphan an organization. The app then clears the local session,
+analytics identity and stored organization, and the sign-in page confirms the
+deletion. The pgTAP suite (`rls.test.sql`) and `apps/api/__tests__/deletion.test.ts`
+cover these rules.
+
 ---
 
 ## 2. Supabase migrations and Row Level Security
@@ -295,6 +334,7 @@ Current schema:
 | `…_billing.sql` | `plans`, `subscriptions`, `payments`, `webhook_events` (idempotency) |
 | `…_storage.sql` | `org-files` (private) and `avatars` (public) buckets with path-based policies |
 | `…_pending_invitations.sql` | `pending_invitations()` RPC for onboarding |
+| `…_account_deletion.sql` | `account_deletion_blockers()`: organizations the caller alone owns (see 1.6) |
 
 ### 2.2 Run the database locally
 
@@ -740,11 +780,8 @@ Or from the command line:
 - [ ] A privacy policy URL, plus the App Privacy (Apple) and Data safety
       (Google) forms. The app collects phone numbers, and PostHog analytics
       if enabled.
-- [ ] **In-app account deletion.** Apple (guideline 5.1.1(v)) and Google Play
-      require it for apps that let users create accounts. The template doesn't
-      ship this flow yet: add it as an `apps/api` endpoint that deletes the
-      user with the admin client after verifying their token, plus a button
-      in Settings.
+- [ ] In-app account deletion works against the production project (Settings
+      → Delete account, see 1.6). Mention where it is in the review notes.
 - [ ] Review notes with a test phone number and code for the reviewers. Add it
       as a test number in Supabase Auth for the review period only.
 - [ ] The commerce mode matches what the app sells (see 1.3).
@@ -1091,7 +1128,7 @@ secret to this project.**
 | `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_WEB_URL` | Build | Also the CORS allow-list |
 | `NEXT_PUBLIC_API_URL` | Feature | This API's public URL; the Wayl webhook URL is derived from it |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | Verifying users' tokens |
-| `SUPABASE_SECRET_KEY` | Feature | `sb_secret_…`. Webhooks, cron, membership checks. **Server only.** |
+| `SUPABASE_SECRET_KEY` | Feature | `sb_secret_…`. Webhooks, cron, account and organization deletion. **Server only.** |
 | `CRON_SECRET` | Feature | At least 32 characters (`openssl rand -hex 32`). Vercel sends it to the cron routes; without it every cron call is rejected. |
 | `WAYL_API_TOKEN`, `WAYL_WEBHOOK_SECRET` | Feature | Payments. Checkout fails in production without them. |
 | `WAYL_ENV` | Feature | `live` in Production, `test` in Preview |
@@ -1130,4 +1167,4 @@ After changing variables, redeploy (**Deployments → … → Redeploy**). Keep 
       (4.1).
 - [ ] Cron jobs listed in Vercel and `CRON_SECRET` set.
 - [ ] Native apps built with production values, deep links registered,
-      account deletion in place, submitted (3.8).
+      account deletion tested, submitted (3.8).

@@ -375,6 +375,15 @@ export type Database = {
         Args: { invitation_token: string };
         Returns: string;
       };
+      account_deletion_blockers: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          name: string;
+          organization_id: string;
+          other_members: number;
+          slug: string;
+        }[];
+      };
       create_organization: {
         Args: { org_name: string; org_slug: string };
         Returns: {

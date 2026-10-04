@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set search_path = public, extensions;
 
-select plan(46);
+select plan(55);
 
 -- ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -362,6 +362,74 @@ select pg_temp.login_as('00000000-0000-0000-0000-00000000000c');
 select is_empty(
   $$ select 1 from storage.objects where bucket_id = 'org-files' $$,
   'other tenants cannot see the organization''s files'
+);
+
+-- ── Account deletion ────────────────────────────────────────────────────────
+-- Org One: A owner, B admin, D member. Org Two and Org Three: C alone.
+
+select pg_temp.login_as('00000000-0000-0000-0000-00000000000c');
+
+select results_eq(
+  'select slug, other_members from public.account_deletion_blockers()',
+  $$ values ('org-three', 0::bigint), ('org-two', 0::bigint) $$,
+  'sole owners see the organizations that block deleting their account'
+);
+
+select pg_temp.login_as('00000000-0000-0000-0000-00000000000b');
+
+select is_empty(
+  'select 1 from public.account_deletion_blockers()',
+  'members and admins have nothing to resolve before deleting their account'
+);
+
+select pg_temp.login_as('00000000-0000-0000-0000-00000000000a');
+
+select results_eq(
+  'select slug, other_members from public.account_deletion_blockers()',
+  $$ values ('org-one', 2::bigint) $$,
+  'other members are counted so ownership can be handed over'
+);
+select isnt_empty(
+  $$ update public.memberships set role = 'owner'
+     where organization_id = '10000000-0000-0000-0000-000000000001'
+       and user_id = '00000000-0000-0000-0000-00000000000b'
+     returning user_id $$,
+  'owners can make another member an owner'
+);
+select is_empty(
+  'select 1 from public.account_deletion_blockers()',
+  'with a co-owner the account can be deleted'
+);
+
+select pg_temp.login_anon();
+
+select throws_ok(
+  'select * from public.account_deletion_blockers()',
+  '42501',
+  null,
+  'anonymous visitors cannot call account_deletion_blockers'
+);
+
+-- As the service role would (auth.admin.deleteUser).
+reset role;
+
+select throws_ok(
+  $$ delete from auth.users where id = '00000000-0000-0000-0000-00000000000c' $$,
+  '23514',
+  'An organization must keep at least one owner',
+  'the database refuses to delete a sole owner'
+);
+select lives_ok(
+  $$ delete from auth.users where id = '00000000-0000-0000-0000-00000000000a' $$,
+  'an account whose organizations have another owner can be deleted'
+);
+select results_eq(
+  $$ select user_id::text, role::text from public.memberships
+     where organization_id = '10000000-0000-0000-0000-000000000001'
+     order by user_id $$,
+  $$ values ('00000000-0000-0000-0000-00000000000b', 'owner'),
+            ('00000000-0000-0000-0000-00000000000d', 'member') $$,
+  'deleting the account removes its memberships and keeps the organization'
 );
 
 select * from finish();

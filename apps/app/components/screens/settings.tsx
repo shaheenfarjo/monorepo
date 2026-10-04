@@ -16,6 +16,7 @@ import { usePathname, useRouter } from "@repo/internationalization/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
+import { DeleteAccountCard } from "@/components/account/delete-account";
 import { useOrganization } from "@/components/organization-provider";
 import { PageHeader } from "@/components/page-header";
 import { ProfileForm } from "@/components/profile-form";
@@ -173,6 +174,7 @@ export const Settings = () => {
           </CardContent>
         </Card>
         <OrganizationSettings />
+        <DeleteAccountCard />
       </div>
     </>
   );
