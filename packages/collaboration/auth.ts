@@ -1,5 +1,7 @@
 import "server-only";
 import { Liveblocks as LiveblocksNode } from "@liveblocks/node";
+// The global Liveblocks types (UserMeta…) are declared in config.ts.
+import type {} from "./config";
 import { keys } from "./keys";
 
 interface AuthenticateOptions {

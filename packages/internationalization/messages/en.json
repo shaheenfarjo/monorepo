@@ -10,7 +10,40 @@
     },
     "loading": "Loading…",
     "error": "Something went wrong.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "back": "Back",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "optional": "Optional",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "errorDescription": "An unexpected error occurred. Please try again.",
+    "notFound": {
+      "title": "Page not found",
+      "description": "The page you're looking for doesn't exist or has moved.",
+      "home": "Go to the home page"
+    },
+    "status": {
+      "operational": "All systems normal",
+      "partial": "Partial outage",
+      "degraded": "Degraded performance",
+      "unknown": "Unable to fetch status"
+    },
+    "ui": {
+      "close": "Close",
+      "loading": "Loading",
+      "more": "More",
+      "morePages": "More pages",
+      "nextPage": "Go to next page",
+      "nextSlide": "Next slide",
+      "previousPage": "Go to previous page",
+      "previousSlide": "Previous slide",
+      "sidebar": "Sidebar",
+      "sidebarDescription": "Displays the mobile sidebar.",
+      "toggleSidebar": "Toggle sidebar"
+    }
   },
   "auth": {
     "changePhone": "Use a different number",
@@ -36,15 +69,25 @@
     "sending": "Sending…",
     "signIn": {
       "title": "Welcome back",
-      "description": "Sign in with your mobile number."
+      "description": "Sign in with your mobile number.",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign up",
+      "deleted": "Your account has been deleted."
     },
     "signOut": "Sign out",
     "signUp": {
       "title": "Create an account",
-      "description": "Sign up with your mobile number."
+      "description": "Sign up with your mobile number.",
+      "haveAccount": "Already have an account?",
+      "signInLink": "Sign in"
     },
     "verify": "Verify",
-    "verifying": "Verifying…"
+    "verifying": "Verifying…",
+    "callback": {
+      "title": "Signing you in…",
+      "failed": "We couldn't complete the sign-in. Please try again.",
+      "retry": "Back to sign in"
+    }
   },
   "billing": {
     "pay": "Pay {amount}",
@@ -55,6 +98,31 @@
       "incomplete": "Awaiting payment",
       "canceled": "Canceled",
       "expired": "Expired"
+    },
+    "title": "Billing",
+    "description": "Your plan and payments.",
+    "currentPlan": "Current plan",
+    "noPlan": "You don't have a plan yet.",
+    "renews": "Renews on {date}",
+    "choosePlan": "Choose a plan",
+    "perMonth": "/ month",
+    "perYear": "/ year",
+    "current": "Current plan",
+    "redirecting": "Opening the payment page…",
+    "payments": "Payment history",
+    "noPayments": "No payments yet.",
+    "paymentStatus": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "failed": "Failed",
+      "canceled": "Canceled",
+      "expired": "Expired",
+      "refunded": "Refunded"
+    },
+    "managersOnly": "Only owners and admins can manage billing.",
+    "noPlans": "No plans are available yet.",
+    "errors": {
+      "checkout": "We couldn't start the payment. Please try again."
     }
   },
   "web": {
@@ -81,10 +149,13 @@
         "description": "Replace this description with a short summary of what your product does and who it is for."
       },
       "hero": {
-        "announcement": "Read our latest article"
+        "announcement": "Read our latest article",
+        "contact": "Get in touch",
+        "signUp": "Sign up"
       },
       "cases": {
-        "title": "Empowering Success Stories Across the Globe"
+        "title": "Empowering Success Stories Across the Globe",
+        "logo": "Logo {number}"
       },
       "features": {
         "title": "Powerful Tools for Modern Business",
@@ -165,7 +236,8 @@
               "image": ""
             }
           }
-        ]
+        ],
+        "by": "By"
       },
       "faq": {
         "title": "Common Questions, Expert Answers",
@@ -193,13 +265,19 @@
       "cta": {
         "title": "Start Your Business Transformation",
         "description": "Join thousands of forward-thinking businesses who have already modernized their operations. Our platform offers the tools, support, and efficiency you need to succeed in today's competitive market. Get started in minutes."
-      }
+      },
+      "beta": "Beta feature now available"
     },
     "blog": {
       "meta": {
         "title": "Blog",
         "description": "Thoughts, ideas, and opinions."
-      }
+      },
+      "back": "Back to blog",
+      "published": "Published",
+      "readingTime": "{count, plural, one {{minutes} min read} other {{minutes} min read}}",
+      "sections": "Sections",
+      "tags": "Tags"
     },
     "contact": {
       "meta": {
@@ -223,13 +301,204 @@
         ],
         "form": {
           "title": "Book a meeting",
-          "date": "Date",
-          "firstName": "First name",
-          "lastName": "Last name",
-          "resume": "Upload resume",
-          "cta": "Book the meeting"
+          "date": "Preferred date",
+          "pickDate": "Pick a date",
+          "name": "Full name",
+          "email": "Email",
+          "message": "How can we help?",
+          "cta": "Book the meeting",
+          "sending": "Sending…",
+          "success": "Thanks! We'll be in touch shortly.",
+          "errors": {
+            "invalid": "Please enter your name, a valid email and a message.",
+            "rate_limited": "You've already sent a message today. Please try again tomorrow.",
+            "unavailable": "The contact form isn't available right now. Please email us instead.",
+            "unknown": "Something went wrong. Please try again."
+          }
         }
       }
+    },
+    "pricing": {
+      "meta": {
+        "title": "Pricing",
+        "description": "Simple plans that grow with your business."
+      },
+      "title": "Prices that make sense",
+      "description": "Pay monthly in Iraqi dinars with ZainCash, FIB, Qi Card or other local payment methods.",
+      "perMonth": "/ month",
+      "custom": "Custom",
+      "tryIt": "Try it",
+      "contactUs": "Contact us",
+      "featuresTitle": "Features",
+      "included": "Included",
+      "notIncluded": "Not included",
+      "members": "{count, plural, one {{members} member} other {{members} members}}",
+      "plans": {
+        "starter": {
+          "name": "Starter",
+          "description": "Everything a small team needs to get going."
+        },
+        "growth": {
+          "name": "Growth",
+          "description": "For growing businesses with more people and more work."
+        },
+        "enterprise": {
+          "name": "Enterprise",
+          "description": "Custom terms, onboarding and support for larger organizations."
+        }
+      },
+      "features": {
+        "sso": "Single sign-on",
+        "ai": "AI assistant",
+        "history": "Version history",
+        "members": "Team members",
+        "collaboration": "Real-time collaboration",
+        "automation": "Workflow automation"
+      }
+    },
+    "footer": {
+      "home": "Home",
+      "pages": "Pages",
+      "blog": "Blog",
+      "docs": "Docs",
+      "legal": "Legal"
+    },
+    "legal": {
+      "back": "Back to home"
+    }
+  },
+  "app": {
+    "nav": {
+      "label": "Navigation",
+      "dashboard": "Projects",
+      "search": "Search",
+      "billing": "Billing",
+      "settings": "Settings",
+      "webhooks": "Webhooks"
+    },
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member"
+    },
+    "search": {
+      "placeholder": "Search projects",
+      "submit": "Search",
+      "title": "Search",
+      "resultsFor": "Results for “{query}”",
+      "empty": "No projects match “{query}”.",
+      "prompt": "Type a project name to search."
+    },
+    "dashboard": {
+      "title": "Projects",
+      "description": "Everything your organization is working on.",
+      "empty": {
+        "title": "No projects yet",
+        "description": "Create your first project to get started."
+      },
+      "newProject": "New project",
+      "projectName": "Project name",
+      "create": "Create",
+      "creating": "Creating…",
+      "createdAt": "Created {date}"
+    },
+    "onboarding": {
+      "title": "Welcome to {name}",
+      "description": "Let's set up your account. It only takes a minute.",
+      "stepOf": "Step {current} of {total}",
+      "profile": {
+        "title": "What should we call you?",
+        "description": "Your name is shown to your teammates.",
+        "fullName": "Full name",
+        "language": "Preferred language",
+        "languageHint": "Used in the app and in the messages we send you.",
+        "submit": "Continue"
+      },
+      "invitations": {
+        "title": "You've been invited",
+        "description": "Join an organization that invited you, or create your own below.",
+        "join": "Join",
+        "joining": "Joining…",
+        "as": "as {role}"
+      },
+      "organization": {
+        "title": "Create your organization",
+        "description": "An organization holds your team, projects and billing.",
+        "name": "Organization name",
+        "namePlaceholder": "e.g. Al-Rafidain Trading",
+        "slug": "Address",
+        "slugHint": "Lowercase English letters, numbers and dashes. Used in links.",
+        "submit": "Create organization",
+        "submitting": "Creating…"
+      },
+      "errors": {
+        "nameRequired": "Enter a name.",
+        "slugInvalid": "Use 2–64 lowercase letters, numbers and single dashes.",
+        "slugTaken": "That address is already taken. Try another one.",
+        "unknown": "Something went wrong. Please try again."
+      }
+    },
+    "organizations": {
+      "new": {
+        "title": "New organization",
+        "description": "Create another organization for a different team or business."
+      }
+    },
+    "invite": {
+      "title": "Accept invitation",
+      "description": "You've been invited to join an organization.",
+      "accept": "Accept invitation",
+      "accepting": "Accepting…",
+      "missing": "This invitation link is incomplete. Ask for a new one.",
+      "signInFirst": "Sign in with the phone number or email the invitation was sent to.",
+      "errors": {
+        "expired": "This invitation has expired or was already used.",
+        "wrongAccount": "This invitation was sent to a different phone number or email.",
+        "unknown": "Something went wrong. Please try again."
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "profile": {
+        "title": "Profile",
+        "description": "How you appear to your teammates.",
+        "phone": "Mobile number"
+      },
+      "organization": {
+        "title": "Organization",
+        "description": "Only owners and admins can change these settings.",
+        "name": "Organization name",
+        "slug": "Address"
+      },
+      "deleteAccount": {
+        "title": "Delete account",
+        "description": "Permanently delete your account and personal data. This can't be undone.",
+        "open": "Delete account",
+        "dialogTitle": "Delete your account?",
+        "consequences": "Your profile, photo and sign-in are deleted, and you leave every organization you belong to. Payment records are kept for accounting, without your name.",
+        "confirmLabel": "To confirm, type “{phrase}”",
+        "confirmPhrase": "delete my account",
+        "confirm": "Delete my account permanently",
+        "deleting": "Deleting…",
+        "failed": "Your account couldn't be deleted. Please try again.",
+        "checking": "Checking your organizations…",
+        "blockers": {
+          "title": "First, resolve your organizations",
+          "description": "You're the only owner of the organizations below. Make another member an owner, or delete the organization. Then you can delete your account.",
+          "handOver": "Make another member an owner",
+          "makeOwner": "Make owner",
+          "onlyMember": "You're the only member, so this organization can only be deleted.",
+          "unnamed": "Member without a name",
+          "deleteOrganization": "Delete organization",
+          "deleteConfirmLabel": "This deletes {name} with its projects, members and files. Type “{slug}” to confirm.",
+          "deleteConfirm": "Delete {name}",
+          "failed": "That didn't work. Please try again."
+        }
+      }
+    },
+    "errors": {
+      "loadFailed": "We couldn't load this page.",
+      "unknown": "Something went wrong. Please try again."
     }
   }
 }

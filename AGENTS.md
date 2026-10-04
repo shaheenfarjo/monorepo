@@ -5,8 +5,11 @@ Conventions for anyone — human or AI agent — changing this repository.
 ## Repository map
 
 - `apps/web` — marketing site (Next.js, i18n routes under `app/[locale]`).
-- `apps/app` — the product. Must stay buildable as a static export for the
-  Capacitor iOS/Android apps: no server-only features in user-facing routes.
+- `apps/app` — the product, client-first: the same code runs in the browser
+  and, as a static export (`bun run build:native`), inside the Capacitor
+  iOS/Android apps. No Server Actions, Route Handlers, `cookies()`, proxy or
+  request-time server rendering here; anything that needs a secret goes in
+  `apps/api`, called with the user's token (`callApi` in `apps/app/lib/api.ts`).
 - `apps/api` — webhooks, cron jobs and privileged server endpoints.
 - `apps/email`, `apps/docs`, `apps/storybook` — templates, docs, UI workbench.
 - `packages/*` — shared code, imported as `@repo/<name>`. `@repo` is a fixed
@@ -14,7 +17,9 @@ Conventions for anyone — human or AI agent — changing this repository.
 - `packages/config/project.json` — the single source of truth for organization,
   project, locales, region and commerce settings. Read it through `@repo/config`.
 - `scripts/` — `init.ts` creates a project from the template (template only);
-  `check-placeholders.ts` guards against unfilled tokens.
+  `check-placeholders.ts`, `check-rtl.ts` and `check-i18n.ts` are repo checks.
+- `ARCHITECTURE_AND_INTEGRATIONS.md` — how the pieces fit together and how to
+  set up each integration (Supabase, Capacitor, tracking, Wayl, Vercel).
 
 ## Commands
 
@@ -26,6 +31,9 @@ bun run typecheck           # every workspace
 bun run test                # Vitest in every workspace
 bun run check:placeholders
 bun run check:rtl           # physical Tailwind utilities (--fix rewrites them)
+bun run check:i18n          # UI text that isn't in the messages files
+bun run build:native        # static export of apps/app for Capacitor
+bun run cap:sync            # build:native + copy into the iOS/Android projects
 bun run gen:package         # scaffold packages/<name>
 ```
 
@@ -37,10 +45,13 @@ Run `check`, `typecheck` and `test` before every commit.
   dependency a package imports; keep versions aligned across workspaces. Bun
   installs and runs scripts; Next.js runs on Node (`next build`, not
   `bun --bun next build`).
-- **Auth:** never authorize with `user_metadata` — users can edit it. Use the
-  session-bound Supabase client (`@repo/auth/server`) for user requests so Row
-  Level Security applies. The admin client (`@repo/database/admin`) bypasses RLS and is
-  only for webhooks, cron jobs and other trusted server code.
+- **Auth:** never authorize with `user_metadata` — users can edit it. In
+  `apps/app`, query with `useAuth().supabase` (the browser or native client) so
+  Row Level Security applies; gates like `RequireAuth` are only UX. In
+  `apps/api`, identify callers with `authenticateRequest` (Bearer token) and
+  check their membership/role. The admin client (`@repo/database/admin`)
+  bypasses RLS and is only for webhooks, cron jobs and other trusted server
+  code. `@repo/auth/server` is for server-rendered apps only.
 - **Database:** schema changes are migrations with RLS policies and tests.
 - **Secrets:** never in client code, logs or commits. New env vars go in the
   package's `keys.ts` and every affected `.env.example`.
@@ -55,6 +66,13 @@ Run `check`, `typecheck` and `test` before every commit.
 - **Payments:** in-app (native) checkout is controlled by
   `project.commerce.allowNativeCheckout`. Digital goods must not be sold
   through third-party checkout inside the iOS/Android apps.
+- **Translations:** every UI string comes from
+  `packages/internationalization/messages/{ar,en}.json` (`useTranslations` /
+  `getTranslations`), checked by `bun run check:i18n`. Pass numbers and dates
+  into messages already formatted with `@repo/internationalization/format`
+  (Latin digits, Baghdad time); ICU `#`/`{n, number}` would use Arabic-Indic
+  digits. Link with `Link`/`useRouter` from
+  `@repo/internationalization/navigation` so URLs keep their `/ar` or `/en`.
 - **Localization:** UI must work in Arabic (RTL) and English (LTR). Use logical
   Tailwind utilities (`ms-*`, `pe-*`, `start-*`, `text-start`), never physical
   ones (`ml-*`, `pr-*`, `left-*`, `text-left`); `bun run check:rtl` enforces

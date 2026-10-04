@@ -7,6 +7,7 @@ import useEmblaCarousel, {
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
 import { cn } from "@repo/design-system/lib/utils"
+import { useUiLabels } from "@repo/design-system/lib/labels"
 import { Button } from "@repo/design-system/components/ui/button"
 import { useDirection } from "@repo/design-system/components/ui/direction"
 
@@ -184,6 +185,7 @@ function CarouselPrevious({
 }: React.ComponentProps<typeof Button>) {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
 
+  const labels = useUiLabels()
   return (
     <Button
       data-slot="carousel-previous"
@@ -203,7 +205,7 @@ function CarouselPrevious({
       <ArrowLeft
         className={cn(orientation === "horizontal" && "rtl:rotate-180")}
       />
-      <span className="sr-only">Previous slide</span>
+      <span className="sr-only">{labels.previousSlide}</span>
     </Button>
   )
 }
@@ -216,6 +218,7 @@ function CarouselNext({
 }: React.ComponentProps<typeof Button>) {
   const { orientation, scrollNext, canScrollNext } = useCarousel()
 
+  const labels = useUiLabels()
   return (
     <Button
       data-slot="carousel-next"
@@ -235,7 +238,7 @@ function CarouselNext({
       <ArrowRight
         className={cn(orientation === "horizontal" && "rtl:rotate-180")}
       />
-      <span className="sr-only">Next slide</span>
+      <span className="sr-only">{labels.nextSlide}</span>
     </Button>
   )
 }

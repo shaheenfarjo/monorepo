@@ -1,8 +1,12 @@
 import { legal } from "@repo/cms";
+import { getTranslations } from "next-intl/server";
 import { FooterColumn } from "./footer-column";
 
 export const FooterLegalColumn = async () => {
-  const legalPages = await legal.getPostsMeta();
+  const [legalPages, t] = await Promise.all([
+    legal.getPostsMeta(),
+    getTranslations("web.footer"),
+  ]);
 
   return (
     <FooterColumn
@@ -10,7 +14,7 @@ export const FooterLegalColumn = async () => {
         href: `/legal/${post._slug}`,
         title: post._title,
       }))}
-      title="Legal"
+      title={t("legal")}
     />
   );
 };

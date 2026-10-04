@@ -1,5 +1,8 @@
+"use client"
+
 import * as React from "react"
 import { cn } from "@repo/design-system/lib/utils"
+import { useUiLabels } from "@repo/design-system/lib/labels"
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -70,9 +73,10 @@ function PaginationPrevious({
   text = "Previous",
   ...props
 }: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
+  const labels = useUiLabels()
   return (
     <PaginationLink
-      aria-label="Go to previous page"
+      aria-label={labels.previousPage}
       size="default"
       className={cn("gap-1 px-2.5 sm:ps-2.5", className)}
       {...props}
@@ -88,9 +92,10 @@ function PaginationNext({
   text = "Next",
   ...props
 }: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
+  const labels = useUiLabels()
   return (
     <PaginationLink
-      aria-label="Go to next page"
+      aria-label={labels.nextPage}
       size="default"
       className={cn("gap-1 px-2.5 sm:pe-2.5", className)}
       {...props}
@@ -105,6 +110,7 @@ function PaginationEllipsis({
   className,
   ...props
 }: React.ComponentProps<"span">) {
+  const labels = useUiLabels()
   return (
     <span
       aria-hidden
@@ -113,7 +119,7 @@ function PaginationEllipsis({
       {...props}
     >
       <MoreHorizontalIcon className="size-4" />
-      <span className="sr-only">More pages</span>
+      <span className="sr-only">{labels.morePages}</span>
     </span>
   )
 }

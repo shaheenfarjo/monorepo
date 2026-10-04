@@ -11,9 +11,12 @@
     "analyze": "turbo analyze",
     "boundaries": "turbo boundaries",
     "build": "turbo build",
+    "build:native": "turbo build:native --filter=app",
     "bump-deps": "bunx npm-check-updates --deep -u && bun install",
     "bump-ui": "bunx shadcn@latest add --all --overwrite -c packages/design-system",
+    "cap:sync": "turbo cap:sync --filter=app",
     "check": "ultracite check",
+    "check:i18n": "bun scripts/check-i18n.ts",
     "check:placeholders": "bun scripts/check-placeholders.ts",
     "check:rtl": "bun scripts/check-rtl.ts",
     "clean": "git clean -xdf node_modules",
@@ -40,9 +43,9 @@
     "@turbo/gen": "^2.8.14",
     "@types/node": "25.3.5",
     "turbo": "^2.8.14",
-    "typescript": "^5.9.3",
-    "ultracite": "7.10.7",
-    "vitest": "^4.0.18"
+    "typescript": "^7.0.2",
+    "ultracite": "7.12.2",
+    "vitest": "^5.0.3"
   },
   "packageManager": "bun@1.3.10",
   "engines": {
