@@ -6,6 +6,8 @@ import { useAuth } from "@repo/auth/provider";
 import { Link } from "@repo/internationalization/navigation";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import { takeAccountDeletedNotice } from "@/lib/account-deletion";
 import { useAuthMessages } from "@/lib/auth-messages";
 import { safeNextPath } from "@/lib/navigation";
 
@@ -21,6 +23,10 @@ export const PhoneSignIn = ({ mode }: PhoneSignInProps) => {
   const messages = useAuthMessages();
   const next = safeNextPath(useSearchParams().get("next"));
   const isSignUp = mode === "sign-up";
+  const [accountDeleted, setAccountDeleted] = useState(false);
+
+  // After an effect, so the prerendered page hydrates without a mismatch.
+  useEffect(() => setAccountDeleted(takeAccountDeletedNotice()), []);
 
   return (
     <div className="grid gap-6">
@@ -32,6 +38,14 @@ export const PhoneSignIn = ({ mode }: PhoneSignInProps) => {
           {isSignUp ? t("signUp.description") : t("signIn.description")}
         </p>
       </div>
+      {accountDeleted ? (
+        <p
+          className="rounded-md bg-muted p-3 text-center text-sm"
+          role="status"
+        >
+          {t("signIn.deleted")}
+        </p>
+      ) : null}
       <PhoneOtpForm
         collectName={isSignUp}
         locale={locale}

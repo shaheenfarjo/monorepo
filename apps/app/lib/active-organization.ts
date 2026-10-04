@@ -19,3 +19,11 @@ export const rememberActiveOrganization = (organizationId: string) => {
     // Without storage the first organization is used.
   }
 };
+
+export const forgetActiveOrganization = () => {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // Nothing stored.
+  }
+};
