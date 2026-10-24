@@ -1,3 +1,4 @@
+import { project } from "@repo/config";
 import { afterEach, describe, expect, test } from "vitest";
 import { canPurchaseInApp, detectPlatform, getPurchasePolicy } from "./policy";
 
@@ -30,8 +31,8 @@ describe("in-app purchase policy", () => {
     });
   });
 
-  test("uses the project setting by default (digital)", () => {
-    expect(canPurchaseInApp("ios")).toBe(false);
+  test("uses the project setting by default", () => {
+    expect(canPurchaseInApp("ios")).toBe(project.commerce.allowNativeCheckout);
   });
 
   test("detects the Capacitor native shell", () => {
