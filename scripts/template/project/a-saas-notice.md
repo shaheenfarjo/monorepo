@@ -1,6 +1,6 @@
 ## A-SAAS
 
-Source: https://github.com/a-saas/a-saas — this project was created from the
+Source: https://github.com/theideaiq/a-saas — this project was created from the
 A-SAAS template.
 
 ```

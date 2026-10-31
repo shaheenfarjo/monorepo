@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "monorepo-template",
+      "name": "a-saas",
       "devDependencies": {
         "@biomejs/biome": "2.5.9",
         "@clack/prompts": "^1.1.0",
