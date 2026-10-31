@@ -1,0 +1,53 @@
+---
+title: A-SAAS
+description: The Arabic-first foundation for SaaS products and their mobile apps.
+template: splash
+hero:
+  tagline: The Arabic-first foundation for SaaS products and their iOS and Android apps. Right-to-left done properly, phone sign-in, regional payments, open source.
+  actions:
+    - text: Quick start
+      link: quickstart/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/theideaiq/a-saas
+      icon: github
+      variant: minimal
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+<CardGrid>
+  <Card title="Arabic and English, RTL by default" icon="translate">
+    Every string is in the translation files and layouts use logical CSS.
+    CI fails on physical Tailwind utilities or hard-coded UI text.
+  </Card>
+  <Card title="Phone sign-in" icon="phone">
+    Supabase phone OTP that accepts Arabic-Indic digits and local formats,
+    with a pluggable SMS hook for local gateways, Twilio and WhatsApp.
+  </Card>
+  <Card title="Multi-tenant from day one" icon="seti:lock">
+    Organizations, roles and invitations, enforced by Postgres Row Level
+    Security and tested with pgTAP.
+  </Card>
+  <Card title="Payments that work in the region" icon="seti:pipeline">
+    One provider interface, shipping with Wayl (Iraq) and Stripe. Amounts in
+    minor units with the right decimals for IQD, SAR, AED, EGP and JOD.
+  </Card>
+  <Card title="Web, iOS and Android" icon="laptop">
+    The product app is client-first and builds as a static export for
+    Capacitor, with PKCE sign-in and the session in the Keychain or Keystore.
+  </Card>
+  <Card title="A generator, not a fork" icon="rocket">
+    `bun run init` fills in your names, applies a country preset, removes the
+    modules you don't need and picks your project's license.
+  </Card>
+</CardGrid>
+
+## See it
+
+<CardGrid>
+  <img src="screenshots/app-ar-dashboard.png" alt="Projects dashboard in Arabic, right to left" />
+  <img src="screenshots/app-en-dashboard.png" alt="The same dashboard in English, left to right" />
+  <img src="screenshots/app-ar-billing.png" alt="Billing with plans priced in Iraqi dinars" />
+  <img src="screenshots/app-ar-sign-in.png" alt="Phone number sign-in in Arabic" />
+</CardGrid>

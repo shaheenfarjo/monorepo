@@ -18,6 +18,9 @@ Conventions for anyone — human or AI agent — changing this repository.
   project, locales, region and commerce settings. Read it through `@repo/config`.
 - `scripts/` — `init.ts` creates a project from the template (template only);
   `check-placeholders.ts`, `check-rtl.ts` and `check-i18n.ts` are repo checks.
+- `docs/` — the A-SAAS docs site (template only). Its guide pages are
+  generated from `ARCHITECTURE_AND_INTEGRATIONS.md` and this file, so edit
+  those, not `docs/src/content/docs/guide`.
 - `ARCHITECTURE_AND_INTEGRATIONS.md` — how the pieces fit together and how to
   set up each integration (Supabase, Capacitor, tracking, Wayl/Stripe, Vercel).
 

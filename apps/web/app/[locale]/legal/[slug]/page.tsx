@@ -1,5 +1,5 @@
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
-import { legal } from "@repo/cms";
+import { isConfigured, legal } from "@repo/cms";
 import { Body } from "@repo/cms/components/body";
 import { Feed } from "@repo/cms/components/feed";
 import { TableOfContents } from "@repo/cms/components/toc";
@@ -44,6 +44,10 @@ export const generateStaticParams = async (): Promise<{ slug: string }[]> => {
 const LegalPage = async ({ params }: LegalPageProperties) => {
   const { locale, slug } = await params;
   setRequestLocale(locale);
+
+  if (!isConfigured) {
+    notFound();
+  }
   const t = await getTranslations("web");
   const labels = {
     back: t("legal.back"),

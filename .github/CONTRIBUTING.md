@@ -26,6 +26,11 @@ bun run check:i18n  # no hard-coded UI text outside the messages files
 bun run test:template   # the init generator (template repository only)
 ```
 
+The docs site lives in `docs/` (Astro Starlight, its own `bun install`).
+Preview it with `bun run --cwd docs dev`. The guide pages come from
+`ARCHITECTURE_AND_INTEGRATIONS.md` and `AGENTS.md`; the landing and quick
+start pages, in English and Arabic, are in `docs/src/content/docs`.
+
 If you change `bun run init` or anything it rewrites, also try it on a copy:
 `bun scripts/init.ts --root <copy> --yes …` (see
 `.github/workflows/template.yml`).

@@ -129,13 +129,16 @@ Inside `apps/app`, link with `Link` and `useRouter` from
 - Node.js 22 or newer (`.nvmrc`) and Bun (the version is pinned in the root
   `package.json` under `packageManager`).
 - Docker, to run Supabase locally.
-- A fresh copy of the template: GitHub's **Use this template** button, or
-  `git clone` followed by pointing `origin` at the client's repository.
+- A fresh copy of the template. The quickest is
+  `bun create theideaiq/a-saas my-product`, which copies the template,
+  installs dependencies and starts a new Git history. GitHub's
+  **Use this template** button or `git clone` also work; then point
+  `origin` at the client's repository.
 
 ### 1.2 Run the generator
 
 ```sh
-bun install
+bun install         # already done if you used bun create
 bun run init
 ```
 

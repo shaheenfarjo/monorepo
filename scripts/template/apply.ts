@@ -32,6 +32,9 @@ export const templateOnlyPaths = [
   "scripts/init.ts",
   "scripts/template",
   ".github/workflows/template.yml",
+  ".github/assets",
+  ".github/workflows/docs.yml",
+  "docs",
 ];
 
 /** Files the new project starts from (copied before template-only files go). */
