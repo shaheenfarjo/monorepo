@@ -19,7 +19,7 @@ Conventions for anyone — human or AI agent — changing this repository.
 - `scripts/` — `init.ts` creates a project from the template (template only);
   `check-placeholders.ts`, `check-rtl.ts` and `check-i18n.ts` are repo checks.
 - `ARCHITECTURE_AND_INTEGRATIONS.md` — how the pieces fit together and how to
-  set up each integration (Supabase, Capacitor, tracking, Wayl, Vercel).
+  set up each integration (Supabase, Capacitor, tracking, Wayl/Stripe, Vercel).
 
 ## Commands
 
@@ -63,27 +63,30 @@ Run `check`, `typecheck` and `test` before every commit.
   `fbq` or `ttq` directly. Server-confirmed purchases go through
   `@repo/analytics/conversions` with the same event id. Ad pixels never load
   inside the Capacitor apps.
-- **Payments:** in-app (native) checkout is controlled by
-  `project.commerce.allowNativeCheckout`. Digital goods must not be sold
+- **Payments:** amounts are integers in the currency's minor unit (CLDR
+  decimals: 25,000 IQD is `25000`, 49 SAR is `4900`). Display them with
+  `formatMoney`; convert with `toMajorUnits` for analytics. In-app (native)
+  checkout is controlled by `project.commerce.allowNativeCheckout`. Digital goods must not be sold
   through third-party checkout inside the iOS/Android apps.
 - **Translations:** every UI string comes from
   `packages/internationalization/messages/{ar,en}.json` (`useTranslations` /
   `getTranslations`), checked by `bun run check:i18n`. Pass numbers and dates
   into messages already formatted with `@repo/internationalization/format`
-  (Latin digits, Baghdad time); ICU `#`/`{n, number}` would use Arabic-Indic
+  (Latin digits, the project time zone); ICU `#`/`{n, number}` would use Arabic-Indic
   digits. Link with `Link`/`useRouter` from
   `@repo/internationalization/navigation` so URLs keep their `/ar` or `/en`.
 - **Localization:** UI must work in Arabic (RTL) and English (LTR). Use logical
   Tailwind utilities (`ms-*`, `pe-*`, `start-*`, `text-start`), never physical
   ones (`ml-*`, `pr-*`, `left-*`, `text-left`); `bun run check:rtl` enforces
   this. Icons that point along the reading direction (arrows, chevrons) get
-  `rtl:rotate-180`. Dates default to `Asia/Baghdad`.
+  `rtl:rotate-180`. Dates use the time zone in `project.region`.
 - **Optional modules:** code that belongs to an optional module (see
   `scripts/template/modules.ts`) is wrapped in `// <module:id>` …
   `// </module:id>` markers (`{/* … */}` in JSX, `#` in env files). Keep markers
   balanced; `bun run check:placeholders` verifies them.
 - **Placeholders:** project-specific values use double-brace tokens such as the
-  project name token in `README.md`. Only `bun run init` should replace them.
+  project name token in `scripts/template/project/README.md`. Only
+  `bun run init` should replace them.
 - **shadcn/ui:** files in `packages/design-system/components/ui` are generated;
   update them with the shadcn CLI rather than hand-editing where possible.
 

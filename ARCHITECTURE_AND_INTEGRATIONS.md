@@ -11,7 +11,7 @@ by step.
 | [1. Create a project from the template](#1-create-a-project-from-the-template) | start a new client or product |
 | [2. Supabase migrations and Row Level Security](#2-supabase-migrations-and-row-level-security) | change the database or its access rules |
 | [3. Build, sync and release the iOS and Android apps](#3-build-sync-and-release-the-ios-and-android-apps) | ship the mobile apps |
-| [4. Marketing tracking and Wayl payments](#4-marketing-tracking-and-wayl-payments) | set up ads attribution or take real payments |
+| [4. Marketing tracking and payments](#4-marketing-tracking-and-payments) | set up ads attribution or take real payments |
 | [5. Vercel environment variables](#5-vercel-environment-variables) | deploy the web apps |
 
 `AGENTS.md` holds the short list of coding rules; this document is the long
@@ -75,8 +75,8 @@ flowchart LR
    and only then uses the admin client.
 3. **One source of truth for project settings.** `packages/config/project.json`
    holds the organization and project names, URL, bundle id, locales, region
-   (Iraq, `Asia/Baghdad`, IQD, Latin digits, Saturday week start) and the
-   commerce mode. Read it through `@repo/config`.
+   (country, time zone, currency, digits, week start and phone example, filled
+   from a country preset by `bun run init`) and the commerce mode. Read it through `@repo/config`.
 4. **Arabic first, English second.** Every UI string comes from
    `packages/internationalization/messages/{ar,en}.json`. Layouts use logical
    Tailwind utilities so they mirror in RTL. `bun run check:i18n` and
@@ -151,8 +151,10 @@ bun run init --yes \
   --project-url https://booking.rafidain.iq \
   --support-email support@rafidain.iq \
   --bundle-id iq.rafidain.booking \
+  --region IQ \
   --default-locale ar \
   --commerce physical \
+  --license proprietary \
   --keep-modules cms,rate-limit
 ```
 
@@ -162,12 +164,14 @@ bun run init --yes \
 | `--org-slug` | Organization slug | Identifiers and the default repository URL | slug of the name |
 | `--project-name` | Project name | Product name in the UI, app stores, metadata | required |
 | `--project-slug` | Project slug | Root package name | slug of the name |
-| `--project-url` | Public website URL | Canonical URLs, sitemaps, emails | `https://<project-slug>.iq` |
+| `--region` | Country | Time zone, currency, week start, phone format, example prices, default website domain (see 1.3) | `IQ` |
+| `--project-url` | Public website URL | Canonical URLs, sitemaps, emails | `https://<project-slug>.<country>` |
 | `--support-email` | Support email | Contact and security addresses | `support@<domain>` |
 | `--repo-url` | Repository URL | README and docs links | the `origin` remote |
 | `--bundle-id` | iOS/Android app ID | Capacitor `appId`, the deep-link scheme | reversed domain + slug |
 | `--default-locale` | Default language | `project.locale.default` | `ar` |
 | `--commerce` | What does this project sell? | `project.commerce.allowNativeCheckout` | `digital` |
+| `--license` | License for your project's code | `LICENSE.md`: `proprietary` (all rights reserved) or `mit` | `proprietary` |
 | `--keep-modules` | Optional modules to keep | Everything else is deleted | all modules |
 | `--skip-install` | | Skip `bun install` and code tidying | off |
 | `--root` | | Initialize another directory | current directory |
@@ -183,20 +187,25 @@ In order:
 2. **Fills in placeholder tokens.** Every text file is scanned for the
    double-brace tokens (organization name and slug, project name, slug and URL,
    support email, repository URL, bundle id, year) and each one is replaced.
-3. **Applies project settings.** Sets the default locale and the commerce mode
-   in `project.json`, and renames the root package.
-4. **Removes the modules you didn't keep.** It deletes their packages and
+3. **Applies project settings.** Sets the region, default locale and
+   commerce mode in `project.json`, turns the example prices (local seed and
+   pricing page) into the region's currency, and renames the root package.
+4. **Writes the project's own README and license.** The template's README
+   and MIT license are replaced with a project README and the license you
+   chose. A-SAAS is MIT-licensed, so its notice is added to
+   `THIRD_PARTY_NOTICES.md`; keep it there whichever license you pick.
+5. **Removes the modules you didn't keep.** It deletes their packages and
    files, removes `<module:id>` … `</module:id>` blocks from shared files (TS,
    JSX, env files, YAML) and drops their dependencies from every
    `package.json`.
-5. **Removes template-only files.** That means `scripts/init.ts`,
+6. **Removes template-only files.** That means `scripts/init.ts`,
    `scripts/template/`, the template CI workflow and the `init` and
    `test:template` scripts.
-6. **Creates `.env.local` files** next to every `.env.example`. Existing files
+7. **Creates `.env.local` files** next to every `.env.example`. Existing files
    are never overwritten.
-7. **Installs and tidies.** Runs `bun install`, then Biome, to remove imports
+8. **Installs and tidies.** Runs `bun install`, then Biome, to remove imports
    and variables left unused by the removed modules.
-8. **Verifies.** Runs `bun run check:placeholders`, which fails if any token
+9. **Verifies.** Runs `bun run check:placeholders`, which fails if any token
    or unbalanced module marker is left.
 
 #### Optional modules
@@ -210,6 +219,24 @@ In order:
 | `feature-flags` | Vercel Flags with PostHog decisions | `packages/feature-flags`, `apps/web/app/.well-known` |
 | `rate-limit` | Upstash rate limiting | `packages/rate-limit` |
 | `ai` | AI SDK helpers and chat components | `packages/ai` |
+
+#### Region presets
+
+| `--region` | Currency (decimals) | Time zone | Week starts | Phone example | Payments to start with |
+| --- | --- | --- | --- | --- | --- |
+| `IQ` Iraq | IQD (0) | Asia/Baghdad | Saturday | 0770 123 4567 | Wayl |
+| `SA` Saudi Arabia | SAR (2) | Asia/Riyadh | Sunday | 050 123 4567 | Stripe, if available to you |
+| `AE` United Arab Emirates | AED (2) | Asia/Dubai | Monday | 050 123 4567 | Stripe |
+| `EG` Egypt | EGP (2) | Africa/Cairo | Saturday | 0100 123 4567 | Stripe, if available to you |
+| `JO` Jordan | JOD (3) | Asia/Amman | Saturday | 079 123 4567 | Stripe, if available to you |
+
+Presets live in `scripts/template/regions.ts`; add a country there, or edit
+`region` in `packages/config/project.json` after init. Money is stored in the
+currency's **minor unit** with CLDR's decimals (25,000 IQD is `25000`, 49 SAR
+is `4900`, 9 JOD is `9000`): use `formatMoney` to display it and
+`toMajorUnits` before sending values to analytics. Phone numbers typed
+without a country code are read as the region's; numbers with a country code
+work for any country.
 
 #### Choosing the commerce mode
 
@@ -803,7 +830,7 @@ update service is configured.
 
 ---
 
-## 4. Marketing tracking and Wayl payments
+## 4. Marketing tracking and payments
 
 ### 4.1 Tracking architecture
 
@@ -909,7 +936,24 @@ outside this template.
 | TikTok | TikTok Pixel Helper for the browser, `TIKTOK_TEST_EVENT_CODE` with **Events Manager → Test events** for the server. Remove the test code afterwards. |
 | GTM | **Preview** mode: each custom event should fire the GA4, Meta and TikTok tags once. |
 
-### 4.2 Wayl payments
+### 4.2 Payments (Wayl and Stripe)
+
+Two providers ship behind the same interface (`packages/payments`), and the
+billing flow below is identical for both: one hosted checkout per invoice,
+confirmed by a signed webhook and re-read from the provider's API.
+
+| Provider | Where | Currencies | Selected when |
+| --- | --- | --- | --- |
+| **Wayl** | Iraq: cards, Qi Card, ZainCash, FIB | IQD | `WAYL_API_TOKEN` is set |
+| **Stripe** | Countries where Stripe serves businesses (e.g. the UAE) | most, incl. SAR, AED, EGP, JOD | `STRIPE_SECRET_KEY` is set |
+
+`PAYMENTS_PROVIDER` picks one explicitly. Regional gateways (Moyasar, Tap,
+HyperPay, Paymob) can be added as providers implementing `PaymentProvider`;
+`providers/stripe.ts` is a compact example.
+
+The diagram shows Wayl; with Stripe, the checkout is a Checkout Session and
+the webhook endpoint is configured in the Stripe dashboard instead of being
+sent with each link.
 
 #### How a payment flows
 
@@ -946,7 +990,8 @@ Defensive design:
   repeated deliveries return `duplicate` and change nothing.
 - **Errors return `5xx`,** so Wayl retries later.
 
-Renewals: Wayl has no card-on-file subscriptions. The daily cron
+Renewals: neither provider is used for card-on-file subscriptions (Iraqi
+wallets can't be charged automatically). The daily cron
 `/cron/subscriptions` creates a renewal payment link 3 days before each
 period ends and emails it to the organization's owners and admins. It marks unpaid
 subscriptions `past_due`, then `expired` after a 7-day grace period.
@@ -968,8 +1013,24 @@ subscriptions `past_due`, then `expired` after a 7-day grace period.
 5. Insert the real plans into `public.plans` in production. Amounts are whole
    IQD, and Wayl's minimum is 1,000 IQD.
 
-Without `WAYL_API_TOKEN`, development uses an in-memory mock provider. In
-production, the API refuses to start a checkout without Wayl credentials.
+#### Set up Stripe
+
+1. In the Stripe dashboard (test mode first), copy the secret key, or create a
+   restricted key with write access to Checkout Sessions and Refunds.
+2. **Developers → Webhooks → Add endpoint**: URL
+   `<NEXT_PUBLIC_API_URL>/webhooks/payments`, events
+   `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
+   `checkout.session.async_payment_failed` and `checkout.session.expired`.
+   Copy its signing secret.
+3. In the **api** Vercel project, set `STRIPE_SECRET_KEY` (`sk_test_…`, later
+   `sk_live_…`) and `STRIPE_WEBHOOK_SECRET` (`whsec_…`).
+4. Insert plans in the currency's minor unit (49 SAR is `4900`). Stripe's own
+   decimals are converted automatically (IQD, for example, has two in Stripe).
+5. Checkout Sessions expire after at most 24 hours, so renewal links in
+   emails last a day; customers can always pay from **Billing**.
+
+Without provider keys, development uses an in-memory mock provider. In
+production, the API refuses to start a checkout without a configured provider.
 
 #### Verify payments in production
 
@@ -1130,10 +1191,11 @@ secret to this project.**
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | Verifying users' tokens |
 | `SUPABASE_SECRET_KEY` | Feature | `sb_secret_…`. Webhooks, cron, account and organization deletion. **Server only.** |
 | `CRON_SECRET` | Feature | At least 32 characters (`openssl rand -hex 32`). Vercel sends it to the cron routes; without it every cron call is rejected. |
-| `WAYL_API_TOKEN`, `WAYL_WEBHOOK_SECRET` | Feature | Payments. Checkout fails in production without them. |
+| `WAYL_API_TOKEN`, `WAYL_WEBHOOK_SECRET` | Feature (Wayl projects) | Payments. Checkout fails in production without a provider. |
 | `WAYL_ENV` | Feature | `live` in Production, `test` in Preview |
 | `WAYL_API_URL` | Optional | Wayl staging server |
-| `PAYMENTS_PROVIDER` | Optional | Leave unset (Wayl when the token is set). Never `mock` in production. |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | Feature (Stripe projects) | Instead of the Wayl variables; see 4.2 |
+| `PAYMENTS_PROVIDER` | Optional | Leave unset (Wayl or Stripe, from whichever keys are set). Never `mock` in production. |
 | `RESEND_TOKEN`, `RESEND_FROM` | Feature | Renewal invoice emails |
 | `NEXT_PUBLIC_META_PIXEL_ID`, `META_CONVERSIONS_ACCESS_TOKEN` | Optional | Server-side purchases to Meta; same pixel as the web apps |
 | `NEXT_PUBLIC_TIKTOK_PIXEL_ID`, `TIKTOK_EVENTS_ACCESS_TOKEN` | Optional | Server-side purchases to TikTok |
