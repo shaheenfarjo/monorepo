@@ -27,6 +27,7 @@ export const createMemoryBillingRepository = (plans: PlanRecord[] = []) => {
         metadata: payment.metadata ?? {},
         organizationId: payment.organizationId,
         provider: payment.provider,
+        providerPaymentId: null,
         referenceId: payment.referenceId,
         status: "pending",
         subscriptionId: payment.subscriptionId,
@@ -109,6 +110,8 @@ export const createMemoryBillingRepository = (plans: PlanRecord[] = []) => {
           ...payment,
           ...(update.status ? { status: update.status } : {}),
           checkoutUrl: update.checkoutUrl ?? payment.checkoutUrl,
+          providerPaymentId:
+            update.providerPaymentId ?? payment.providerPaymentId,
         });
       }
       return Promise.resolve();

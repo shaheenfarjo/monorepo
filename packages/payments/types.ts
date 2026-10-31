@@ -1,6 +1,6 @@
 /**
  * Provider-agnostic payment types. Amounts are integers in the currency's
- * smallest unit; IQD has no minor unit in practice, so 25,000 IQD is 25000.
+ * minor unit (see money.ts): 25,000 IQD is 25000, 49 SAR is 4900.
  */
 export type CurrencyCode = "IQD" | (string & {});
 
@@ -64,6 +64,8 @@ export interface Checkout {
 
 export interface RefundInput {
   amount: Money;
+  /** The provider's id for the checkout (Checkout.providerReference). */
+  providerReference?: string;
   reason: string;
   referenceId: string;
 }
@@ -84,6 +86,11 @@ export interface PaymentEvent {
   /** Stable key for this delivery, used for idempotency. */
   eventKey: string;
   provider: string;
+  /**
+   * The provider's id for the checkout, when the provider can only look it up
+   * by its own id (Stripe Checkout Sessions). Wayl looks up by referenceId.
+   */
+  providerReference?: string;
   raw: unknown;
   referenceId: string;
 }
@@ -96,10 +103,17 @@ export interface ProviderCapabilities {
 }
 
 export interface PaymentProvider {
-  cancelCheckout: (referenceId: string) => Promise<void>;
+  cancelCheckout: (
+    referenceId: string,
+    providerReference?: string
+  ) => Promise<void>;
   readonly capabilities: ProviderCapabilities;
   createCheckout: (input: CheckoutInput) => Promise<Checkout>;
-  getCheckout: (referenceId: string) => Promise<Checkout>;
+  /** Reads the checkout back from the provider (the source of truth). */
+  getCheckout: (
+    referenceId: string,
+    providerReference?: string
+  ) => Promise<Checkout>;
   readonly id: string;
   /** Verifies the signature over the raw body and normalizes the payload. */
   parseWebhook: (request: {

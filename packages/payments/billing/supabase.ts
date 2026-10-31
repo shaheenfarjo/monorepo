@@ -31,6 +31,7 @@ const toPayment = (row: Tables<"payments">): PaymentRecord => ({
   metadata: isRecord(row.metadata) ? row.metadata : {},
   organizationId: row.organization_id,
   provider: row.provider,
+  providerPaymentId: row.provider_payment_id,
   referenceId: row.reference_id,
   status: row.status,
   subscriptionId: row.subscription_id,
