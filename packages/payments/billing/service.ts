@@ -289,7 +289,10 @@ export const createBillingService = ({
         } satisfies WebhookOutcome;
       }
 
-      const checkout = await provider.getCheckout(event.referenceId);
+      const checkout = await provider.getCheckout(
+        event.referenceId,
+        event.providerReference ?? payment.providerPaymentId ?? undefined
+      );
       const next = resolveStatus(payment, checkout);
       const transitions = canTransition(payment.status, next);
 

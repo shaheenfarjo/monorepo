@@ -8,16 +8,16 @@ import {
 } from "./config";
 
 /**
- * Locale-aware formatting with the project's regional defaults: the
- * Asia/Baghdad time zone, the Gregorian calendar (Iraqi month names in
- * Arabic) and Western or Arabic-Indic digits per project.json.
+ * Locale-aware formatting with the project's regional defaults from
+ * project.json: its time zone, the Gregorian calendar (with the country's
+ * Arabic month names) and Western or Arabic-Indic digits.
  *
  * Store timestamps in UTC (timestamptz) and format them with these helpers.
  */
 
 export const TIME_ZONE = project.region.timeZone;
 export const CURRENCY = project.region.currency;
-/** 6 = Saturday, the first day of the week in Iraq. */
+/** 0 = Sunday … 6 = Saturday; from the project's region (Iraq: Saturday). */
 export const WEEK_STARTS_ON = project.region.weekStartsOn as
   | 0
   | 1
@@ -123,7 +123,7 @@ export const formatNumber = (
   options?: Intl.NumberFormatOptions
 ) => new Intl.NumberFormat(intlLocale(locale), options).format(value);
 
-/** Money in whole units of the currency (IQD has no minor unit in practice). */
+/** Money in whole units of the currency (49 SAR is 49). */
 export const formatCurrency = (
   amount: number,
   locale: Locale = defaultLocale,
@@ -131,9 +131,25 @@ export const formatCurrency = (
 ) =>
   new Intl.NumberFormat(intlLocale(locale), {
     currency,
-    maximumFractionDigits: currency === "IQD" ? 0 : undefined,
     style: "currency",
   }).format(amount);
+
+/**
+ * Money stored in the currency's minor unit, as payments and plans are
+ * (4900 SAR is 49.00 SAR; IQD has none, so 25000 is 25,000 IQD).
+ */
+export const formatMoney = (
+  amount: number,
+  locale: Locale = defaultLocale,
+  currency: string = CURRENCY
+) => {
+  const digits =
+    new Intl.NumberFormat("en", {
+      currency,
+      style: "currency",
+    }).resolvedOptions().maximumFractionDigits ?? 2;
+  return formatCurrency(amount / 10 ** digits, locale, currency);
+};
 
 /**
  * A date in the project time zone, for date-fns calculations such as start of

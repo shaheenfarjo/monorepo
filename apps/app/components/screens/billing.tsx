@@ -11,8 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/design-system/components/ui/card";
-import { formatCurrency, formatDate } from "@repo/internationalization/format";
-import { getPurchasePolicy } from "@repo/payments";
+import { formatDate, formatMoney } from "@repo/internationalization/format";
+import { getPurchasePolicy, toMajorUnits } from "@repo/payments";
 import { useMutation } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -76,7 +76,8 @@ export const Billing = () => {
           planId: plan.id,
           planName: plan.name,
           referenceId,
-          value: plan.amount,
+          // Ad platforms take whole units (49 SAR, not 4900).
+          value: toMajorUnits(plan.amount, plan.currency),
         });
         await openCheckout(url);
       }
@@ -85,12 +86,11 @@ export const Billing = () => {
 
   const startCheckout = (plan: Plan) => {
     setCheckoutError(false);
+    const value = toMajorUnits(plan.amount, plan.currency);
     track("begin_checkout", {
       currency: plan.currency,
-      items: [
-        { id: plan.id, name: plan.name, price: plan.amount, quantity: 1 },
-      ],
-      value: plan.amount,
+      items: [{ id: plan.id, name: plan.name, price: value, quantity: 1 }],
+      value,
     });
     checkout.mutate(plan);
   };
@@ -160,7 +160,7 @@ export const Billing = () => {
           <div className="grid gap-4 md:grid-cols-3">
             {plans.data?.map((plan) => {
               const isCurrent = plan.id === subscription.data?.plan_id;
-              const price = formatCurrency(plan.amount, locale, plan.currency);
+              const price = formatMoney(plan.amount, locale, plan.currency);
               return (
                 <Card key={plan.id}>
                   <CardHeader>
@@ -218,11 +218,7 @@ export const Billing = () => {
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="tabular-nums">
-                        {formatCurrency(
-                          payment.amount,
-                          locale,
-                          payment.currency
-                        )}
+                        {formatMoney(payment.amount, locale, payment.currency)}
                       </span>
                       <Badge variant="outline">
                         {t(`paymentStatus.${payment.status}`)}

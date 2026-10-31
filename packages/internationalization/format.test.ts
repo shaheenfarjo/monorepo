@@ -1,11 +1,32 @@
 import { startOfDay } from "date-fns";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
+
+// These tests describe Iraq's conventions, whatever region the project uses.
+vi.mock("@repo/config", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@repo/config")>();
+  return {
+    ...actual,
+    project: {
+      ...actual.project,
+      region: {
+        country: "IQ",
+        currency: "IQD",
+        numberingSystem: "latn",
+        phoneExample: "0770 123 4567",
+        timeZone: "Asia/Baghdad",
+        weekStartsOn: 6,
+      },
+    },
+  };
+});
+
 import { getDirection } from "./config";
 import {
   formatCalendarDate,
   formatCurrency,
   formatDate,
   formatDateTime,
+  formatMoney,
   formatMonthYear,
   formatRelativeTime,
   formatWeekday,
@@ -69,5 +90,17 @@ describe("regional formatting", () => {
     expect(formatCalendarDate(october, "ar")).toBe("15 تشرين الأول 2026");
     // 15 October 2026 is a Thursday.
     expect(formatWeekday(october, "en")).toBe("Thu");
+  });
+});
+
+describe("money in minor units", () => {
+  test("uses each currency's decimals", () => {
+    expect(formatMoney(25_000, "en", "IQD")).toBe(
+      formatCurrency(25_000, "en", "IQD")
+    );
+    expect(formatMoney(4900, "en", "SAR")).toBe(
+      formatCurrency(49, "en", "SAR")
+    );
+    expect(formatMoney(9000, "en", "JOD")).toBe(formatCurrency(9, "en", "JOD"));
   });
 });

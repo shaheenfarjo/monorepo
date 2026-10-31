@@ -1,5 +1,6 @@
 "use client";
 
+import { project } from "@repo/config";
 import type { Database } from "@repo/database";
 import { Button } from "@repo/design-system/components/ui/button";
 import { Input } from "@repo/design-system/components/ui/input";
@@ -148,7 +149,9 @@ export const PhoneOtpForm = ({
     }
   };
 
-  const errorMessage = error ? messages.errors[error] : null;
+  const errorMessage = error
+    ? format(messages.errors[error], { example: project.region.phoneExample })
+    : null;
 
   return (
     <form className="grid gap-4" noValidate onSubmit={handleSubmit}>
@@ -177,7 +180,7 @@ export const PhoneOtpForm = ({
               id={`${id}-phone`}
               inputMode="tel"
               onChange={(event) => setPhoneInput(event.target.value)}
-              placeholder="0770 123 4567"
+              placeholder={project.region.phoneExample}
               required
               type="tel"
               value={phoneInput}

@@ -25,7 +25,7 @@ describe.skipIf(!(process.env.SUPABASE_INTEGRATION && publishableKey))(
     });
 
     test("signs in with a phone OTP and works inside an organization", async () => {
-      const sent = await sendPhoneOtp(supabase, "٠٧٧٠ ٠٠٠ ٠٠٠٠", {
+      const sent = await sendPhoneOtp(supabase, "+٩٦٤ ٧٧٠ ٠٠٠ ٠٠٠٠", {
         fullName: "Test User",
         locale: "en",
       });
@@ -81,7 +81,7 @@ describe.skipIf(!(process.env.SUPABASE_INTEGRATION && publishableKey))(
     });
 
     test("rejects a wrong code", async () => {
-      await sendPhoneOtp(supabase, "07700000000");
+      await sendPhoneOtp(supabase, "+9647700000000");
       const result = await verifyPhoneOtp(supabase, "+9647700000000", "000000");
       expect(result).toMatchObject({ code: "invalid_code", ok: false });
     });

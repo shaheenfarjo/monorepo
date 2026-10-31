@@ -16,7 +16,8 @@
     "timeZone": "Asia/Baghdad",
     "currency": "IQD",
     "numberingSystem": "latn",
-    "weekStartsOn": 6
+    "weekStartsOn": 6,
+    "phoneExample": "0770 123 4567"
   },
   "commerce": {
     "allowNativeCheckout": false

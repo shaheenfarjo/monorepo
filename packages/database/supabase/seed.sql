@@ -1,5 +1,6 @@
 -- Local development seed (runs after migrations on `supabase db reset`).
--- Prices are in IQD (whole dinars). Adjust to the project's real plans.
+-- Prices are in IQD, in the currency's minor unit (IQD has none; 49 SAR would
+-- be 4900). Adjust to the project's real plans.
 
 insert into public.plans (id, name, description, amount, currency, billing_interval)
 values

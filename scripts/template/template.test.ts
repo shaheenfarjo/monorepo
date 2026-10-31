@@ -10,13 +10,13 @@ import {
 } from "./tokens";
 
 const answers = {
-  bundleId: "iq.example.reserve",
-  orgName: "شركة ٩٦٤",
-  orgSlug: "964-reserve",
-  projectName: "Reserve",
-  projectSlug: "reserve",
-  projectUrl: "https://reserve.example.iq",
-  repoUrl: "https://github.com/acme/reserve",
+  bundleId: "iq.example.nakhla",
+  orgName: "شركة النخلة",
+  orgSlug: "nakhla-trading",
+  projectName: "Nakhla",
+  projectSlug: "nakhla",
+  projectUrl: "https://nakhla.example.iq",
+  repoUrl: "https://github.com/acme/nakhla",
   supportEmail: "support@example.iq",
   year: 2026,
 };
@@ -27,7 +27,7 @@ describe("tokens", () => {
     const other = ["{{", "OTHER", "}}"].join("");
     const input = `{{PROJECT_NAME}} by {{ORG_NAME}} © {{YEAR}} ${other} {{ name }}`;
     expect(replaceTokens(input, tokenValues(answers))).toBe(
-      `Reserve by شركة ٩٦٤ © 2026 ${other} {{ name }}`
+      `Nakhla by شركة النخلة © 2026 ${other} {{ name }}`
     );
   });
 
@@ -36,13 +36,13 @@ describe("tokens", () => {
   });
 
   test("slugifies names", () => {
-    expect(slugify("964 Reserve — Erbil!")).toBe("964-reserve-erbil");
+    expect(slugify("Nakhla 24 — Erbil!")).toBe("nakhla-24-erbil");
     expect(slugify("شركة")).toBe("");
   });
 
   test("derives a valid reverse-DNS bundle id", () => {
-    const id = deriveBundleId("https://www.964-reserve.iq", "reserve-app");
-    expect(id).toBe("iq.app964reserve.reserveapp");
+    const id = deriveBundleId("https://www.24-nakhla.iq", "nakhla-app");
+    expect(id).toBe("iq.app24nakhla.nakhlaapp");
     expect(validate.bundleId(id)).toBeUndefined();
   });
 
@@ -110,5 +110,42 @@ describe("module markers", () => {
     expect(() => stripModuleBlocks("// <module:a>\nx", new Set())).toThrow(
       MarkerError
     );
+  });
+});
+
+describe("region presets", () => {
+  test("every replaced text still exists in its file", async () => {
+    const { readFile } = await import("node:fs/promises");
+    const { join } = await import("node:path");
+    const { regionalReplacements, regionPresets } = await import("./regions");
+    const root = join(import.meta.dirname, "../..");
+
+    for (const [file, replacements] of Object.entries(
+      regionalReplacements(regionPresets[1] as (typeof regionPresets)[number])
+    )) {
+      // biome-ignore lint/performance/noAwaitInLoops: two small files
+      const content = await readFile(join(root, file), "utf8");
+      for (const [from] of replacements) {
+        expect(content, `${file}: ${from}`).toContain(from);
+      }
+    }
+  });
+
+  test("presets are valid for Intl and use the currency's minor unit", async () => {
+    const { regionPresets } = await import("./regions");
+    for (const preset of regionPresets) {
+      expect(
+        () => new Intl.DateTimeFormat("en", { timeZone: preset.timeZone })
+      ).not.toThrow();
+      const digits =
+        new Intl.NumberFormat("en", {
+          currency: preset.currency,
+          style: "currency",
+        }).resolvedOptions().maximumFractionDigits ?? 2;
+      // Example prices are whole amounts of money.
+      for (const price of preset.prices) {
+        expect(price % 10 ** digits).toBe(0);
+      }
+    }
   });
 });

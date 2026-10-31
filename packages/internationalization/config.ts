@@ -16,9 +16,10 @@ interface LocaleDefinition {
  * ready to enable once messages/ckb.json exists.
  */
 export const localeDefinitions: Record<SupportedLocale, LocaleDefinition> = {
-  ar: { dir: "rtl", intl: "ar-IQ", label: "العربية" },
+  // Arabic as used in the project's country (ar-IQ, ar-SA, ar-EG, …).
+  ar: { dir: "rtl", intl: `ar-${project.region.country}`, label: "العربية" },
   ckb: { dir: "rtl", intl: "ckb-IQ", label: "کوردی" },
-  // British English: day-month-year dates, as used in Iraq.
+  // British English: day-month-year dates, as used across the region.
   en: { dir: "ltr", intl: "en-GB", label: "English" },
 };
 

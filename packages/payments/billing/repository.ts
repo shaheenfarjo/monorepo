@@ -27,6 +27,8 @@ export interface PaymentRecord {
   metadata: Record<string, unknown>;
   organizationId: string | null;
   provider: string;
+  /** The provider's id for the checkout, once created. */
+  providerPaymentId: string | null;
   referenceId: string;
   status: PaymentStatus;
   subscriptionId: string | null;

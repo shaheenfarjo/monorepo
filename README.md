@@ -1,82 +1,102 @@
-# {{PROJECT_NAME}}
+# A-SAAS · أساس
 
-{{ORG_NAME}}'s production monorepo: a Next.js + Supabase SaaS platform built for
-Iraq-first products. It ships Arabic (RTL) and English (LTR) out of the box, takes
-local payments through Wayl, and can be packaged as native iOS and Android apps.
+**The Arabic-first foundation for SaaS products and their mobile apps.**
 
-> **Starting a new project from this template?** Run `bun install && bun run init`
-> first. It asks for your organization and project details, fills in every
-> placeholder token, sets up environment files and removes the modules you don't need.
+*Asās* (أساس) means "foundation". A-SAAS is a production-ready monorepo for
+products whose users speak Arabic: right-to-left done properly, phone sign-in,
+regional payments, and the same app on the web, iOS and Android.
+
+Most starters are English-first, Stripe-only and web-only. A-SAAS starts from
+what products in Iraq, the Gulf and the wider region actually need.
+
+## What you get
+
+- **Arabic and English, RTL by default.** Every string is in the translation
+  files. Layouts use logical CSS, so they mirror correctly. CI fails on
+  physical Tailwind utilities or hard-coded UI text. Dates, numbers and money
+  are formatted for the region, with Latin or Arabic-Indic digits.
+- **Phone sign-in.** Supabase phone OTP accepts Arabic-Indic digits and local
+  formats. A pluggable SMS hook covers local gateways, Twilio and WhatsApp.
+- **Multi-tenant from day one.** Organizations, roles and invitations, all
+  enforced by Postgres Row Level Security with a pgTAP test suite.
+- **Payments that work in the region.** One provider interface, shipping with
+  Wayl (Iraq: cards, Qi Card, ZainCash, FIB) and Stripe. Native apps follow
+  App Store and Play rules on digital goods.
+- **Web, iOS and Android from one codebase.** The product app is client-first
+  and builds as a static export for Capacitor. Native auth uses PKCE and keeps
+  the session in the Keychain or Keystore.
+- **Ready for store review.** Includes in-app account deletion with
+  sole-owner handling, privacy-safe analytics in the apps, and deep links.
+- **Marketing that measures.** One `track()` call reaches GA4, Meta and
+  TikTok, with server-side purchase conversions deduplicated against the
+  browser event.
+- **A generator, not a fork-and-pray.** `bun run init` fills in your names,
+  applies a country preset, removes the modules you don't need and picks
+  your project's license.
+
+## Quick start
+
+```sh
+git clone https://github.com/a-saas/a-saas my-product
+cd my-product
+bun install
+bun run init        # interactive: names, country, language, license, modules
+bun run db:start    # local Supabase (Docker)
+bun run dev         # app :3000 · site :3001 · api :3002
+```
+
+Sign in locally with `+964 770 000 0000` and the code `123456`.
+
+### Country presets
+
+| `--region` | Currency | Time zone | Payments to start with |
+| --- | --- | --- | --- |
+| `IQ` Iraq | IQD | Asia/Baghdad | Wayl |
+| `SA` Saudi Arabia | SAR | Asia/Riyadh | Stripe, if available to you |
+| `AE` UAE | AED | Asia/Dubai | Stripe |
+| `EG` Egypt | EGP | Africa/Cairo | Stripe, if available to you |
+| `JO` Jordan | JOD | Asia/Amman | Stripe, if available to you |
+
+Each preset also sets the week start, phone format and example prices.
+Adding a country is one entry in `scripts/template/regions.ts`.
 
 ## Stack
 
 | Concern | Choice |
 | --- | --- |
 | Monorepo | Turborepo + Bun workspaces |
-| Web apps | Next.js (App Router), React, Tailwind CSS v4, shadcn/ui |
-| Auth & database | Supabase (Postgres, Row Level Security, phone OTP) |
-| Payments | Provider-agnostic `@repo/payments` with Wayl (ZainCash, FIB, Qi Card, cards) |
-| Localization | Arabic + English, RTL-aware design system, `Asia/Baghdad` dates, IQD |
-| Mobile | Capacitor (iOS + Android) from the same `apps/app` codebase |
-| Analytics | GTM, GA4, Meta Pixel, TikTok Pixel, server-side conversions |
-| Hosting | Vercel (apps) + Cloudflare (DNS, Turnstile, R2) |
-| Quality | Biome via Ultracite, TypeScript strict, Vitest, GitHub Actions |
+| Web | Next.js (App Router), React, Tailwind CSS v4, shadcn/ui |
+| Auth & data | Supabase: Postgres, Row Level Security, phone OTP, Storage |
+| Mobile | Capacitor (iOS + Android) from the product app |
+| i18n | next-intl, Arabic + English (Kurdish ready) |
+| Payments | `@repo/payments` with Wayl and Stripe |
+| Analytics | GTM or GA4 + Meta + TikTok, PostHog, server-side conversions |
+| Quality | TypeScript strict, Biome (Ultracite), Vitest, pgTAP, GitHub Actions |
 
-## Structure
+Optional modules, all removable by `init`: CMS (BaseHub), real-time
+collaboration (Liveblocks), notifications (Knock), outbound webhooks (Svix),
+feature flags, rate limiting and AI helpers.
 
-```
-apps/
-  web/        Marketing site (port 3001)
-  app/        Main product — web + iOS/Android via Capacitor (port 3000)
-  api/        Webhooks, cron jobs and server-only endpoints (port 3002)
-  email/      React Email templates (port 3003)
-  docs/       Mintlify documentation (port 3004)
-  storybook/  Design-system workbench (port 6006)
-packages/
-  config/     Project identity, locales and regional settings (single source of truth)
-  auth/       Supabase Auth clients, phone OTP, session middleware
-  database/   Supabase schema, migrations, RLS tests and generated types
-  payments/   Payment-provider interface, Wayl provider, billing logic
-  design-system/, internationalization/, analytics/, security/, seo/, …
-scripts/      Template init and repository checks
-```
+## Documentation
 
-## Getting started
+- [ARCHITECTURE_AND_INTEGRATIONS.md](./ARCHITECTURE_AND_INTEGRATIONS.md): how
+  it fits together and step-by-step setup. It covers the generator, Supabase
+  and RLS, the mobile apps, tracking, payments and Vercel.
+- [AGENTS.md](./AGENTS.md): conventions for humans and AI coding agents.
+- [CONTRIBUTING](./.github/CONTRIBUTING.md): how to contribute.
 
-Prerequisites: Node.js 22+, [Bun](https://bun.sh), and Docker if you want to run
-Supabase locally.
+## Contributing
 
-```sh
-bun install
-bun run init      # first time only, when creating a project from the template
-bun run dev       # starts every app
-```
+Issues and pull requests are welcome, especially new country presets, payment
+gateways (Moyasar, Tap, HyperPay, Paymob…), SMS providers and translations.
+Please read the [contributing guide](./.github/CONTRIBUTING.md) first.
 
-Each app reads its environment from `.env.local` (created by `init` from the
-`.env.example` files). Without credentials the apps still start; integrations whose
-keys are missing are disabled.
+## License
 
-## Common scripts
+[MIT](./LICENSE.md). Projects you create with `bun run init` can use any
+license; the generator offers proprietary or MIT and keeps the A-SAAS notice
+in `THIRD_PARTY_NOTICES.md`. A-SAAS builds on
+[next-forge](https://github.com/vercel/next-forge) and
+[shadcn/ui](https://github.com/shadcn-ui/ui), both MIT.
 
-| Script | What it does |
-| --- | --- |
-| `bun run dev` | Run all apps in development |
-| `bun run build` | Build all apps |
-| `bun run check` / `bun run fix` | Lint and format with Biome |
-| `bun run typecheck` | Type-check every workspace |
-| `bun run test` | Run all unit tests |
-| `bun run check:placeholders` | Fail if placeholder tokens remain after init |
-| `bun run check:rtl` / `bun run check:i18n` | Physical Tailwind utilities / UI text missing from the messages files |
-| `bun run db:start` / `db:reset` / `db:test` / `db:types` | Local Supabase, migrations, RLS tests, generated types |
-| `bun run build:native` / `bun run cap:sync` | Static export of `apps/app` / copy it into the iOS and Android projects |
-
-## Further reading
-
-- `ARCHITECTURE_AND_INTEGRATIONS.md` — how the apps fit together, and step-by-step
-  setup for the template generator, Supabase migrations and RLS, the Capacitor apps,
-  tracking, Wayl payments and Vercel environment variables
-- `AGENTS.md` — conventions for humans and AI agents
-- `.github/CONTRIBUTING.md` — workflow and local checks
-- `THIRD_PARTY_NOTICES.md` — licenses of included open-source code
-
-Repository: {{REPO_URL}} · Support: {{SUPPORT_EMAIL}}
+Created and maintained by [@shaheenfarjo](https://github.com/shaheenfarjo).
