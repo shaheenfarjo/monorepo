@@ -37,7 +37,7 @@ what products in Iraq, the Gulf and the wider region actually need.
 ## Quick start
 
 ```sh
-git clone https://github.com/a-saas/a-saas my-product
+git clone https://github.com/theideaiq/a-saas my-product
 cd my-product
 bun install
 bun run init        # interactive: names, country, language, license, modules
@@ -99,4 +99,5 @@ in `THIRD_PARTY_NOTICES.md`. A-SAAS builds on
 [next-forge](https://github.com/vercel/next-forge) and
 [shadcn/ui](https://github.com/shadcn-ui/ui), both MIT.
 
-Created and maintained by [@shaheenfarjo](https://github.com/shaheenfarjo).
+Built and maintained by [The Idea IQ](https://github.com/theideaiq), created by
+[@shaheenfarjo](https://github.com/shaheenfarjo).

@@ -1,7 +1,7 @@
 # {{PROJECT_NAME}}
 
 {{ORG_NAME}}'s production monorepo: a Next.js + Supabase SaaS platform for
-Arabic-first products, created from the [A-SAAS](https://github.com/a-saas/a-saas)
+Arabic-first products, created from the [A-SAAS](https://github.com/theideaiq/a-saas)
 template. It ships Arabic (RTL) and English (LTR), takes payments through Wayl or
 Stripe, and can be packaged as native iOS and Android apps.
 
