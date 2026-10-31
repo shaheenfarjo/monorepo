@@ -32,7 +32,7 @@ describe("phone OTP", () => {
     const signInWithOtp = vi.fn().mockResolvedValue({ error: null });
     const result = await sendPhoneOtp(
       clientWith({ signInWithOtp }),
-      "٠٧٧٠ ١٢٣ ٤٥٦٧",
+      "+٩٦٤ ٧٧٠ ١٢٣ ٤٥٦٧",
       { channel: "whatsapp", fullName: " Sara ", locale: "ar" }
     );
 

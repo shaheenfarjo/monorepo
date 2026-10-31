@@ -1,10 +1,5 @@
 import { describe, expect, test } from "vitest";
-import {
-  formatPhone,
-  isIraqiMobile,
-  normalizePhone,
-  toWesternDigits,
-} from "./phone";
+import { formatPhone, normalizePhone, toWesternDigits } from "./phone";
 
 describe("phone numbers", () => {
   test("converts Arabic-Indic and Persian digits", () => {
@@ -19,8 +14,8 @@ describe("phone numbers", () => {
     ["+964 770 123 4567"],
     ["00964 770 123 4567"],
     ["964 770 123 4567"],
-  ])("normalizes %s to E.164", (input) => {
-    expect(normalizePhone(input)).toBe("+9647701234567");
+  ])("normalizes %s to E.164 (Iraq as the local country)", (input) => {
+    expect(normalizePhone(input, "IQ")).toBe("+9647701234567");
   });
 
   test("rejects invalid numbers", () => {
@@ -33,10 +28,13 @@ describe("phone numbers", () => {
     expect(normalizePhone("+971 50 123 4567")).toBe("+971501234567");
   });
 
-  test("detects Iraqi mobile numbers", () => {
-    expect(isIraqiMobile("+9647701234567")).toBe(true);
-    expect(isIraqiMobile("+96417123456")).toBe(false);
-    expect(isIraqiMobile("+971501234567")).toBe(false);
+  test.each([
+    ["SA", "050 123 4567", "+966501234567"],
+    ["AE", "050 123 4567", "+971501234567"],
+    ["EG", "0100 123 4567", "+201001234567"],
+    ["JO", "079 123 4567", "+962791234567"],
+  ] as const)("reads local %s numbers", (country, input, e164) => {
+    expect(normalizePhone(input, country)).toBe(e164);
   });
 
   test("formats numbers for display", () => {

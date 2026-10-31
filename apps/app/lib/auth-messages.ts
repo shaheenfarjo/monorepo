@@ -18,7 +18,8 @@ export const useAuthMessages = (): AuthMessages => {
       captcha_failed: t("errors.captcha_failed"),
       delivery_failed: t("errors.delivery_failed"),
       invalid_code: t("errors.invalid_code"),
-      invalid_phone: t("errors.invalid_phone"),
+      // The component fills in {example} itself.
+      invalid_phone: t.raw("errors.invalid_phone") as string,
       rate_limited: t("errors.rate_limited"),
       signups_disabled: t("errors.signups_disabled"),
       unknown: t("errors.unknown"),

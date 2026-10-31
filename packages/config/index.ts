@@ -54,6 +54,8 @@ const projectSchema = z
       country: z.string().length(2),
       currency: z.string().length(3),
       numberingSystem: z.enum(["latn", "arab"]),
+      /** A local mobile number, shown as the phone field's example. */
+      phoneExample: z.string().min(1),
       timeZone: z.string().min(1),
       weekStartsOn: z.number().int().min(0).max(6),
     }),

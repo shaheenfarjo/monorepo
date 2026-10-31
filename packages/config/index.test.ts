@@ -14,9 +14,15 @@ describe("project config", () => {
     expect(project.locale.enabled).toContain(project.locale.default);
   });
 
-  test("defaults to Iraq regional settings", () => {
-    expect(project.region.timeZone).toBe("Asia/Baghdad");
-    expect(project.region.currency).toBe("IQD");
+  test("regional settings are valid for Intl", () => {
+    const { country, currency, timeZone } = project.region;
+    expect(() => new Intl.DateTimeFormat("en", { timeZone })).not.toThrow();
+    expect(
+      () => new Intl.NumberFormat("en", { currency, style: "currency" })
+    ).not.toThrow();
+    expect(
+      new Intl.DisplayNames("en", { type: "region" }).of(country)
+    ).not.toBe(country);
   });
 
   test("functional fields are undefined or valid, never a raw token", () => {

@@ -1,9 +1,6 @@
 import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale } from "@repo/internationalization";
-import {
-  formatCurrency,
-  formatNumber,
-} from "@repo/internationalization/format";
+import { formatMoney, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { Check, Minus, MoveRight, PhoneCall } from "lucide-react";
 import type { Metadata } from "next";
@@ -27,8 +24,9 @@ type FeatureId =
   | "automation";
 
 /**
- * Example plans: replace the prices (IQD per month, `null` = on request) and
- * the feature matrix with your own. Names and descriptions are translated in
+ * Example plans: replace the prices (in the currency's minor unit, as in the
+ * database: prices in IQD per month, `null` = on request) and the feature
+ * matrix with your own. Names and descriptions are translated in
  * the `web.pricing` messages.
  */
 const plans: { id: PlanId; price: number | null }[] = [
@@ -116,7 +114,7 @@ const Pricing = async ({ params }: PricingProps) => {
                   ) : (
                     <>
                       <span className="text-4xl">
-                        {formatCurrency(plan.price, locale)}
+                        {formatMoney(plan.price, locale)}
                       </span>
                       <span className="text-muted-foreground text-sm">
                         {t("perMonth")}

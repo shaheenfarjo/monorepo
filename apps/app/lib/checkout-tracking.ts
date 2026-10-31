@@ -7,6 +7,7 @@ export interface PendingCheckout {
   planId: string;
   planName: string;
   referenceId: string;
+  /** In whole units of the currency, as ad platforms expect. */
   value: number;
 }
 

@@ -5,6 +5,7 @@ import { analytics } from "@repo/analytics/server";
 import { createAdminClient } from "@repo/database/admin";
 import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
+import { toMajorUnits } from "@repo/payments";
 import type { PaymentRecord } from "@repo/payments/server";
 
 const lookupUser = async (userId: string) => {
@@ -45,7 +46,8 @@ export const reportPayment = async (payment: PaymentRecord) => {
       {
         currency: payment.currency,
         transactionId: payment.referenceId,
-        value: payment.amount,
+        // Stored in minor units; the conversion APIs take whole units.
+        value: toMajorUnits(payment.amount, payment.currency),
       },
       {
         attribution,
