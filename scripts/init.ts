@@ -24,8 +24,14 @@ import {
   spinner,
   text,
 } from "@clack/prompts";
-import { applyInit } from "./template/apply";
+import { applyInit, type ProjectLicense } from "./template/apply";
 import { moduleIds, templateModules } from "./template/modules";
+import {
+  getRegionPreset,
+  type RegionPreset,
+  regionIds,
+  regionPresets,
+} from "./template/regions";
 import {
   type Answers,
   deriveBundleId,
@@ -47,11 +53,17 @@ const HELP = `Usage: bun run init [options]
   --support-email <email>   Support / security contact
   --repo-url <url>          Git repository URL
   --bundle-id <id>          iOS/Android app ID, e.g. iq.example.app
+  --region <code>           Country preset: ${regionIds.join(", ")} (default: IQ).
+                            Sets time zone, currency, week start, phone
+                            format and example prices
   --default-locale <ar|en>  Default language (default: ar)
   --commerce <digital|physical>
                             digital: SaaS/subscriptions, checkout is web-only
                             physical: goods/services/bookings, checkout is
                             allowed inside the native apps
+  --license <proprietary|mit>
+                            License of the new project (default: proprietary).
+                            The A-SAAS MIT notice is kept in THIRD_PARTY_NOTICES.md
   --keep-modules <ids>      Comma-separated optional modules to keep, or "all"
                             (${moduleIds.join(", ")})
   --yes                     Non-interactive; accept defaults for the rest
@@ -65,11 +77,13 @@ const { values: flags } = parseArgs({
     "default-locale": { type: "string" },
     help: { short: "h", type: "boolean" },
     "keep-modules": { type: "string" },
+    license: { type: "string" },
     "org-name": { type: "string" },
     "org-slug": { type: "string" },
     "project-name": { type: "string" },
     "project-slug": { type: "string" },
     "project-url": { type: "string" },
+    region: { type: "string" },
     "repo-url": { type: "string" },
     root: { type: "string" },
     "skip-install": { type: "boolean" },
@@ -171,10 +185,10 @@ const ensureUninitialized = async () => {
   }
 };
 
-const collectIdentity = async (): Promise<Answers> => {
+const collectIdentity = async (region: RegionPreset): Promise<Answers> => {
   const orgName = await ask(flags["org-name"], {
     message: "Organization name",
-    placeholder: "964 Reserve",
+    placeholder: "Nakhla Trading",
     validate: validate.required,
   });
   const orgSlug = await ask(flags["org-slug"], {
@@ -184,7 +198,7 @@ const collectIdentity = async (): Promise<Answers> => {
   });
   const projectName = await ask(flags["project-name"], {
     message: "Project name",
-    placeholder: "Reserve",
+    placeholder: "Nakhla",
     validate: validate.required,
   });
   const projectSlug = await ask(flags["project-slug"], {
@@ -193,7 +207,7 @@ const collectIdentity = async (): Promise<Answers> => {
     validate: validate.slug,
   });
   const projectUrl = await ask(flags["project-url"], {
-    defaultValue: `https://${projectSlug}.iq`,
+    defaultValue: `https://${projectSlug}.${region.tld}`,
     message: "Public website URL",
     validate: validate.url,
   });
@@ -301,7 +315,21 @@ const run = async () => {
   intro("Create a new project from the template");
   await ensureUninitialized();
 
-  const answers = await collectIdentity();
+  const regionId = await choose<string>(
+    flags.region?.toUpperCase(),
+    regionIds,
+    {
+      initialValue: "IQ",
+      message: "Country (time zone, currency, phone numbers, prices)",
+      options: regionPresets.map((preset) => ({
+        hint: `${preset.currency}, ${preset.timeZone}`,
+        label: preset.name,
+        value: preset.id,
+      })),
+    }
+  );
+  const region = getRegionPreset(regionId) as RegionPreset;
+  const answers = await collectIdentity(region);
   const defaultLocale = await choose<"ar" | "en">(
     flags["default-locale"],
     ["ar", "en"],
@@ -334,6 +362,22 @@ const run = async () => {
       ],
     }
   );
+  const license = await choose<ProjectLicense>(
+    flags.license,
+    ["proprietary", "mit"],
+    {
+      initialValue: "proprietary",
+      message: "License for your project's code",
+      options: [
+        {
+          hint: "closed source; clients and products you sell",
+          label: "Proprietary (all rights reserved)",
+          value: "proprietary",
+        },
+        { hint: "open source", label: "MIT", value: "mit" },
+      ],
+    }
+  );
   const removeModules = await collectModulesToRemove();
 
   note(
@@ -345,7 +389,9 @@ const run = async () => {
       `Repository     ${answers.repoUrl}`,
       `App ID         ${answers.bundleId}`,
       `Language       ${defaultLocale}`,
+      `Region         ${region.name} (${region.currency}, ${region.timeZone})`,
       `Commerce       ${commerce}`,
+      `License        ${license}`,
       `Remove         ${removeModules.join(", ") || "nothing"}`,
     ].join("\n"),
     "Summary"
@@ -365,6 +411,8 @@ const run = async () => {
     answers,
     commerce,
     defaultLocale,
+    license,
+    region,
     removeModules,
     root,
   });
@@ -390,8 +438,11 @@ const run = async () => {
       "",
       "Next steps:",
       "  1. Fill in the .env.local files (Supabase keys first).",
-      "  2. bun run dev",
-      "  3. Review and commit the changes.",
+      region.payments === "wayl"
+        ? "  2. Payments: set WAYL_API_TOKEN and WAYL_WEBHOOK_SECRET in apps/api."
+        : "  2. Payments: set STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET in apps/api.",
+      "  3. bun run dev",
+      "  4. Review and commit the changes.",
     ].join("\n")
   );
 };

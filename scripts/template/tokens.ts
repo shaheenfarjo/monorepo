@@ -67,7 +67,7 @@ const toBundleSegment = (value: string) => {
   return STARTS_WITH_LETTER.test(segment) ? segment : `app${segment}`;
 };
 
-/** `https://reserve.example.iq` + `reserve-app` → `iq.example.reserve.reserveapp`. */
+/** `https://nakhla.example.iq` + `nakhla-app` → `iq.example.nakhla.nakhlaapp`. */
 export const deriveBundleId = (projectUrl: string, projectSlug: string) => {
   const labels = new URL(projectUrl).hostname
     .split(".")
