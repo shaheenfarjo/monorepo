@@ -1,0 +1,17 @@
+{
+  "name": "a-saas-docs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun run sync && astro build",
+    "dev": "bun run sync && astro dev --port 4321",
+    "preview": "astro preview",
+    "sync": "bun scripts/sync.ts"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "0.42.6",
+    "astro": "7.4.0",
+    "mermaid": "11.17.2"
+  }
+}

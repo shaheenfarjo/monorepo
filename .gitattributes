@@ -1,0 +1,4 @@
+# Left out of `git archive`, which builds the public template from the
+# private upstream: Dependabot runs upstream, and new projects get their own
+# config from `bun run init`.
+.github/dependabot.yml export-ignore

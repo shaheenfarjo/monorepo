@@ -1,5 +1,5 @@
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
-import { blog } from "@repo/cms";
+import { blog, isConfigured } from "@repo/cms";
 import { Body } from "@repo/cms/components/body";
 import { CodeBlock } from "@repo/cms/components/code-block";
 import { Feed } from "@repo/cms/components/feed";
@@ -54,6 +54,10 @@ export const generateStaticParams = async (): Promise<{ slug: string }[]> => {
 const BlogPost = async ({ params }: BlogPostProperties) => {
   const { locale, slug } = await params;
   setRequestLocale(locale);
+
+  if (!isConfigured) {
+    notFound();
+  }
   const t = await getTranslations("web.blog");
   const labels = {
     back: t("back"),

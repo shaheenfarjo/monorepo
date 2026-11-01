@@ -1,0 +1,16 @@
+---
+import Default from "@astrojs/starlight/components/Head.astro";
+---
+
+<Default><slot /></Default>
+
+<script>
+  // Renders the guide's ```mermaid diagrams, loading mermaid only where used.
+  const diagrams = document.querySelectorAll<HTMLElement>("pre.mermaid");
+  if (diagrams.length > 0) {
+    const { default: mermaid } = await import("mermaid");
+    const dark = document.documentElement.dataset.theme === "dark";
+    mermaid.initialize({ startOnLoad: false, theme: dark ? "dark" : "default" });
+    await mermaid.run({ nodes: [...diagrams] });
+  }
+</script>

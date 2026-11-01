@@ -6,6 +6,9 @@ import "./basehub.config";
 
 const { BASEHUB_TOKEN } = keys();
 
+/** False until BASEHUB_TOKEN is set; pages then show no CMS content. */
+export const isConfigured = Boolean(BASEHUB_TOKEN);
+
 const basehub = BASEHUB_TOKEN
   ? basehubClient({ token: BASEHUB_TOKEN })
   : undefined;

@@ -1,0 +1,47 @@
+---
+title: أساس
+description: الأساس العربي لمنتجات البرمجيات كخدمة وتطبيقاتها على الهاتف.
+template: splash
+hero:
+  tagline: قالب مفتوح المصدر لبناء منتجات SaaS عربية مع تطبيقاتها على iOS وAndroid، فيه دعم كامل للاتجاه من اليمين إلى اليسار، وتسجيل دخول برقم الهاتف، ومدفوعات محلية.
+  actions:
+    - text: البدء السريع
+      link: quickstart/
+      icon: left-arrow
+    - text: المستودع على GitHub
+      link: https://github.com/theideaiq/a-saas
+      icon: github
+      variant: minimal
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+<CardGrid>
+  <Card title="العربية والإنجليزية" icon="translate">
+    كل نصوص الواجهة في ملفات الترجمة، والتخطيط مبني على خصائص CSS المنطقية
+    فينعكس الاتجاه تلقائياً.
+  </Card>
+  <Card title="الدخول برقم الهاتف" icon="phone">
+    رمز تحقق عبر Supabase يقبل الأرقام العربية والصيغ المحلية، مع ربط مرن
+    بمزوّدي الرسائل.
+  </Card>
+  <Card title="مؤسسات متعددة" icon="seti:lock">
+    مؤسسات وأدوار ودعوات، محمية بسياسات أمان الصفوف في Postgres ومختبرة.
+  </Card>
+  <Card title="مدفوعات محلية" icon="seti:pipeline">
+    واجهة موحدة لمزوّدي الدفع، مع Wayl في العراق وStripe، وأسعار بالدينار
+    والريال والدرهم والجنيه.
+  </Card>
+  <Card title="ويب وiOS وAndroid" icon="laptop">
+    تطبيق واحد يعمل في المتصفح ويُبنى كتطبيق أصلي عبر Capacitor.
+  </Card>
+  <Card title="مولّد مشاريع" icon="rocket">
+    الأمر `bun run init` يضع اسم مشروعك ويطبّق إعدادات بلدك ويحذف الوحدات
+    التي لا تحتاجها.
+  </Card>
+</CardGrid>
+
+<CardGrid>
+  <img src="../screenshots/app-ar-dashboard.png" alt="لوحة المشاريع بالعربية" />
+  <img src="../screenshots/app-ar-billing.png" alt="صفحة الفوترة بالدينار العراقي" />
+</CardGrid>

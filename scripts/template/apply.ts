@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { copyFile, readFile, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { listTextFiles } from "./files";
 import { stripModuleBlocks } from "./markers";
@@ -32,6 +32,10 @@ export const templateOnlyPaths = [
   "scripts/init.ts",
   "scripts/template",
   ".github/workflows/template.yml",
+  ".github/assets",
+  ".gitattributes",
+  ".github/workflows/docs.yml",
+  "docs",
 ];
 
 /** Files the new project starts from (copied before template-only files go). */
@@ -40,8 +44,9 @@ const NOTICES_HEADING = /^# Third-party notices\n\n[^#]*/;
 
 /**
  * Replaces the template's README and MIT license with the new project's own,
- * and records that the project derives from A-SAAS (the MIT license asks for
- * its notice to be kept).
+ * adds its Dependabot config (the public template ships none, so it gets no
+ * update PRs of its own), and records that the project derives from A-SAAS
+ * (the MIT license asks for its notice to be kept).
  */
 const writeProjectFiles = async (root: string, license: ProjectLicense) => {
   const source = (name: string) =>
@@ -53,6 +58,12 @@ const writeProjectFiles = async (root: string, license: ProjectLicense) => {
     await source(`LICENSE.${license}.md`)
   );
 
+  await mkdir(join(root, ".github"), { recursive: true });
+  await writeFile(
+    join(root, ".github", "dependabot.yml"),
+    await source("dependabot.yml")
+  );
+
   const noticesPath = join(root, "THIRD_PARTY_NOTICES.md");
   const notices = await readFile(noticesPath, "utf8");
   const notice = await source("a-saas-notice.md");
@@ -61,7 +72,12 @@ const writeProjectFiles = async (root: string, license: ProjectLicense) => {
     notices.replace(NOTICES_HEADING, (heading) => `${heading}${notice}`)
   );
 
-  return ["README.md", "LICENSE.md", "THIRD_PARTY_NOTICES.md"];
+  return [
+    "README.md",
+    "LICENSE.md",
+    ".github/dependabot.yml",
+    "THIRD_PARTY_NOTICES.md",
+  ];
 };
 
 /** Root scripts that only make sense in the template. */
